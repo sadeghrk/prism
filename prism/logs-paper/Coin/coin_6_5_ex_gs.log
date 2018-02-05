@@ -1,0 +1,158 @@
+PRISM
+=====
+
+Version: 4.4.beta
+Date: Tue Jan 23 23:14:13 IRST 2018
+Hostname: astek.hpc.vru.ac.ir
+Memory limits: cudd=1g, java(heap)=65.1g
+Command line: prism ../examples/consensus/coin6.nm ../examples/consensus/coin.pctl -prop 4 -const K=5 -ex -gs -javamaxmem 75000m -maxiters 2500000
+
+Parsing model file "../examples/consensus/coin6.nm"...
+
+Parsing properties file "../examples/consensus/coin.pctl"...
+
+8 properties:
+(1) P>=1 [ F "finished" ]
+(2) Pmin=? [ F "finished"&"all_coins_equal_0" ]
+(3) Pmin=? [ F "finished"&"all_coins_equal_1" ]
+(4) Pmax=? [ F "finished"&!"agree" ]
+(5) Pmin=? [ F<=k "finished" ]
+(6) Pmax=? [ F<=k "finished" ]
+(7) R{"steps"}min=? [ F "finished" ]
+(8) R{"steps"}max=? [ F "finished" ]
+
+Type:        MDP
+Modules:     process1 process2 process3 process4 process5 process6 
+Variables:   counter pc1 coin1 pc2 coin2 pc3 coin3 pc4 coin4 pc5 coin5 pc6 coin6 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ F "finished"&!"agree" ]
+Model constants: K=5
+
+Building model...
+Model constants: K=5
+
+Computing reachable states... 262782 482289 845054 1151648 1307839 1660595 2076898 2507157 2935552 states
+Reachable states exploration and model construction done in 35.793 secs.
+Sorting reachable states list...
+
+Time for model construction: 55.405 seconds.
+
+Type:        MDP
+States:      2935552 (1 initial)
+Transitions: 14634816
+Choices:     11726592
+Max/avg:     6/3.99
+
+Starting probabilistic reachability (max)...
+Starting Prob0 (max)...
+Prob0 (max) took 277 iterations and 18.057 seconds.
+Starting Prob1 (max)...
+Prob1 (max) took 8987 iterations and 690.415 seconds.
+target=372, yes=1283796, no=27270, maybe=1624486
+Starting value iteration (max, with Gauss-Seidel)...
+Iteration 107: 5.00 sec so far
+Iteration 213: 10.02 sec so far
+Iteration 319: 15.04 sec so far
+Iteration 425: 20.06 sec so far
+Iteration 531: 25.07 sec so far
+Iteration 637: 30.09 sec so far
+Iteration 743: 35.10 sec so far
+Iteration 849: 40.13 sec so far
+Iteration 955: 45.14 sec so far
+Iteration 1061: 50.16 sec so far
+Iteration 1167: 55.18 sec so far
+Iteration 1273: 60.20 sec so far
+Iteration 1379: 65.22 sec so far
+Iteration 1485: 70.25 sec so far
+Iteration 1591: 75.26 sec so far
+Iteration 1697: 80.29 sec so far
+Iteration 1803: 85.30 sec so far
+Iteration 1909: 90.33 sec so far
+Iteration 2015: 95.35 sec so far
+Iteration 2121: 100.38 sec so far
+Iteration 2227: 105.39 sec so far
+Iteration 2333: 110.41 sec so far
+Iteration 2439: 115.43 sec so far
+Iteration 2545: 120.46 sec so far
+Iteration 2651: 125.47 sec so far
+Iteration 2757: 130.50 sec so far
+Iteration 2863: 135.52 sec so far
+Iteration 2969: 140.54 sec so far
+Iteration 3075: 145.56 sec so far
+Iteration 3181: 150.58 sec so far
+Iteration 3287: 155.61 sec so far
+Iteration 3392: 160.62 sec so far
+Iteration 3498: 165.65 sec so far
+Iteration 3604: 170.69 sec so far
+Iteration 3710: 175.74 sec so far
+Iteration 3815: 180.75 sec so far
+Iteration 3920: 185.75 sec so far
+Iteration 4025: 190.78 sec so far
+Iteration 4130: 195.80 sec so far
+Iteration 4235: 200.81 sec so far
+Iteration 4340: 205.81 sec so far
+Iteration 4446: 210.85 sec so far
+Iteration 4552: 215.89 sec so far
+Iteration 4658: 220.93 sec so far
+Iteration 4764: 225.98 sec so far
+Iteration 4870: 231.02 sec so far
+Iteration 4976: 236.06 sec so far
+Iteration 5081: 241.07 sec so far
+Iteration 5186: 246.09 sec so far
+Iteration 5291: 251.10 sec so far
+Iteration 5396: 256.11 sec so far
+Iteration 5501: 261.12 sec so far
+Iteration 5606: 266.12 sec so far
+Iteration 5711: 271.13 sec so far
+Iteration 5817: 276.17 sec so far
+Iteration 5922: 281.17 sec so far
+Iteration 6028: 286.21 sec so far
+Iteration 6134: 291.25 sec so far
+Iteration 6240: 296.30 sec so far
+Iteration 6345: 301.30 sec so far
+Iteration 6450: 306.30 sec so far
+Iteration 6555: 311.32 sec so far
+Iteration 6661: 316.36 sec so far
+Iteration 6767: 321.41 sec so far
+Iteration 6873: 326.45 sec so far
+Iteration 6978: 331.47 sec so far
+Iteration 7084: 336.51 sec so far
+Iteration 7189: 341.53 sec so far
+Iteration 7294: 346.53 sec so far
+Iteration 7399: 351.54 sec so far
+Iteration 7504: 356.55 sec so far
+Iteration 7609: 361.56 sec so far
+Iteration 7714: 366.56 sec so far
+Iteration 7820: 371.60 sec so far
+Iteration 7926: 376.65 sec so far
+Iteration 8032: 381.69 sec so far
+Iteration 8138: 386.72 sec so far
+Iteration 8244: 391.76 sec so far
+Iteration 8350: 396.79 sec so far
+Iteration 8456: 401.83 sec so far
+Iteration 8562: 406.85 sec so far
+Iteration 8668: 411.88 sec so far
+Iteration 8774: 416.91 sec so far
+Iteration 8880: 421.94 sec so far
+Iteration 8986: 426.96 sec so far
+Iteration 9092: 432.00 sec so far
+Iteration 9198: 437.04 sec so far
+Iteration 9304: 442.07 sec so far
+Iteration 9410: 447.11 sec so far
+Iteration 9516: 452.14 sec so far
+Iteration 9622: 457.18 sec so far
+Iteration 9728: 462.23 sec so far
+Iteration 9834: 467.27 sec so far
+Iteration 9940: 472.32 sec so far
+Iteration 10046: 477.35 sec so far
+Value iteration (max, with Gauss-Seidel) took 10131 iterations, 95240112660 MV-multiplications and 481.479 seconds.
+Probabilistic reachability took 1189.963 seconds.
+
+Value in the initial state: 0.1498954700884413
+
+Time for model checking: 1190.028 seconds.
+
+Result: 0.1498954700884413 (value in the initial state)
+

@@ -74,6 +74,8 @@ jlong _strat				// strategy storage
 	DdNode *yes = jlong_to_DdNode(y);				// 'yes' states
 	DdNode *maybe = jlong_to_DdNode(m); 			// 'maybe' states
 	int *strat = (int *)jlong_to_ptr(_strat);		// strategy storage
+	int maybe_states;
+	double updates;
 
 	// mtbdds
 	DdNode *a = NULL, *tmp = NULL;
@@ -138,7 +140,7 @@ jlong _strat				// strategy storage
 	kb = ndsm->mem;
 	kbt = kb;
 	// print out info
-	PS_PrintToMainLog(env, "[n=%d, nc=%d, nnz=%ld, k=%d] ", n, nc, nnz, ndsm->k);
+	PS_PrintToMainLog(env, "[n=%d, nc=%d, nnz=%d, k=%d] ", n, nc, nnz, ndsm->k);
 	PS_PrintMemoryToMainLog(env, "[", kb, "]\n");
 	
 	// if needed, and if info is available, build a vector of action indices for the MDP
@@ -158,7 +160,7 @@ jlong _strat				// strategy storage
 			// also extract list of action names from 'synchs'
 			get_string_array_from_java(env, synchs, action_names_jstrings, action_names, num_actions);
 		} else {
-			PS_PrintWarningToMainLog(env, "Action labels are not available for adversary generation.");
+			PS_PrintWarningToMainLog(env, "Action labels are not available for adversary generation.", export_adv_filename);
 		}
 	}
 	
@@ -238,7 +240,18 @@ jlong _strat				// strategy storage
 	int *choice_starts = (int *)ndsm->choice_counts;
 	bool use_counts = ndsm->use_counts;
 	unsigned int *cols = ndsm->cols;
-		
+	maybe_states = 0;
+
+	for (i = 0; i < n; i++) 
+	{
+		d1 = 0.0; // initial value doesn't matter
+		first = true; // (because we also remember 'first')
+		if (!use_counts) { l1 = row_starts[i]; h1 = row_starts[i+1]; }
+		else { l1 = h1; h1 += row_counts[i]; }
+		if(l1 < h1)
+			maybe_states++;
+	}
+
 	while (!done && iters < max_iters) {
 		
 		iters++;
@@ -285,7 +298,7 @@ jlong _strat				// strategy storage
 		if (iterationExport)
 			iterationExport->exportVector(soln2, n, 0);
 
-		// check convergence
+		// check convergence 
 		measure.reset();
 		measure.measure(soln, soln2, n);
 		if (measure.value() < term_crit_param) {
@@ -386,7 +399,7 @@ jlong _strat				// strategy storage
 	if (action_names != NULL) {
 		release_string_array_from_java(env, action_names_jstrings, action_names, num_actions);
 	}
-	
+	printf("\nNumber of updates = %d M \n", (int)(((double)iters * maybe_states)/1000000));	
 	return ptr_to_jlong(soln);
 }
 

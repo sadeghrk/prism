@@ -42,10 +42,6 @@ rewards "steps"
 	true : 1;
 endrewards
 
-// set of initial states: all (i.e. any possible initial configuration of tokens)
-init
-	true
-endinit
 
 // formula, for use in properties: number of tokens
 // (i.e. number of processes that have the same value as the process to their left)
@@ -53,4 +49,4 @@ formula num_tokens = (x1=x2?1:0)+(x2=x3?1:0)+(x3=x4?1:0)+(x4=x5?1:0)+(x5=x6?1:0)
 
 // label - stable configurations (1 token)
 label "stable" = num_tokens=1;
-
+label "fin" = x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10 + x11 + x12 + x13 + x14 + x15 + x16 + x17 + x18 + x19 = 11;

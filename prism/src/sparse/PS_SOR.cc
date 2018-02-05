@@ -90,6 +90,7 @@ jboolean forwards	// forwards or backwards?
 	// misc
 	int i, j, fb, l, h, iters;
 	double d, kb, kbt;
+	double total_mults;
 	bool done;
 	// measure for convergence termination check
 	MeasureSupNorm measure(term_crit == TERM_CRIT_RELATIVE);
@@ -138,7 +139,7 @@ jboolean forwards	// forwards or backwards?
 	}
 	kbt = kb;
 	// print some info
-	PS_PrintToMainLog(env, "[n=%d, nnz=%ld%s] ", n, nnz, compact_a?", compact":"");
+	PS_PrintToMainLog(env, "[n=%d, nnz=%d%s] ", n, nnz, compact_a?", compact":"");
 	PS_PrintMemoryToMainLog(env, "[", kb, "]\n");
 	
 	// get vector of diags, either by extracting from mtbdd or
@@ -222,7 +223,7 @@ jboolean forwards	// forwards or backwards?
 	iters = 0;
 	done = false;
 	PS_PrintToMainLog(env, "\nStarting iterations...\n");
-	
+	total_mults = 0;
 	while (!done && iters < max_iters) {
 		
 		iters++;
@@ -289,7 +290,7 @@ jboolean forwards	// forwards or backwards?
 			// set vector element
 			soln[i] = d;
 		}
-
+		total_mults += h;
 		if (iterationExport)
 			iterationExport->exportVector(soln, n, 0);
 
@@ -312,7 +313,7 @@ jboolean forwards	// forwards or backwards?
 	time_taken = (double)(stop - start1)/1000;
 	
 	// print iters/timing info
-	PS_PrintToMainLog(env, "\n%s%s: %d iterations in %.2f seconds (average %.6f, setup %.2f)\n", forwards?"":"Backwards ", (omega == 1.0)?"Gauss-Seidel":"SOR", iters, time_taken, time_for_iters/iters, time_for_setup);
+	PS_PrintToMainLog(env, "\n%s%s: %d iterations in %.2f seconds (average %.6f, setup %.2f)\n", forwards?"":"Backwards ", (omega == 1.0)?"Gauss-Seidel":"SOR", iters, time_for_iters, time_for_iters/iters, time_for_setup);
 	
 	// if the iterative method didn't terminate, this is an error
 	if (!done) { delete[] soln; soln = NULL; PS_SetErrorMessage("Iterative method did not converge within %d iterations.\nConsider using a different numerical method or increasing the maximum number of iterations", iters); }
@@ -335,6 +336,7 @@ jboolean forwards	// forwards or backwards?
 	if (b_vec) delete[] b_vec;
 	if (b_dist) delete b_dist;
 	
+	printf("\n\nNumber of scallar multiplications: %dM \n", (int) (total_mults / 1000000));
 	return ptr_to_jlong(soln);
 }
 

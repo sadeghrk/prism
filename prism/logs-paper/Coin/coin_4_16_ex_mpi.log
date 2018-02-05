@@ -1,0 +1,63 @@
+PRISM
+=====
+
+Version: 4.4.beta
+Date: Tue Jan 23 17:44:31 IRST 2018
+Hostname: astek.hpc.vru.ac.ir
+Memory limits: cudd=1g, java(heap)=65.1g
+Command line: prism ../examples/consensus/coin4.nm ../examples/consensus/coin.pctl -prop 4 -const K=16 -ex -modpoliter -javamaxmem 75000m -maxiters 2500000
+
+Parsing model file "../examples/consensus/coin4.nm"...
+
+Parsing properties file "../examples/consensus/coin.pctl"...
+
+8 properties:
+(1) P>=1 [ F "finished" ]
+(2) Pmin=? [ F "finished"&"all_coins_equal_0" ]
+(3) Pmin=? [ F "finished"&"all_coins_equal_1" ]
+(4) Pmax=? [ F "finished"&!"agree" ]
+(5) Pmin=? [ F<=k "finished" ]
+(6) Pmax=? [ F<=k "finished" ]
+(7) R{"steps"}min=? [ F "finished" ]
+(8) R{"steps"}max=? [ F "finished" ]
+
+Type:        MDP
+Modules:     process1 process2 process3 process4 
+Variables:   counter pc1 coin1 pc2 coin2 pc3 coin3 pc4 coin4 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ F "finished"&!"agree" ]
+Model constants: K=16
+
+Building model...
+Model constants: K=16
+
+Computing reachable states... 166016 states
+Reachable states exploration and model construction done in 0.999 secs.
+Sorting reachable states list...
+
+Time for model construction: 1.373 seconds.
+
+Type:        MDP
+States:      166016 (1 initial)
+Transitions: 559072
+Choices:     447616
+Max/avg:     4/2.70
+
+Starting probabilistic reachability (max)...
+Starting Prob0 (max)...
+Prob0 (max) took 581 iterations and 1.896 seconds.
+Starting Prob1 (max)...
+Prob1 (max) took 33339 iterations and 129.061 seconds.
+target=56, yes=38520, no=910, maybe=126586
+Starting modified policy iteration (max)...
+Modified policy iteration took 442 cycles (44193 iterations in total) and 53.706 seconds.
+Probabilistic reachability took 184.668 seconds.
+
+Value in the initial state: 0.038972171521965
+
+Time for model checking: 184.687 seconds.
+
+Result: 0.038972171521965 (value in the initial state)
+

@@ -1,0 +1,120 @@
+PRISM
+=====
+
+Version: 4.4.beta
+Date: Wed Jan 10 05:21:40 IRST 2018
+Hostname: astek.hpc.vru.ac.ir
+Memory limits: cudd=1g, java(heap)=65.1g
+Command line: prism ../examples/nonsparse/dns1.nm ../examples/nonsparse/qq.pctl -ex -gs -javamaxmem 75000m -maxiters 500000
+
+Parsing model file "../examples/nonsparse/dns1.nm"...
+
+Parsing properties file "../examples/nonsparse/qq.pctl"...
+
+1 property:
+(1) Pmax=? [ "PP" U "QQ" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 m4 m5 
+Variables:   s1 s2 s3 s4 s5 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "PP" U "QQ" ]
+
+Building model...
+
+Computing reachable states... 4720 10765 12425 17145 21373 25000 states
+Reachable states exploration and model construction done in 17.407 secs.
+Sorting reachable states list...
+
+Time for model construction: 22.296 seconds.
+
+Type:        MDP
+States:      25000 (1 initial)
+Transitions: 23215048
+Choices:     86000
+Max/avg:     6/3.44
+
+Starting probabilistic reachability (max)...
+Starting Prob0 (max)...
+Prob0 (max) took 4 iterations and 0.095 seconds.
+Starting Prob1 (max)...
+Prob1 (max) took 20 iterations and 0.759 seconds.
+target=1, yes=1, no=144, maybe=24855
+Starting value iteration (max, with Gauss-Seidel)...
+Iteration 133: 5.01 sec so far
+Iteration 267: 10.03 sec so far
+Iteration 400: 15.05 sec so far
+Iteration 537: 20.06 sec so far
+Iteration 674: 25.08 sec so far
+Iteration 811: 30.09 sec so far
+Iteration 948: 35.11 sec so far
+Iteration 1085: 40.12 sec so far
+Iteration 1221: 45.14 sec so far
+Iteration 1357: 50.14 sec so far
+Iteration 1494: 55.16 sec so far
+Iteration 1630: 60.19 sec so far
+Iteration 1765: 65.20 sec so far
+Iteration 1900: 70.21 sec so far
+Iteration 2035: 75.22 sec so far
+Iteration 2169: 80.25 sec so far
+Iteration 2302: 85.27 sec so far
+Iteration 2437: 90.28 sec so far
+Iteration 2572: 95.30 sec so far
+Iteration 2707: 100.33 sec so far
+Iteration 2842: 105.34 sec so far
+Iteration 2977: 110.35 sec so far
+Iteration 3112: 115.36 sec so far
+Iteration 3247: 120.38 sec so far
+Iteration 3382: 125.42 sec so far
+Iteration 3517: 130.44 sec so far
+Iteration 3652: 135.46 sec so far
+Iteration 3787: 140.47 sec so far
+Iteration 3922: 145.50 sec so far
+Iteration 4057: 150.52 sec so far
+Iteration 4191: 155.53 sec so far
+Iteration 4326: 160.55 sec so far
+Iteration 4462: 165.57 sec so far
+Iteration 4598: 170.60 sec so far
+Iteration 4732: 175.61 sec so far
+Iteration 4868: 180.63 sec so far
+Iteration 5004: 185.63 sec so far
+Iteration 5140: 190.64 sec so far
+Iteration 5276: 195.65 sec so far
+Iteration 5412: 200.66 sec so far
+Iteration 5548: 205.70 sec so far
+Iteration 5684: 210.71 sec so far
+Iteration 5818: 215.73 sec so far
+Iteration 5954: 220.75 sec so far
+Iteration 6091: 225.78 sec so far
+Iteration 6228: 230.81 sec so far
+Iteration 6364: 235.82 sec so far
+Iteration 6497: 240.84 sec so far
+Iteration 6633: 245.84 sec so far
+Iteration 6769: 250.87 sec so far
+Iteration 6904: 255.89 sec so far
+Iteration 7040: 260.90 sec so far
+Iteration 7176: 265.90 sec so far
+Iteration 7311: 270.90 sec so far
+Iteration 7447: 275.91 sec so far
+Iteration 7584: 280.94 sec so far
+Iteration 7717: 285.95 sec so far
+Iteration 7850: 290.98 sec so far
+Iteration 7982: 296.00 sec so far
+Iteration 8113: 301.00 sec so far
+Iteration 8247: 306.02 sec so far
+Iteration 8383: 311.05 sec so far
+Iteration 8518: 316.06 sec so far
+Iteration 8654: 321.10 sec so far
+Iteration 8791: 326.13 sec so far
+Iteration 8928: 331.15 sec so far
+Value iteration (max, with Gauss-Seidel) took 9031 iterations, 208522186631 MV-multiplications and 334.934 seconds.
+Probabilistic reachability took 335.792 seconds.
+
+Value in the initial state: 0.9531153329259064
+
+Time for model checking: 335.796 seconds.
+
+Result: 0.9531153329259064 (value in the initial state)
+

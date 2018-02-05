@@ -27,7 +27,7 @@
 
 // includes
 #include "prism.h"
-#include <cstdio>
+#include <stdio.h>
 #include <cmath>
 #include <new>
 #include <vector>

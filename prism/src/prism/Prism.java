@@ -118,13 +118,19 @@ public class Prism extends PrismComponent implements PrismSettingsListener
 	public static final int BSOR = 9;
 	public static final int PSOR = 10;
 	public static final int BPSOR = 11;
+	public static final int IMPGAUSSSEIDEL = 12;
+	public static final int IMPGAUSSSEIDEL2= 13;
 
 	// methods for solving MDPs
 	public static final int MDP_VALITER = 1;
 	public static final int MDP_GAUSSSEIDEL = 2;
 	public static final int MDP_POLITER = 3;
 	public static final int MDP_MODPOLITER = 4;
-	public static final int MDP_LP = 5;
+	public static final int MDP_EXPMODPOLITER = 5;
+	public static final int MDP_LP = 6;
+	public static final int MDP_IMPROVEDMODPOLITER = 7;
+	public static final int MDP_IMPROVEDMODPOLITER2 = 8;
+
 
 	// methods for solving multi-objective queries on MDPs
 	public static final int MDP_MULTI_VALITER = 1;
@@ -2908,10 +2914,10 @@ public class Prism extends PrismComponent implements PrismSettingsListener
 		// Auto-switch engine if required
 		if (currentModelType == ModelType.MDP && !Expression.containsMultiObjective(prop.getExpression())) {
 			if (getMDPSolnMethod() != Prism.MDP_VALITER && !getExplicit()) {
-				mainLog.printWarning("Switching to explicit engine to allow use of chosen MDP solution method.");
-				engineSwitch = true;
-				lastEngine = getEngine();
-				setEngine(Prism.EXPLICIT);
+				//mainLog.printWarning("Switching to explicit engine to allow use of chosen MDP solution method.");
+				//engineSwitch = true;
+				//lastEngine = getEngine();
+				//setEngine(Prism.EXPLICIT);
 			}
 		}
 		if (Expression.containsNonProbLTLFormula(prop.getExpression())) {

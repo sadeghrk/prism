@@ -1,0 +1,63 @@
+PRISM
+=====
+
+Version: 4.4.beta
+Date: Tue Jan 23 23:35:00 IRST 2018
+Hostname: astek.hpc.vru.ac.ir
+Memory limits: cudd=1g, java(heap)=65.1g
+Command line: prism ../examples/consensus/coin6.nm ../examples/consensus/coin.pctl -prop 4 -const K=5 -ex -politer -javamaxmem 75000m -maxiters 2500000
+
+Parsing model file "../examples/consensus/coin6.nm"...
+
+Parsing properties file "../examples/consensus/coin.pctl"...
+
+8 properties:
+(1) P>=1 [ F "finished" ]
+(2) Pmin=? [ F "finished"&"all_coins_equal_0" ]
+(3) Pmin=? [ F "finished"&"all_coins_equal_1" ]
+(4) Pmax=? [ F "finished"&!"agree" ]
+(5) Pmin=? [ F<=k "finished" ]
+(6) Pmax=? [ F<=k "finished" ]
+(7) R{"steps"}min=? [ F "finished" ]
+(8) R{"steps"}max=? [ F "finished" ]
+
+Type:        MDP
+Modules:     process1 process2 process3 process4 process5 process6 
+Variables:   counter pc1 coin1 pc2 coin2 pc3 coin3 pc4 coin4 pc5 coin5 pc6 coin6 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ F "finished"&!"agree" ]
+Model constants: K=5
+
+Building model...
+Model constants: K=5
+
+Computing reachable states... 265902 482285 835556 1140261 1305931 1658288 2052815 2400728 2778374 2935552 states
+Reachable states exploration and model construction done in 35.317 secs.
+Sorting reachable states list...
+
+Time for model construction: 56.015 seconds.
+
+Type:        MDP
+States:      2935552 (1 initial)
+Transitions: 14634816
+Choices:     11726592
+Max/avg:     6/3.99
+
+Starting probabilistic reachability (max)...
+Starting Prob0 (max)...
+Prob0 (max) took 277 iterations and 17.868 seconds.
+Starting Prob1 (max)...
+Prob1 (max) took 8987 iterations and 700.684 seconds.
+target=372, yes=1283796, no=27270, maybe=1624486
+Starting policy iteration (max)...
+Policy iteration took 48 cycles (23585 iterations in total) and 749.522 seconds.
+Probabilistic reachability took 1468.087 seconds.
+
+Value in the initial state: 0.14998095653377597
+
+Time for model checking: 1468.159 seconds.
+
+Result: 0.14998095653377597 (value in the initial state)
+

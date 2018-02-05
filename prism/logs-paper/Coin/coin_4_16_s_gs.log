@@ -1,0 +1,93 @@
+PRISM
+=====
+
+Version: 4.4.beta
+Date: Tue Jan 23 17:18:55 IRST 2018
+Hostname: astek.hpc.vru.ac.ir
+Memory limits: cudd=1g, java(heap)=981.5m
+Command line: prism ../examples/consensus/coin4.nm ../examples/consensus/coin.pctl -prop 4 -const K=16 -s -gs -maxiters 2500000
+
+Parsing model file "../examples/consensus/coin4.nm"...
+
+Parsing properties file "../examples/consensus/coin.pctl"...
+
+8 properties:
+(1) P>=1 [ F "finished" ]
+(2) Pmin=? [ F "finished"&"all_coins_equal_0" ]
+(3) Pmin=? [ F "finished"&"all_coins_equal_1" ]
+(4) Pmax=? [ F "finished"&!"agree" ]
+(5) Pmin=? [ F<=k "finished" ]
+(6) Pmax=? [ F<=k "finished" ]
+(7) R{"steps"}min=? [ F "finished" ]
+(8) R{"steps"}max=? [ F "finished" ]
+
+Type:        MDP
+Modules:     process1 process2 process3 process4 
+Variables:   counter pc1 coin1 pc2 coin2 pc3 coin3 pc4 coin4 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ F "finished"&!"agree" ]
+Model constants: K=16
+
+Building model...
+Model constants: K=16
+
+Computing reachable states...
+
+Reachability (BFS): 771 iterations in 0.10 seconds (average 0.000128, setup 0.00)
+
+Time for model construction: 0.144 seconds.
+
+Type:        MDP
+States:      166016 (1 initial)
+Transitions: 559072
+Choices:     447616
+
+Transition matrix: 2432 nodes (3 terminal), 559072 minterms, vars: 20r/20c/4nd
+
+Prob0A: 581 iterations in 0.33 seconds (average 0.000571, setup 0.00)
+
+Prob1E: 32888 iterations in 29.20 seconds (average 0.000888, setup 0.00)
+
+yes = 38520, no = 910, maybe = 126586
+
+Computing remaining probabilities...
+Engine: Sparse
+
+Building sparse matrix(FOR GS)... [n=166016, nc=380040, nnz=475288, k=4] [6.0 MB]
+Creating vector for yes...[1.3 MB]
+Allocating iteration vectors... [2 x 1.3 MB]
+TOTAL: [9.8 MB]
+
+Starting iterations...
+Iteration 2095: max relative diff=0.017441, 5.00 sec so far
+Iteration 4195: max relative diff=0.004192, 10.01 sec so far
+Iteration 6301: max relative diff=0.001778, 15.01 sec so far
+Iteration 8403: max relative diff=0.000949, 20.01 sec so far
+Iteration 10508: max relative diff=0.000568, 25.01 sec so far
+Iteration 12609: max relative diff=0.000363, 30.01 sec so far
+Iteration 14714: max relative diff=0.000240, 35.01 sec so far
+Iteration 16817: max relative diff=0.000163, 40.02 sec so far
+Iteration 18925: max relative diff=0.000112, 45.02 sec so far
+Iteration 21026: max relative diff=0.000077, 50.02 sec so far
+Iteration 23133: max relative diff=0.000054, 55.02 sec so far
+Iteration 25235: max relative diff=0.000037, 60.02 sec so far
+Iteration 27339: max relative diff=0.000026, 65.02 sec so far
+Iteration 29439: max relative diff=0.000018, 70.02 sec so far
+Iteration 31544: max relative diff=0.000012, 75.02 sec so far
+Iteration 33644: max relative diff=0.000009, 80.03 sec so far
+Iteration 35748: max relative diff=0.000006, 85.03 sec so far
+Iteration 37843: max relative diff=0.000004, 90.03 sec so far
+Iteration 39942: max relative diff=0.000003, 95.03 sec so far
+Iteration 42035: max relative diff=0.000002, 100.03 sec so far
+Iteration 44129: max relative diff=0.000001, 105.03 sec so far
+
+Iterative method: 45432 iterations in 108.23 seconds (average 0.002380, setup 0.09)
+
+Value in the initial state: 0.03899314910177621
+
+Time for model checking: 137.822 seconds.
+
+Result: 0.03899314910177621 (value in the initial state)
+

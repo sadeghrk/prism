@@ -1,0 +1,114 @@
+PRISM
+=====
+
+Version: 4.4.beta
+Date: Fri Jan 12 05:36:34 IRST 2018
+Hostname: astek.hpc.vru.ac.ir
+Memory limits: cudd=1g, java(heap)=981.5m
+Command line: prism ../examples/self-stabilisation/herman/herman19_75.pm ../examples/self-stabilisation/herman/herman.pctl -s -prop 6 -sor -nocompact
+
+Parsing model file "../examples/self-stabilisation/herman/herman19_75.pm"...
+
+Parsing properties file "../examples/self-stabilisation/herman/herman.pctl"...
+
+6 properties:
+(1) filter(forall, "init"=>P>=1 [ F "stable" ])
+(2) R=? [ F "stable" {"init"}{max} ]
+(3) R=? [ F "stable" {"k_tokens"}{max} ]
+(4) R=? [ F "stable" {"k_tokens"}{min} ]
+(5) P=? [ F<=K "stable" {"init"}{min} ]
+(6) P=? [ F "fin" ]
+
+Type:        DTMC
+Modules:     process1 process2 process3 process4 process5 process6 process7 process8 process9 process10 process11 process12 process13 process14 process15 process16 process17 process18 process19 
+Variables:   x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 x18 x19 
+
+---------------------------------------------------------------------
+
+Model checking: P=? [ F "fin" ]
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 2 iterations in 0.00 seconds (average 0.000500, setup 0.00)
+
+Time for model construction: 0.031 seconds.
+
+Type:        DTMC
+States:      524288 (1 initial)
+Transitions: 1162261468
+
+Transition matrix: 12706 nodes (111 terminal), 1162261468 minterms, vars: 19r/19c
+
+Prob0: 2 iterations in 0.00 seconds (average 0.001000, setup 0.00)
+
+Prob1: 7 iterations in 0.03 seconds (average 0.004000, setup 0.00)
+
+yes = 75582, no = 38, maybe = 448668
+
+Computing remaining probabilities...
+Engine: Sparse
+
+Building sparse matrix... [n=524288, nnz=1031518438] [11.5 GB]
+Creating vector for diagonals... [4.0 MB]
+Creating vector for RHS... [4.0 MB]
+Allocating iteration vector... [4.0 MB]
+TOTAL: [11.5 GB]
+
+Starting iterations...
+Iteration 3: max relative diff=0.651851, 5.93 sec so far
+Iteration 6: max relative diff=0.233785, 11.86 sec so far
+Iteration 9: max relative diff=0.119030, 17.80 sec so far
+Iteration 12: max relative diff=0.071210, 23.71 sec so far
+Iteration 15: max relative diff=0.046496, 29.65 sec so far
+Iteration 18: max relative diff=0.032005, 35.57 sec so far
+Iteration 21: max relative diff=0.023073, 41.52 sec so far
+Iteration 24: max relative diff=0.017040, 47.51 sec so far
+Iteration 27: max relative diff=0.012748, 53.44 sec so far
+Iteration 30: max relative diff=0.009623, 59.32 sec so far
+Iteration 33: max relative diff=0.007306, 65.20 sec so far
+Iteration 36: max relative diff=0.005573, 71.10 sec so far
+Iteration 39: max relative diff=0.004269, 77.00 sec so far
+Iteration 42: max relative diff=0.003281, 82.86 sec so far
+Iteration 45: max relative diff=0.002529, 88.78 sec so far
+Iteration 48: max relative diff=0.001952, 94.68 sec so far
+Iteration 51: max relative diff=0.001509, 100.55 sec so far
+Iteration 54: max relative diff=0.001167, 106.41 sec so far
+Iteration 57: max relative diff=0.000904, 112.26 sec so far
+Iteration 60: max relative diff=0.000701, 118.16 sec so far
+Iteration 63: max relative diff=0.000543, 124.07 sec so far
+Iteration 66: max relative diff=0.000421, 129.96 sec so far
+Iteration 69: max relative diff=0.000327, 136.11 sec so far
+Iteration 72: max relative diff=0.000254, 142.36 sec so far
+Iteration 75: max relative diff=0.000197, 148.68 sec so far
+Iteration 78: max relative diff=0.000153, 154.93 sec so far
+Iteration 81: max relative diff=0.000119, 161.18 sec so far
+Iteration 84: max relative diff=0.000092, 167.42 sec so far
+Iteration 87: max relative diff=0.000072, 173.65 sec so far
+Iteration 90: max relative diff=0.000056, 179.88 sec so far
+Iteration 93: max relative diff=0.000043, 186.12 sec so far
+Iteration 96: max relative diff=0.000034, 192.34 sec so far
+Iteration 99: max relative diff=0.000026, 198.59 sec so far
+Iteration 102: max relative diff=0.000020, 204.82 sec so far
+Iteration 105: max relative diff=0.000016, 211.06 sec so far
+Iteration 108: max relative diff=0.000012, 217.25 sec so far
+Iteration 111: max relative diff=0.000009, 223.54 sec so far
+Iteration 114: max relative diff=0.000007, 229.81 sec so far
+Iteration 117: max relative diff=0.000006, 236.13 sec so far
+Iteration 120: max relative diff=0.000004, 242.40 sec so far
+Iteration 123: max relative diff=0.000003, 248.78 sec so far
+Iteration 126: max relative diff=0.000003, 255.02 sec so far
+Iteration 129: max relative diff=0.000002, 261.26 sec so far
+Iteration 132: max relative diff=0.000002, 267.52 sec so far
+Iteration 135: max relative diff=0.000001, 273.73 sec so far
+Iteration 138: max relative diff=0.000001, 280.12 sec so far
+
+SOR: 138 iterations in 280.12 seconds (average 2.029826, setup 72.28)
+
+Value in the initial state: 0.358851428366823
+
+Time for model checking: 354.847 seconds.
+
+Result: 0.358851428366823 (value in the initial state)
+

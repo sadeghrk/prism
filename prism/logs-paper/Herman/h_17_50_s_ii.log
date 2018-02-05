@@ -1,0 +1,71 @@
+PRISM
+=====
+
+Version: 4.4.beta
+Date: Thu Jan 11 23:49:50 IRST 2018
+Hostname: astek.hpc.vru.ac.ir
+Memory limits: cudd=1g, java(heap)=78.1g
+Command line: prism ../examples/self-stabilisation/herman/herman17.pm ../examples/self-stabilisation/herman/herman.pctl -s -prop 6 -gs -ii -epsilon 1e-8 -javamaxmem 90000m
+
+Parsing model file "../examples/self-stabilisation/herman/herman17.pm"...
+
+Parsing properties file "../examples/self-stabilisation/herman/herman.pctl"...
+
+6 properties:
+(1) filter(forall, "init"=>P>=1 [ F "stable" ])
+(2) R=? [ F "stable" {"init"}{max} ]
+(3) R=? [ F "stable" {"k_tokens"}{max} ]
+(4) R=? [ F "stable" {"k_tokens"}{min} ]
+(5) P=? [ F<=K "stable" {"init"}{min} ]
+(6) P=? [ F "fin" ]
+
+Type:        DTMC
+Modules:     process1 process2 process3 process4 process5 process6 process7 process8 process9 process10 process11 process12 process13 process14 process15 process16 process17 
+Variables:   x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 
+
+---------------------------------------------------------------------
+
+Model checking: P=? [ F "fin" ]
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 2 iterations in 0.00 seconds (average 0.000000, setup 0.00)
+
+Time for model construction: 0.018 seconds.
+
+Type:        DTMC
+States:      131072 (1 initial)
+Transitions: 129140164
+
+Transition matrix: 1053 nodes (10 terminal), 129140164 minterms, vars: 17r/17c
+
+Prob0: 2 iterations in 0.00 seconds (average 0.001000, setup 0.00)
+
+Prob1: 6 iterations in 0.02 seconds (average 0.003000, setup 0.00)
+
+yes = 19448, no = 34, maybe = 111590
+
+Computing remaining probabilities...
+Engine: Sparse
+
+Building sparse matrix... [n=131072, nnz=114007646, compact] [435.4 MB]
+Creating vector for diagonals... [dist=2, compact] [256.0 KB]
+Creating vector for RHS... [dist=2, compact] [256.0 KB]
+Allocating iteration vectors... [ 2 x 1024.0 KB]
+TOTAL: [437.9 MB]
+
+Starting iterations...
+Iteration 18: max relative diff=0.004214, 5.25 sec so far
+Iteration 36: max relative diff=0.000009, 10.52 sec so far
+Iteration 54: max relative diff=0.000000, 15.75 sec so far
+Max relative diff between upper and lower bound on convergence: 9.66979E-09
+Gauss-Seidel (interval iteration): 56 iterations in 22.77 seconds (average 0.291732, setup 6.43)
+
+Value in the initial state: 0.8892198785650521
+
+Time for model checking: 22.878 seconds.
+
+Result: 0.8892198785650521 (value in the initial state)
+

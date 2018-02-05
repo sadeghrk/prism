@@ -1,0 +1,74 @@
+PRISM
+=====
+
+Version: 4.4.beta
+Date: Thu Jan 25 15:04:09 IRST 2018
+Hostname: astek.hpc.vru.ac.ir
+Memory limits: cudd=1g, java(heap)=65.1g
+Command line: prism ../examples/nonsparse/SysAdmin3.nm ../examples/nonsparse/qq.pctl -s -modpoliter -javamaxmem 75000m -maxiters 500000
+
+Parsing model file "../examples/nonsparse/SysAdmin3.nm"...
+
+Parsing properties file "../examples/nonsparse/qq.pctl"...
+
+1 property:
+(1) Pmax=? [ "PP" U "QQ" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 
+Variables:   s7 s2 s3 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "PP" U "QQ" ]
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 3 iterations in 0.00 seconds (average 0.000333, setup 0.00)
+
+Time for model construction: 7.862 seconds.
+
+Type:        MDP
+States:      8192 (1 initial)
+Transitions: 128759040
+Choices:     65536
+
+Transition matrix: 235617 nodes (15137 terminal), 128759040 minterms, vars: 14r/14c/8nd
+
+Prob0A: 3 iterations in 0.01 seconds (average 0.002000, setup 0.00)
+
+Prob1E: 8 iterations in 0.01 seconds (average 0.000625, setup 0.00)
+
+yes = 1, no = 113, maybe = 8078
+
+Computing remaining probabilities...
+Engine: Sparse
+
+Building sparse matrix (FOR POLICY ITERASION)... [n=8192, nc=64624, nnz=127067508, k=8] [1.4 GB]
+Creating vector for yes...[64.0 KB]
+Allocating iteration vectors... [2 x 64.0 KB]
+TOTAL: [1.4 GB]
+
+Starting iterations...
+Iteration 199: max relative diff=0.112268, 5.93 sec so far
+Iteration 502: max relative diff=0.002308, 12.55 sec so far
+Iteration 805: max relative diff=0.000252, 19.45 sec so far
+Iteration 1108: max relative diff=0.000046, 26.37 sec so far
+Iteration 1411: max relative diff=0.000023, 33.27 sec so far
+Iteration 1714: max relative diff=0.000012, 40.22 sec so far
+Iteration 2017: max relative diff=0.000009, 47.20 sec so far
+Iteration 2320: max relative diff=0.000002, 54.10 sec so far
+
+Iterative method: 2514 iterations in 58.73 seconds (average 0.023360, setup 7.06)
+
+
+Number of scallar multiplications: 41928M 
+
+Value in the initial state: 0.9852856121810785
+
+Time for model checking: 66.093 seconds.
+
+Result: 0.9852856121810785 (value in the initial state)
+
