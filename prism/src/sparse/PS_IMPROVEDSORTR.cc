@@ -26,7 +26,7 @@
 
 // includes
 #include "PrismSparse.h"
-#include <cmath>
+#include <math.h>
 #include <util.h>
 #include <cudd.h>
 #include <dd.h>
@@ -36,16 +36,13 @@
 #include "PrismSparseGlob.h"
 #include "jnipointer.h"
 #include "prism.h"
-#include "Measures.h"
-#include "ExportIterations.h"
-#include <memory>
 #include <new>
 
 //------------------------------------------------------------------------------
 
 // solve the linear equation system Ax=b with Gauss-Seidel/SOR
 
-JNIEXPORT jlong __jlongpointer JNICALL Java_sparse_PrismSparse_PS_1SOR
+JNIEXPORT jlong __jlongpointer JNICALL Java_sparse_PrismSparse_PS_1IMPROVEDSORTR
 (
 JNIEnv *env,
 jclass cls,
@@ -89,12 +86,12 @@ jboolean forwards	// forwards or backwards?
 	double time_taken, time_for_setup, time_for_iters;
 	// misc
 	int i, j, fb, l, h, iters;
-	double d, kb, kbt;
-	double total_mults;
+	double d, x, sup_norm, kb, kbt, total_mults;
 	bool done;
-	// measure for convergence termination check
-	MeasureSupNorm measure(term_crit == TERM_CRIT_RELATIVE);
-	
+	int num_of_trans;	
+	double* in_probs;		
+	double d1, d2;		
+
 	// exception handling around whole function
 	try {
 	
@@ -121,7 +118,7 @@ jboolean forwards	// forwards or backwards?
 	a = DD_ITE(ddman, id, DD_Constant(ddman, 0), a);
 	
 	// build sparse matrix
-	PS_PrintToMainLog(env, "\nBuilding sparse matrix... ");
+	PS_PrintToMainLog(env, "\nBuilding sparse matrix...");
 	// if requested, try and build a "compact" version
 	compact_a = true;
 	cmsrsm = NULL;
@@ -175,6 +172,8 @@ jboolean forwards	// forwards or backwards?
 		for (i = 0; i < diags_dist->num_dist; i++) diags_dist->dist[i] = 1.0 / diags_dist->dist[i];
 	}
 	
+	num_of_trans = diags_dist->num_dist;		//	4-8-2017 	
+
 	// build b vector (if present)
 	if (b != NULL) {
 		PS_PrintToMainLog(env, "Creating vector for RHS... ");
@@ -202,59 +201,160 @@ jboolean forwards	// forwards or backwards?
 	
 	// print total memory usage
 	PS_PrintMemoryToMainLog(env, "TOTAL: [", kbt, "]\n");
-
-	std::unique_ptr<ExportIterations> iterationExport;
-	if (PS_GetFlagExportIterations()) {
-		std::string title("PS_SOR (");
-		title += forwards?"":"Backwards ";
-		title += (omega == 1.0)?"Gauss-Seidel":("SOR omega=" + std::to_string(omega));
-		title += ")";
-		iterationExport.reset(new ExportIterations(title.c_str()));
-		iterationExport->exportVector(soln, n, 0);
-	}
-
+	
 	// get setup time
 	stop = util_cpu_time();
 	time_for_setup = (double)(stop - start2)/1000;
 	start2 = stop;
 	start3 = stop;
-
+	
 	// start iterations
 	iters = 0;
 	done = false;
 	PS_PrintToMainLog(env, "\nStarting iterations...\n");
-	total_mults = 0;
-	while (!done && iters < max_iters) {
 		
-		iters++;
+	int* high_trans;					
+	double *non_zeros;
+	unsigned char *row_counts;
+	int *row_starts;
+	bool use_counts;
+	unsigned int *cols;
+	double *dist;
+	int dist_shift;
+	int dist_mask;
+	if (!compact_a) {
+		non_zeros = rmsm->non_zeros;
+		row_counts = rmsm->row_counts;
+		row_starts = (int *)rmsm->row_counts;
+		use_counts = rmsm->use_counts;
+		cols = rmsm->cols;
+	} else {
+		row_counts = cmsrsm->row_counts;
+		row_starts = (int *)cmsrsm->row_counts;
+		use_counts = cmsrsm->use_counts;
+		cols = cmsrsm->cols;
+		dist = cmsrsm->dist;
+		dist_shift = cmsrsm->dist_shift;
+		dist_mask = cmsrsm->dist_mask;
+	}
+	
+	double *high_soln, threshold;
+
+	int maybe_count = 0, _a, left, right, small, tot_mults, good_mults;			
+	int s_q = 0, a, b;		
+	unsigned int int_temp;						
+	double _b, dbl_temp, high_trns, A, B;					
+	double effic1, effic2, change_sum;
+	num_of_trans = row_starts[n];
+ 	high_trans = new int[n+1];				
+	high_soln = new double[n+1];
+	in_probs = new double[n+1];
+ 	int *dns_start = new int[n+1];					
+
+	for(i = 0; i < n; i++)
+	{
+		in_probs[i] = 0;
+		maybe_count += row_starts[i + 1] - row_starts[i];
+	}
+
+	for(i = 0; i < num_of_trans; i++)
+	{
+		_a = cols[i];
+		_b = non_zeros[i];
+		in_probs[_a] += fabs(_b);
+	}
+	x = 0;
+	for(i = 0; i < n; i++)
+		if(row_starts[i+1] > row_starts[i])
+			x += in_probs[i];
+	_b = x / maybe_count;
+	bool flag = true;
+
+	a = 0;
+	for(i = 0; i < n; i++)						
+	{
+		l = row_starts[i];
+		h = row_starts[i + 1];
+		if(h <= l)
+			continue;
+
+		threshold = 1.0;
+		if(in_probs[i] > 4)
+			threshold /= 4;
+		else if(in_probs[i] < .25)
+			threshold *= 4;
+		else
+			threshold /= in_probs[i];
 		
-		measure.reset();
+		x = threshold / (h - l);
+
+		for(j = l; j < h; j++)
+		{
+			A += fabs(non_zeros[j]);
+			if(fabs(non_zeros[j]) >= x)
+				a++;
+ 		}
+	}
+
+	double *dns_nnz = new double[a + 1];
+	int *dns_cols = new int[a + 1];
+
+	small = s_q = high_trns = A = B = 0;
+	a = b = tot_mults = good_mults = 0;
+	for(i = 0; i < n; i++)						
+	{
+		dns_start[i] = s_q;
+		high_soln[i] = 0;
+		l = row_starts[i];
+		h = row_starts[i + 1];
+		if(h <= l)
+			continue;
+		a += h - l;
+		left = l;
+
+		threshold = 1.0;
+			if(in_probs[i] > 4)
+				threshold /= 4;
+			else if(in_probs[i] < .25)
+				threshold *= 4;
+			else
+				threshold /= in_probs[i];
 		
-		// store local copies of stuff
-		double *non_zeros;
-		unsigned char *row_counts;
-		int *row_starts;
-		bool use_counts;
-		unsigned int *cols;
-		double *dist;
-		int dist_shift;
-		int dist_mask;
-		if (!compact_a) {
-			non_zeros = rmsm->non_zeros;
-			row_counts = rmsm->row_counts;
-			row_starts = (int *)rmsm->row_counts;
-			use_counts = rmsm->use_counts;
-			cols = rmsm->cols;
-		} else {
-			row_counts = cmsrsm->row_counts;
-			row_starts = (int *)cmsrsm->row_counts;
-			use_counts = cmsrsm->use_counts;
-			cols = cmsrsm->cols;
-			dist = cmsrsm->dist;
-			dist_shift = cmsrsm->dist_shift;
-			dist_mask = cmsrsm->dist_mask;
+		x = threshold / (h - l);
+
+		for(j = l; j < h; j++)
+		{
+			A += fabs(non_zeros[j]);
+			if(fabs(non_zeros[j]) < x)
+			{
+				dbl_temp = non_zeros[j];
+				non_zeros[j] = non_zeros[left];
+				non_zeros[left] = dbl_temp;
+				int_temp = cols[j];
+				cols[j] = cols[left];
+				cols[left++] = int_temp;
+				small++;
+			}
+			else
+			{
+				good_mults++;
+				B += fabs(non_zeros[j]);
+				dns_cols[s_q] = cols[j];	
+				dns_nnz[s_q++] = non_zeros[j];
+				high_trns += fabs(non_zeros[j]);
+			}
 		}
-		
+		high_trans[i] = left;
+		tot_mults = a;		
+	}
+	total_mults = 0;
+	dns_start[n] = s_q;
+	while (!done && iters < max_iters) 
+	{
+		iters++;
+		sup_norm = 0.0;
+		change_sum = 0;
+		// store local copies of stuff
 		// matrix multiply
 		l = nnz; h = 0;
 		for (fb = 0; fb < n; fb++) {
@@ -262,46 +362,85 @@ jboolean forwards	// forwards or backwards?
 			// loop actually over i
 			// (can do forwards or backwards sor/gs)
 			i = (forwards) ? fb : n-1-fb;
-			
 			d = (b == NULL) ? 0.0 : ((!compact_b) ? b_vec[i] : b_dist->dist[b_dist->ptrs[i]]);
-			if (!use_counts) { l = row_starts[i]; h = row_starts[i+1]; }
+			if (!use_counts) { l = row_starts[i]; h = row_starts[i+1];}
 			else if (forwards) { l = h; h += row_counts[i]; }
 			else { h = l; l -= row_counts[i]; }
 			// "row major" version
+	
 			if (!compact_a) {
-				for (j = l; j < h; j++) {
+				if(false){
+				for (j = l; j < h; j++) 
 					d -= non_zeros[j] * soln[cols[j]];
+				}
+				else
+				{
+					if(l >= h)
+						continue;	
+					
+					if(flag)
+					{
+						d1 = d2 = 0;
+						for(j = l; j < high_trans[i]; j++)
+							d1 -= non_zeros[j] * soln[cols[j]];
+						for(j = high_trans[i]; j < h; j++)
+							d2 -= non_zeros[j] * soln[cols[j]];
+						high_soln[i] = d1;
+					}
+					else
+					{
+						d2 = 0;
+						d1 = high_soln[i];						
+						for(j = dns_start[i]; j < dns_start[i+1]; j++)				
+							d2 -= dns_nnz[j] * soln[dns_cols[j]];				
+					}
+					if(d <= 0)
+					d = d1 + d2;
 				}
 			// "compact msr" version
 			} else {
 				for (j = l; j < h; j++) {
 					d -= dist[(int)(cols[j] & dist_mask)] * soln[(int)(cols[j] >> dist_shift)];
 				}
-			}
+			}	
 			// divide by diagonal (multiply by inverted diagonal)
 			if (!compact_d) d *= diags_vec[i]; else d *= diags_dist->dist[diags_dist->ptrs[i]];
 			// over-relaxation
 			if (omega != 1.0) {
 				d = ((1-omega) * soln[i]) + (omega * d);
 			}
+	
 			// compute norm for convergence
 			// (note we must do this inside the loop because we only store one vector for sor/gauss-seidel)
-			measure.measure(soln[i], d);
+			x = fabs(d - soln[i]);
+			if (term_crit == TERM_CRIT_RELATIVE) {
+				x /= d;
+			}
+			change_sum += x;
+			if (x > sup_norm) sup_norm = x;
 			// set vector element
 			soln[i] = d;
 		}
-		total_mults += h;
-		if (iterationExport)
-			iterationExport->exportVector(soln, n, 0);
-
-		// check convergence
-		if (measure.value() < term_crit_param) {
-			done = true;
+		
+		if(flag)
+		{	
+			effic1 = change_sum / tot_mults;
+			flag = false;
+			if (sup_norm < term_crit_param) 
+				done = true;	
+			total_mults += tot_mults;
+		}
+		else
+		{
+			effic2 = change_sum / good_mults;
+			if(effic2 / effic1 < 1.5)
+				flag = true;
+			total_mults += good_mults;
 		}
 		
 		// print occasional status update
 		if ((util_cpu_time() - start3) > UPDATE_DELAY) {
-			PS_PrintToMainLog(env, "Iteration %d: max %sdiff=%f", iters, measure.isRelative()?"relative ":"", measure.value());
+			PS_PrintToMainLog(env, "Iteration %d: max %sdiff=%f", iters, (term_crit == TERM_CRIT_RELATIVE)?"relative ":"", sup_norm);
 			PS_PrintToMainLog(env, ", %.2f sec so far\n", ((double)(util_cpu_time() - start2)/1000));
 			start3 = util_cpu_time();
 		}
@@ -316,7 +455,7 @@ jboolean forwards	// forwards or backwards?
 	PS_PrintToMainLog(env, "\n%s%s: %d iterations in %.2f seconds (average %.6f, setup %.2f)\n", forwards?"":"Backwards ", (omega == 1.0)?"Gauss-Seidel":"SOR", iters, time_for_iters, time_for_iters/iters, time_for_setup);
 	
 	// if the iterative method didn't terminate, this is an error
-	if (!done) { delete[] soln; soln = NULL; PS_SetErrorMessage("Iterative method did not converge within %d iterations.\nConsider using a different numerical method or increasing the maximum number of iterations", iters); }
+	if (!done) { delete soln; soln = NULL; PS_SetErrorMessage("Iterative method did not converge within %d iterations.\nConsider using a different numerical method or increasing the maximum number of iterations", iters); }
 	
 	// catch exceptions: register error, free memory
 	} catch (std::bad_alloc e) {

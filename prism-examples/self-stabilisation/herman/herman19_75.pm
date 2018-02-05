@@ -4,7 +4,7 @@
 // the procotol is synchronous with no nondeterminism (a DTMC)
 dtmc
 
-const double p = 0.5;
+const double p = 0.75;
 
 // module for process 1
 module process1
@@ -41,6 +41,7 @@ module process19 = process1 [ x1=x19, x19=x18 ] endmodule
 rewards "steps"
 	true : 1;
 endrewards
+
 
 
 // formula, for use in properties: number of tokens
