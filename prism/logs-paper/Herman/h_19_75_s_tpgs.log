@@ -1,0 +1,86 @@
+PRISM
+=====
+
+Version: 4.4.beta
+Date: Thu Jan 25 17:48:43 IRST 2018
+Hostname: astek.hpc.vru.ac.ir
+Memory limits: cudd=1g, java(heap)=981.5m
+Command line: prism ../examples/self-stabilisation/herman/herman19_75.pm ../examples/self-stabilisation/herman/herman.pctl -s -prop 6 -improvedgs2 -nocompact
+
+Parsing model file "../examples/self-stabilisation/herman/herman19_75.pm"...
+
+Parsing properties file "../examples/self-stabilisation/herman/herman.pctl"...
+
+6 properties:
+(1) filter(forall, "init"=>P>=1 [ F "stable" ])
+(2) R=? [ F "stable" {"init"}{max} ]
+(3) R=? [ F "stable" {"k_tokens"}{max} ]
+(4) R=? [ F "stable" {"k_tokens"}{min} ]
+(5) P=? [ F<=K "stable" {"init"}{min} ]
+(6) P=? [ F "fin" ]
+
+Type:        DTMC
+Modules:     process1 process2 process3 process4 process5 process6 process7 process8 process9 process10 process11 process12 process13 process14 process15 process16 process17 process18 process19 
+Variables:   x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 x18 x19 
+
+---------------------------------------------------------------------
+
+Model checking: P=? [ F "fin" ]
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 2 iterations in 0.00 seconds (average 0.000000, setup 0.00)
+
+Time for model construction: 0.033 seconds.
+
+Type:        DTMC
+States:      524288 (1 initial)
+Transitions: 1162261468
+
+Transition matrix: 12706 nodes (111 terminal), 1162261468 minterms, vars: 19r/19c
+
+Prob0: 2 iterations in 0.00 seconds (average 0.001500, setup 0.00)
+
+Prob1: 7 iterations in 0.03 seconds (average 0.004429, setup 0.00)
+
+yes = 75582, no = 38, maybe = 448668
+
+Computing remaining probabilities...
+Engine: Sparse
+
+Building sparse matrix...[n=524288, nnz=1031518438] [11.5 GB]
+Creating vector for diagonals... [4.0 MB]
+Creating vector for RHS... [4.0 MB]
+Allocating iteration vector... [4.0 MB]
+TOTAL: [11.5 GB]
+
+Starting iterations...
+Iteration 1: max relative diff=1.000000, 7.61 sec so far
+Iteration 13: max relative diff=0.278423, 13.40 sec so far
+Iteration 23: max relative diff=0.083990, 18.82 sec so far
+Iteration 33: max relative diff=0.029247, 24.24 sec so far
+Iteration 43: max relative diff=0.010891, 29.67 sec so far
+Iteration 53: max relative diff=0.004160, 35.11 sec so far
+Iteration 63: max relative diff=0.001605, 40.53 sec so far
+Iteration 73: max relative diff=0.000621, 46.06 sec so far
+Iteration 83: max relative diff=0.000241, 51.51 sec so far
+Iteration 93: max relative diff=0.000093, 56.93 sec so far
+Iteration 103: max relative diff=0.000036, 62.41 sec so far
+Iteration 113: max relative diff=0.000014, 67.88 sec so far
+Iteration 123: max relative diff=0.000005, 73.33 sec so far
+Iteration 133: max relative diff=0.000002, 78.75 sec so far
+Iteration 143: max relative diff=0.000001, 84.17 sec so far
+
+Gauss-Seidel: 143 iterations in 84.17 seconds (average 0.588580, setup 70.07)
+
+
+Number of scallar multiplications: 38759M 
+
+Value in the initial state: 0.358854521112331
+
+Time for model checking: 156.982 seconds.
+
+Result: 0.358854521112331 (value in the initial state)
+

@@ -1,0 +1,70 @@
+PRISM
+=====
+
+Version: 4.4.beta
+Date: Tue Jan 23 17:12:52 IRST 2018
+Hostname: astek.hpc.vru.ac.ir
+Memory limits: cudd=1g, java(heap)=65.1g
+Command line: prism ../examples/consensus/coin4.nm ../examples/consensus/coin.pctl -prop 4 -const K=12 -ex -gs -javamaxmem 75000m -maxiters 2500000
+
+Parsing model file "../examples/consensus/coin4.nm"...
+
+Parsing properties file "../examples/consensus/coin.pctl"...
+
+8 properties:
+(1) P>=1 [ F "finished" ]
+(2) Pmin=? [ F "finished"&"all_coins_equal_0" ]
+(3) Pmin=? [ F "finished"&"all_coins_equal_1" ]
+(4) Pmax=? [ F "finished"&!"agree" ]
+(5) Pmin=? [ F<=k "finished" ]
+(6) Pmax=? [ F<=k "finished" ]
+(7) R{"steps"}min=? [ F "finished" ]
+(8) R{"steps"}max=? [ F "finished" ]
+
+Type:        MDP
+Modules:     process1 process2 process3 process4 
+Variables:   counter pc1 coin1 pc2 coin2 pc3 coin3 pc4 coin4 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ F "finished"&!"agree" ]
+Model constants: K=12
+
+Building model...
+Model constants: K=12
+
+Computing reachable states... 125056 states
+Reachable states exploration and model construction done in 0.763 secs.
+Sorting reachable states list...
+
+Time for model construction: 1.191 seconds.
+
+Type:        MDP
+States:      125056 (1 initial)
+Transitions: 420832
+Choices:     337024
+Max/avg:     4/2.69
+
+Starting probabilistic reachability (max)...
+Starting Prob0 (max)...
+Prob0 (max) took 437 iterations and 1.139 seconds.
+Starting Prob1 (max)...
+Prob1 (max) took 19251 iterations and 58.117 seconds.
+target=56, yes=29304, no=910, maybe=94842
+Starting value iteration (max, with Gauss-Seidel)...
+Iteration 3147: 5.00 sec so far
+Iteration 6313: 10.00 sec so far
+Iteration 9490: 15.00 sec so far
+Iteration 12661: 20.01 sec so far
+Iteration 15835: 25.01 sec so far
+Iteration 19001: 30.01 sec so far
+Iteration 22170: 35.01 sec so far
+Value iteration (max, with Gauss-Seidel) took 24956 iterations, 8890525088 MV-multiplications and 39.419 seconds.
+Probabilistic reachability took 98.682 seconds.
+
+Value in the initial state: 0.05198256633635222
+
+Time for model checking: 98.699 seconds.
+
+Result: 0.05198256633635222 (value in the initial state)
+

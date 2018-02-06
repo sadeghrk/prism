@@ -1,0 +1,58 @@
+PRISM
+=====
+
+Version: 4.4.beta
+Date: Fri Jan 12 00:03:48 IRST 2018
+Hostname: astek.hpc.vru.ac.ir
+Memory limits: cudd=1g, java(heap)=78.1g
+Command line: prism ../examples/self-stabilisation/herman/herman17_9.pm ../examples/self-stabilisation/herman/herman.pctl -ex -prop 6 -gs -topological -javamaxmem 90000m
+
+Parsing model file "../examples/self-stabilisation/herman/herman17_9.pm"...
+
+Parsing properties file "../examples/self-stabilisation/herman/herman.pctl"...
+
+6 properties:
+(1) filter(forall, "init"=>P>=1 [ F "stable" ])
+(2) R=? [ F "stable" {"init"}{max} ]
+(3) R=? [ F "stable" {"k_tokens"}{max} ]
+(4) R=? [ F "stable" {"k_tokens"}{min} ]
+(5) P=? [ F<=K "stable" {"init"}{min} ]
+(6) P=? [ F "fin" ]
+
+Type:        DTMC
+Modules:     process1 process2 process3 process4 process5 process6 process7 process8 process9 process10 process11 process12 process13 process14 process15 process16 process17 
+Variables:   x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 
+
+---------------------------------------------------------------------
+
+Model checking: P=? [ F "fin" ]
+
+Building model...
+
+Computing reachable states... 137 513 1052 2005 3171 4064 4112 6241 7746 8385 11895 13537 15465 16377 18375 18409 24065 26368 29153 30962 32383 33021 36289 40673 48148 50173 54153 56400 58429 61580 63639 65009 65538 66448 68559 70833 73728 79236 81920 87567 94254 97882 98702 100255 102150 105480 108498 113684 114887 116265 117992 120967 122937 123910 126244 127175 128548 129432 130276 130841 131072 states
+Reachable states exploration and model construction done in 221.525 secs.
+Sorting reachable states list...
+
+Time for model construction: 232.923 seconds.
+
+Type:        DTMC
+States:      131072 (1 initial)
+Transitions: 129140164
+
+Starting probabilistic reachability...
+Calculating predecessor relation for discrete-time Markov chain...  done (8.96 seconds)
+Starting Prob0...
+Prob0 took 2.797 seconds.
+Starting Prob1...
+Prob1 took 4.565 seconds.
+target=19448, yes=19448, no=34, maybe=111590
+Starting value iteration (topological, with Gauss-Seidel)...
+Value iteration (topological, with Gauss-Seidel, with 8 non-singleton SCCs) took 263 iterations, 1396511456 MV-multiplications and 6.138 seconds.
+Probabilistic reachability took 22.466 seconds.
+
+Value in the initial state: 0.03451123759875517
+
+Time for model checking: 22.48 seconds.
+
+Result: 0.03451123759875517 (value in the initial state)
+

@@ -1,0 +1,124 @@
+PRISM
+=====
+
+Version: 4.4.beta
+Date: Wed Jan 10 06:07:27 IRST 2018
+Hostname: astek.hpc.vru.ac.ir
+Memory limits: cudd=1g, java(heap)=65.1g
+Command line: prism ../examples/nonsparse/dns2.nm ../examples/nonsparse/qq.pctl -ex -gs -javamaxmem 75000m -topological -maxiters 500000
+
+Parsing model file "../examples/nonsparse/dns2.nm"...
+
+Parsing properties file "../examples/nonsparse/qq.pctl"...
+
+1 property:
+(1) Pmax=? [ "PP" U "QQ" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 
+Variables:   s1 s2 s3 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "PP" U "QQ" ]
+
+Building model...
+
+Computing reachable states... 3580 7517 11895 15851 20210 24025 28073 28626 30080 states
+Reachable states exploration and model construction done in 28.949 secs.
+Sorting reachable states list...
+
+Time for model construction: 33.262 seconds.
+
+Type:        MDP
+States:      30080 (1 initial)
+Transitions: 32413236
+Choices:     150400
+Max/avg:     5/5.00
+
+Starting probabilistic reachability (max)...
+Starting Prob0 (max)...
+Prob0 (max) took 4 iterations and 0.164 seconds.
+Starting Prob1 (max)...
+Prob1 (max) took 11 iterations and 0.672 seconds.
+target=1, yes=1, no=1035, maybe=29044
+Starting value iteration (max, topological, with Gauss-Seidel)...
+Iteration 81: Iteration 81 in SCC 1 of 1, 5.04 sec so far
+Iteration 162: Iteration 162 in SCC 1 of 1, 10.05 sec so far
+Iteration 244: Iteration 244 in SCC 1 of 1, 15.10 sec so far
+Iteration 326: Iteration 326 in SCC 1 of 1, 20.16 sec so far
+Iteration 408: Iteration 408 in SCC 1 of 1, 25.22 sec so far
+Iteration 490: Iteration 490 in SCC 1 of 1, 30.27 sec so far
+Iteration 571: Iteration 571 in SCC 1 of 1, 35.29 sec so far
+Iteration 653: Iteration 653 in SCC 1 of 1, 40.34 sec so far
+Iteration 735: Iteration 735 in SCC 1 of 1, 45.40 sec so far
+Iteration 817: Iteration 817 in SCC 1 of 1, 50.43 sec so far
+Iteration 899: Iteration 899 in SCC 1 of 1, 55.48 sec so far
+Iteration 981: Iteration 981 in SCC 1 of 1, 60.53 sec so far
+Iteration 1063: Iteration 1063 in SCC 1 of 1, 65.58 sec so far
+Iteration 1145: Iteration 1145 in SCC 1 of 1, 70.62 sec so far
+Iteration 1227: Iteration 1227 in SCC 1 of 1, 75.67 sec so far
+Iteration 1309: Iteration 1309 in SCC 1 of 1, 80.69 sec so far
+Iteration 1391: Iteration 1391 in SCC 1 of 1, 85.74 sec so far
+Iteration 1473: Iteration 1473 in SCC 1 of 1, 90.78 sec so far
+Iteration 1555: Iteration 1555 in SCC 1 of 1, 95.82 sec so far
+Iteration 1637: Iteration 1637 in SCC 1 of 1, 100.86 sec so far
+Iteration 1719: Iteration 1719 in SCC 1 of 1, 105.91 sec so far
+Iteration 1801: Iteration 1801 in SCC 1 of 1, 110.94 sec so far
+Iteration 1883: Iteration 1883 in SCC 1 of 1, 115.98 sec so far
+Iteration 1965: Iteration 1965 in SCC 1 of 1, 121.01 sec so far
+Iteration 2047: Iteration 2047 in SCC 1 of 1, 126.05 sec so far
+Iteration 2129: Iteration 2129 in SCC 1 of 1, 131.08 sec so far
+Iteration 2211: Iteration 2211 in SCC 1 of 1, 136.12 sec so far
+Iteration 2293: Iteration 2293 in SCC 1 of 1, 141.14 sec so far
+Iteration 2375: Iteration 2375 in SCC 1 of 1, 146.17 sec so far
+Iteration 2457: Iteration 2457 in SCC 1 of 1, 151.20 sec so far
+Iteration 2539: Iteration 2539 in SCC 1 of 1, 156.23 sec so far
+Iteration 2621: Iteration 2621 in SCC 1 of 1, 161.26 sec so far
+Iteration 2703: Iteration 2703 in SCC 1 of 1, 166.30 sec so far
+Iteration 2785: Iteration 2785 in SCC 1 of 1, 171.32 sec so far
+Iteration 2867: Iteration 2867 in SCC 1 of 1, 176.36 sec so far
+Iteration 2949: Iteration 2949 in SCC 1 of 1, 181.38 sec so far
+Iteration 3031: Iteration 3031 in SCC 1 of 1, 186.43 sec so far
+Iteration 3113: Iteration 3113 in SCC 1 of 1, 191.45 sec so far
+Iteration 3195: Iteration 3195 in SCC 1 of 1, 196.50 sec so far
+Iteration 3277: Iteration 3277 in SCC 1 of 1, 201.56 sec so far
+Iteration 3359: Iteration 3359 in SCC 1 of 1, 206.59 sec so far
+Iteration 3441: Iteration 3441 in SCC 1 of 1, 211.64 sec so far
+Iteration 3523: Iteration 3523 in SCC 1 of 1, 216.68 sec so far
+Iteration 3605: Iteration 3605 in SCC 1 of 1, 221.71 sec so far
+Iteration 3687: Iteration 3687 in SCC 1 of 1, 226.76 sec so far
+Iteration 3769: Iteration 3769 in SCC 1 of 1, 231.81 sec so far
+Iteration 3851: Iteration 3851 in SCC 1 of 1, 236.85 sec so far
+Iteration 3933: Iteration 3933 in SCC 1 of 1, 241.88 sec so far
+Iteration 4015: Iteration 4015 in SCC 1 of 1, 246.91 sec so far
+Iteration 4097: Iteration 4097 in SCC 1 of 1, 251.93 sec so far
+Iteration 4179: Iteration 4179 in SCC 1 of 1, 256.98 sec so far
+Iteration 4261: Iteration 4261 in SCC 1 of 1, 261.99 sec so far
+Iteration 4343: Iteration 4343 in SCC 1 of 1, 267.03 sec so far
+Iteration 4425: Iteration 4425 in SCC 1 of 1, 272.06 sec so far
+Iteration 4507: Iteration 4507 in SCC 1 of 1, 277.09 sec so far
+Iteration 4589: Iteration 4589 in SCC 1 of 1, 282.12 sec so far
+Iteration 4671: Iteration 4671 in SCC 1 of 1, 287.15 sec so far
+Iteration 4753: Iteration 4753 in SCC 1 of 1, 292.18 sec so far
+Iteration 4835: Iteration 4835 in SCC 1 of 1, 297.21 sec so far
+Iteration 4917: Iteration 4917 in SCC 1 of 1, 302.24 sec so far
+Iteration 4999: Iteration 4999 in SCC 1 of 1, 307.27 sec so far
+Iteration 5080: Iteration 5080 in SCC 1 of 1, 312.29 sec so far
+Iteration 5162: Iteration 5162 in SCC 1 of 1, 317.32 sec so far
+Iteration 5244: Iteration 5244 in SCC 1 of 1, 322.34 sec so far
+Iteration 5326: Iteration 5326 in SCC 1 of 1, 327.37 sec so far
+Iteration 5408: Iteration 5408 in SCC 1 of 1, 332.40 sec so far
+Iteration 5490: Iteration 5490 in SCC 1 of 1, 337.45 sec so far
+Iteration 5572: Iteration 5572 in SCC 1 of 1, 342.48 sec so far
+Iteration 5654: Iteration 5654 in SCC 1 of 1, 347.51 sec so far
+Iteration 5736: Iteration 5736 in SCC 1 of 1, 352.54 sec so far
+Value iteration (max, topological, with Gauss-Seidel, with 1 non-singleton SCCs) took 5761 iterations, 180370918560 MV-multiplications and 355.476 seconds.
+Probabilistic reachability took 356.316 seconds.
+
+Value in the initial state: 0.025318278680654786
+
+Time for model checking: 356.323 seconds.
+
+Result: 0.025318278680654786 (value in the initial state)
+

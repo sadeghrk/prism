@@ -1,0 +1,77 @@
+PRISM
+=====
+
+Version: 4.4.beta
+Date: Fri Jan 12 17:17:07 IRST 2018
+Hostname: astek.hpc.vru.ac.ir
+Memory limits: cudd=1g, java(heap)=65.1g
+Command line: prism ../examples/nonsparse/SysAdmin2.nm ../examples/nonsparse/qq.pctl -ex -gs -javamaxmem 75000m -topological -maxiters 500000
+
+Parsing model file "../examples/nonsparse/SysAdmin2.nm"...
+
+Parsing properties file "../examples/nonsparse/qq.pctl"...
+
+1 property:
+(1) Pmax=? [ "PP" U "QQ" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 
+Variables:   s6 s2 s3 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "PP" U "QQ" ]
+
+Building model...
+
+Computing reachable states... 515 1045 1660 2139 2809 3424 3991 4096 states
+Reachable states exploration and model construction done in 28.586 secs.
+Sorting reachable states list...
+
+Time for model construction: 32.798 seconds.
+
+Type:        MDP
+States:      4096 (1 initial)
+Transitions: 32053248
+Choices:     28672
+Max/avg:     7/7.00
+
+Starting probabilistic reachability (max)...
+Starting Prob0 (max)...
+Prob0 (max) took 3 iterations and 0.09 seconds.
+Starting Prob1 (max)...
+Prob1 (max) took 8 iterations and 0.385 seconds.
+target=2, yes=2, no=92, maybe=4002
+Starting value iteration (max, topological, with Gauss-Seidel)...
+Iteration 108: Iteration 108 in SCC 1 of 1, 5.03 sec so far
+Iteration 218: Iteration 218 in SCC 1 of 1, 10.04 sec so far
+Iteration 328: Iteration 328 in SCC 1 of 1, 15.05 sec so far
+Iteration 438: Iteration 438 in SCC 1 of 1, 20.07 sec so far
+Iteration 548: Iteration 548 in SCC 1 of 1, 25.10 sec so far
+Iteration 659: Iteration 659 in SCC 1 of 1, 30.14 sec so far
+Iteration 770: Iteration 770 in SCC 1 of 1, 35.18 sec so far
+Iteration 880: Iteration 880 in SCC 1 of 1, 40.18 sec so far
+Iteration 991: Iteration 991 in SCC 1 of 1, 45.21 sec so far
+Iteration 1101: Iteration 1101 in SCC 1 of 1, 50.22 sec so far
+Iteration 1212: Iteration 1212 in SCC 1 of 1, 55.25 sec so far
+Iteration 1322: Iteration 1322 in SCC 1 of 1, 60.25 sec so far
+Iteration 1433: Iteration 1433 in SCC 1 of 1, 65.27 sec so far
+Iteration 1544: Iteration 1544 in SCC 1 of 1, 70.29 sec so far
+Iteration 1655: Iteration 1655 in SCC 1 of 1, 75.31 sec so far
+Iteration 1767: Iteration 1767 in SCC 1 of 1, 80.36 sec so far
+Iteration 1879: Iteration 1879 in SCC 1 of 1, 85.39 sec so far
+Iteration 1991: Iteration 1991 in SCC 1 of 1, 90.41 sec so far
+Iteration 2103: Iteration 2103 in SCC 1 of 1, 95.45 sec so far
+Iteration 2215: Iteration 2215 in SCC 1 of 1, 100.49 sec so far
+Iteration 2327: Iteration 2327 in SCC 1 of 1, 105.52 sec so far
+Iteration 2439: Iteration 2439 in SCC 1 of 1, 110.55 sec so far
+Iteration 2551: Iteration 2551 in SCC 1 of 1, 115.56 sec so far
+Value iteration (max, topological, with Gauss-Seidel, with 1 non-singleton SCCs) took 2602 iterations, 81518656460 MV-multiplications and 118.956 seconds.
+Probabilistic reachability took 119.434 seconds.
+
+Value in the initial state: 0.9690004591469648
+
+Time for model checking: 119.437 seconds.
+
+Result: 0.9690004591469648 (value in the initial state)
+

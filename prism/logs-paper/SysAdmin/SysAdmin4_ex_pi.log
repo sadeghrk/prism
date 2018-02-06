@@ -1,0 +1,54 @@
+PRISM
+=====
+
+Version: 4.4.beta
+Date: Fri Jan 12 18:17:39 IRST 2018
+Hostname: astek.hpc.vru.ac.ir
+Memory limits: cudd=1g, java(heap)=65.1g
+Command line: prism ../examples/nonsparse/SysAdmin4.nm ../examples/nonsparse/qq.pctl -ex -politer -javamaxmem 75000m -maxiters 500000
+
+Parsing model file "../examples/nonsparse/SysAdmin4.nm"...
+
+Parsing properties file "../examples/nonsparse/qq.pctl"...
+
+1 property:
+(1) Pmax=? [ "PP" U "QQ" ]
+
+Type:        MDP
+Modules:     m1 m2 
+Variables:   s7 s2 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "PP" U "QQ" ]
+
+Building model...
+
+Computing reachable states... 192 390 415 602 795 984 1072 1286 1454 1613 1827 2029 2194 2403 2566 2767 2911 3073 3261 3456 3669 3847 3996 4210 4358 4549 4725 4934 5135 5277 5472 5593 5818 6035 6172 6373 6503 6737 6904 7126 7332 7566 7716 7997 8223 8512 8775 9058 9299 9505 9686 9888 10076 10245 10437 10604 10813 10961 11194 11393 11502 11702 11865 12063 12249 12343 12577 12815 12950 13173 13353 13591 13791 13938 14144 14368 14542 14733 14893 15090 15315 15509 15718 15934 15975 16204 16384 states
+Reachable states exploration and model construction done in 466.617 secs.
+Sorting reachable states list...
+
+Time for model construction: 1587.86 seconds.
+
+Type:        MDP
+States:      16384 (1 initial)
+Transitions: 459435008
+Choices:     131072
+Max/avg:     8/8.00
+
+Starting probabilistic reachability (max)...
+Starting Prob0 (max)...
+Prob0 (max) took 3 iterations and 1.387 seconds.
+Starting Prob1 (max)...
+Prob1 (max) took 8 iterations and 1.783 seconds.
+target=1, yes=1, no=248, maybe=16135
+Starting policy iteration (max)...
+Policy iteration took 9 cycles (1848 iterations in total) and 143.684 seconds.
+Probabilistic reachability took 146.857 seconds.
+
+Value in the initial state: 0.952175628886088
+
+Time for model checking: 146.862 seconds.
+
+Result: 0.952175628886088 (value in the initial state)
+

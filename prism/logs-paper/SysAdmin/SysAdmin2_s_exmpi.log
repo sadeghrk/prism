@@ -1,0 +1,68 @@
+PRISM
+=====
+
+Version: 4.4.beta
+Date: Thu Jan 25 14:57:20 IRST 2018
+Hostname: astek.hpc.vru.ac.ir
+Memory limits: cudd=1g, java(heap)=65.1g
+Command line: prism ../examples/nonsparse/SysAdmin2.nm ../examples/nonsparse/qq.pctl -s -explicitmodpoliter -javamaxmem 75000m -maxiters 500000
+
+Parsing model file "../examples/nonsparse/SysAdmin2.nm"...
+
+Parsing properties file "../examples/nonsparse/qq.pctl"...
+
+1 property:
+(1) Pmax=? [ "PP" U "QQ" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 
+Variables:   s6 s2 s3 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "PP" U "QQ" ]
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 3 iterations in 0.00 seconds (average 0.000667, setup 0.00)
+
+Time for model construction: 0.948 seconds.
+
+Type:        MDP
+States:      4096 (1 initial)
+Transitions: 32053248
+Choices:     28672
+
+Transition matrix: 140493 nodes (10589 terminal), 32053248 minterms, vars: 13r/13c/7nd
+
+Prob0A: 3 iterations in 0.00 seconds (average 0.000667, setup 0.00)
+
+Prob1E: 8 iterations in 0.00 seconds (average 0.000500, setup 0.00)
+
+yes = 2, no = 92, maybe = 4002
+
+Computing remaining probabilities...
+Engine: Sparse
+
+Building sparse matrix (FOR POLICY ITERASION)... [n=4096, nc=28014, nnz=31329230, k=7] [358.7 MB]
+Creating vector for yes...[32.0 KB]
+Allocating iteration vectors... [2 x 32.0 KB]
+TOTAL: [358.8 MB]
+
+Starting iterations...
+Iteration 1003: max relative diff=0.000168, 5.38 sec so far
+Iteration 2013: max relative diff=0.000011, 10.47 sec so far
+
+Iterative method: 2372 iterations in 12.29 seconds (average 0.005179, setup 1.73)
+
+
+Number of scallar multiplications: 10814M 
+
+Value in the initial state: 0.96913672560504
+
+Time for model checking: 14.126 seconds.
+
+Result: 0.96913672560504 (value in the initial state)
+

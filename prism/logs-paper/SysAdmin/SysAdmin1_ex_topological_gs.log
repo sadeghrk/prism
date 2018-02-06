@@ -1,0 +1,64 @@
+PRISM
+=====
+
+Version: 4.4.beta
+Date: Fri Jan 12 17:10:52 IRST 2018
+Hostname: astek.hpc.vru.ac.ir
+Memory limits: cudd=1g, java(heap)=65.1g
+Command line: prism ../examples/nonsparse/SysAdmin1.nm ../examples/nonsparse/qq.pctl -ex -gs -javamaxmem 75000m -topological -maxiters 500000
+
+Parsing model file "../examples/nonsparse/SysAdmin1.nm"...
+
+Parsing properties file "../examples/nonsparse/qq.pctl"...
+
+1 property:
+(1) Pmax=? [ "PP" U "QQ" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 
+Variables:   s5 s2 s3 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "PP" U "QQ" ]
+
+Building model...
+
+Computing reachable states... 1182 2048 states
+Reachable states exploration and model construction done in 4.972 secs.
+Sorting reachable states list...
+
+Time for model construction: 5.859 seconds.
+
+Type:        MDP
+States:      2048 (1 initial)
+Transitions: 7665408
+Choices:     12288
+Max/avg:     6/6.00
+
+Starting probabilistic reachability (max)...
+Starting Prob0 (max)...
+Prob0 (max) took 3 iterations and 0.027 seconds.
+Starting Prob1 (max)...
+Prob1 (max) took 5 iterations and 0.133 seconds.
+target=1, yes=1, no=13, maybe=2034
+Starting value iteration (max, topological, with Gauss-Seidel)...
+Iteration 483: Iteration 483 in SCC 1 of 1, 5.01 sec so far
+Iteration 970: Iteration 970 in SCC 1 of 1, 10.02 sec so far
+Iteration 1461: Iteration 1461 in SCC 1 of 1, 15.03 sec so far
+Iteration 1961: Iteration 1961 in SCC 1 of 1, 20.04 sec so far
+Iteration 2461: Iteration 2461 in SCC 1 of 1, 25.04 sec so far
+Iteration 2961: Iteration 2961 in SCC 1 of 1, 30.05 sec so far
+Iteration 3461: Iteration 3461 in SCC 1 of 1, 35.05 sec so far
+Iteration 3960: Iteration 3960 in SCC 1 of 1, 40.05 sec so far
+Iteration 4459: Iteration 4459 in SCC 1 of 1, 45.05 sec so far
+Iteration 4958: Iteration 4958 in SCC 1 of 1, 50.06 sec so far
+Value iteration (max, topological, with Gauss-Seidel, with 1 non-singleton SCCs) took 5146 iterations, 39177197856 MV-multiplications and 52.331 seconds.
+Probabilistic reachability took 52.494 seconds.
+
+Value in the initial state: 0.6978845898386451
+
+Time for model checking: 52.496 seconds.
+
+Result: 0.6978845898386451 (value in the initial state)
+

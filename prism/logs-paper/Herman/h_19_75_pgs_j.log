@@ -1,0 +1,10 @@
+PRISM
+=====
+
+Version: 4.4.beta
+Date: Fri Jan 12 05:36:33 IRST 2018
+Hostname: astek.hpc.vru.ac.ir
+Memory limits: cudd=1g, java(heap)=981.5m
+Command line: prism ../examples/self-stabilisation/herman/herman19_75.pm ../examples/self-stabilisation/herman/herman.pctl -s -prop 6 -pgs -nocompact
+
+Error: Pseudo Gauss-Seidel/SOR methods are currently not supported by the sparse engine.

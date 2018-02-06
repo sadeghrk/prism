@@ -1,0 +1,78 @@
+PRISM
+=====
+
+Version: 4.4.beta
+Date: Tue Jan 23 17:00:36 IRST 2018
+Hostname: astek.hpc.vru.ac.ir
+Memory limits: cudd=1g, java(heap)=65.1g
+Command line: prism ../examples/consensus/coin4.nm ../examples/consensus/coin.pctl -prop 4 -const K=8 -ex -gs -ii -epsilon 1e-8 -javamaxmem 75000m -maxiters 3505000
+
+Parsing model file "../examples/consensus/coin4.nm"...
+
+Parsing properties file "../examples/consensus/coin.pctl"...
+
+8 properties:
+(1) P>=1 [ F "finished" ]
+(2) Pmin=? [ F "finished"&"all_coins_equal_0" ]
+(3) Pmin=? [ F "finished"&"all_coins_equal_1" ]
+(4) Pmax=? [ F "finished"&!"agree" ]
+(5) Pmin=? [ F<=k "finished" ]
+(6) Pmax=? [ F<=k "finished" ]
+(7) R{"steps"}min=? [ F "finished" ]
+(8) R{"steps"}max=? [ F "finished" ]
+
+Type:        MDP
+Modules:     process1 process2 process3 process4 
+Variables:   counter pc1 coin1 pc2 coin2 pc3 coin3 pc4 coin4 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ F "finished"&!"agree" ]
+Model constants: K=8
+
+Building model...
+Model constants: K=8
+
+Computing reachable states... 84096 states
+Reachable states exploration and model construction done in 0.627 secs.
+Sorting reachable states list...
+
+Time for model construction: 0.867 seconds.
+
+Type:        MDP
+States:      84096 (1 initial)
+Transitions: 282592
+Choices:     226432
+Max/avg:     4/2.69
+
+Starting probabilistic reachability (max)...
+Starting Prob0 (max)...
+Prob0 (max) took 293 iterations and 0.515 seconds.
+Starting Prob1 (max)...
+Prob1 (max) took 9003 iterations and 18.431 seconds.
+target=56, yes=20088, no=910, maybe=63098
+Max-Quotient MDP: 63100 equivalence classes / non-trap states.
+Starting interval iteration (max, with Gauss-Seidel)...
+Iteration 2024: max relative diff=17.624792769, 5.01 sec so far
+Iteration 4063: max relative diff=1.15332910051, 10.00 sec so far
+Iteration 6101: max relative diff=0.18906987302, 15.01 sec so far
+Iteration 8143: max relative diff=0.036183959542, 20.01 sec so far
+Iteration 10178: max relative diff=0.0071722203634, 25.01 sec so far
+Iteration 12215: max relative diff=0.0014189136838, 30.01 sec so far
+Iteration 14252: max relative diff=0.000279617267274, 35.01 sec so far
+Iteration 16293: max relative diff=5.47107024873e-05, 40.01 sec so far
+Iteration 18334: max relative diff=1.06748744237e-05, 45.02 sec so far
+Iteration 20371: max relative diff=2.08652485721e-06, 50.02 sec so far
+Iteration 22405: max relative diff=4.08279473152e-07, 55.02 sec so far
+Iteration 24443: max relative diff=7.96247265167e-08, 60.02 sec so far
+Iteration 26468: max relative diff=1.56691137238e-08, 65.02 sec so far
+Max relative diff between upper and lower bound on convergence: 9.99874504437e-09
+Interval iteration (max, with Gauss-Seidel) took 27027 iterations, 12822041232 MV-multiplications and 66.463 seconds.
+Probabilistic reachability took 85.807 seconds.
+
+Value in the initial state: 0.07812499357899433
+
+Time for model checking: 85.82 seconds.
+
+Result: 0.07812499357899433 (value in the initial state)
+

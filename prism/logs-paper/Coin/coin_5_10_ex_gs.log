@@ -1,0 +1,123 @@
+PRISM
+=====
+
+Version: 4.4.beta
+Date: Wed Jan 24 11:01:42 IRST 2018
+Hostname: astek.hpc.vru.ac.ir
+Memory limits: cudd=1g, java(heap)=65.1g
+Command line: prism ../examples/consensus/coin5.nm ../examples/consensus/coin.pctl -prop 4 -const K=10 -ex -gs -javamaxmem 75000m -maxiters 2500000
+
+Parsing model file "../examples/consensus/coin5.nm"...
+
+Parsing properties file "../examples/consensus/coin.pctl"...
+
+8 properties:
+(1) P>=1 [ F "finished" ]
+(2) Pmin=? [ F "finished"&"all_coins_equal_0" ]
+(3) Pmin=? [ F "finished"&"all_coins_equal_1" ]
+(4) Pmax=? [ F "finished"&!"agree" ]
+(5) Pmin=? [ F<=k "finished" ]
+(6) Pmax=? [ F<=k "finished" ]
+(7) R{"steps"}min=? [ F "finished" ]
+(8) R{"steps"}max=? [ F "finished" ]
+
+Type:        MDP
+Modules:     process1 process2 process3 process4 process5 
+Variables:   counter pc1 coin1 pc2 coin2 pc3 coin3 pc4 coin4 pc5 coin5 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ F "finished"&!"agree" ]
+Model constants: K=10
+
+Building model...
+Model constants: K=10
+
+Computing reachable states... 412249 657004 792576 states
+Reachable states exploration and model construction done in 8.697 secs.
+Sorting reachable states list...
+
+Time for model construction: 10.458 seconds.
+
+Type:        MDP
+States:      792576 (1 initial)
+Transitions: 3307120
+Choices:     2648320
+Max/avg:     5/3.34
+
+Starting probabilistic reachability (max)...
+Starting Prob0 (max)...
+Prob0 (max) took 456 iterations and 7.153 seconds.
+Starting Prob1 (max)...
+Prob1 (max) took 21618 iterations and 414.226 seconds.
+target=150, yes=266590, no=5042, maybe=520944
+Starting value iteration (max, with Gauss-Seidel)...
+Iteration 429: 5.01 sec so far
+Iteration 862: 10.01 sec so far
+Iteration 1295: 15.02 sec so far
+Iteration 1729: 20.03 sec so far
+Iteration 2163: 25.04 sec so far
+Iteration 2597: 30.04 sec so far
+Iteration 3032: 35.05 sec so far
+Iteration 3466: 40.05 sec so far
+Iteration 3907: 45.06 sec so far
+Iteration 4349: 50.06 sec so far
+Iteration 4791: 55.07 sec so far
+Iteration 5233: 60.07 sec so far
+Iteration 5674: 65.07 sec so far
+Iteration 6116: 70.08 sec so far
+Iteration 6557: 75.09 sec so far
+Iteration 6999: 80.10 sec so far
+Iteration 7440: 85.10 sec so far
+Iteration 7882: 90.11 sec so far
+Iteration 8324: 95.11 sec so far
+Iteration 8766: 100.12 sec so far
+Iteration 9207: 105.12 sec so far
+Iteration 9649: 110.13 sec so far
+Iteration 10090: 115.13 sec so far
+Iteration 10532: 120.14 sec so far
+Iteration 10973: 125.14 sec so far
+Iteration 11415: 130.15 sec so far
+Iteration 11856: 135.15 sec so far
+Iteration 12297: 140.15 sec so far
+Iteration 12738: 145.16 sec so far
+Iteration 13180: 150.17 sec so far
+Iteration 13622: 155.18 sec so far
+Iteration 14064: 160.18 sec so far
+Iteration 14506: 165.19 sec so far
+Iteration 14949: 170.20 sec so far
+Iteration 15391: 175.21 sec so far
+Iteration 15833: 180.21 sec so far
+Iteration 16275: 185.22 sec so far
+Iteration 16717: 190.23 sec so far
+Iteration 17159: 195.24 sec so far
+Iteration 17601: 200.24 sec so far
+Iteration 18042: 205.25 sec so far
+Iteration 18484: 210.25 sec so far
+Iteration 18926: 215.26 sec so far
+Iteration 19368: 220.26 sec so far
+Iteration 19810: 225.27 sec so far
+Iteration 20252: 230.27 sec so far
+Iteration 20694: 235.28 sec so far
+Iteration 21136: 240.29 sec so far
+Iteration 21578: 245.29 sec so far
+Iteration 22019: 250.29 sec so far
+Iteration 22460: 255.30 sec so far
+Iteration 22902: 260.31 sec so far
+Iteration 23343: 265.31 sec so far
+Iteration 23785: 270.32 sec so far
+Iteration 24226: 275.33 sec so far
+Iteration 24668: 280.34 sec so far
+Iteration 25109: 285.34 sec so far
+Iteration 25551: 290.35 sec so far
+Iteration 25992: 295.36 sec so far
+Iteration 26434: 300.37 sec so far
+Value iteration (max, with Gauss-Seidel) took 26467 iterations, 65683153900 MV-multiplications and 300.788 seconds.
+Probabilistic reachability took 722.179 seconds.
+
+Value in the initial state: 0.06985506278969256
+
+Time for model checking: 722.21 seconds.
+
+Result: 0.06985506278969256 (value in the initial state)
+

@@ -1,0 +1,72 @@
+PRISM
+=====
+
+Version: 4.4.beta
+Date: Fri Jan 12 17:13:01 IRST 2018
+Hostname: astek.hpc.vru.ac.ir
+Memory limits: cudd=1g, java(heap)=65.1g
+Command line: prism ../examples/nonsparse/SysAdmin2.nm ../examples/nonsparse/qq.pctl -ex -gs -javamaxmem 75000m -maxiters 500000
+
+Parsing model file "../examples/nonsparse/SysAdmin2.nm"...
+
+Parsing properties file "../examples/nonsparse/qq.pctl"...
+
+1 property:
+(1) Pmax=? [ "PP" U "QQ" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 
+Variables:   s6 s2 s3 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "PP" U "QQ" ]
+
+Building model...
+
+Computing reachable states... 492 1017 1653 2137 2819 3450 4011 4096 states
+Reachable states exploration and model construction done in 27.044 secs.
+Sorting reachable states list...
+
+Time for model construction: 31.1 seconds.
+
+Type:        MDP
+States:      4096 (1 initial)
+Transitions: 32053248
+Choices:     28672
+Max/avg:     7/7.00
+
+Starting probabilistic reachability (max)...
+Starting Prob0 (max)...
+Prob0 (max) took 3 iterations and 0.062 seconds.
+Starting Prob1 (max)...
+Prob1 (max) took 8 iterations and 0.337 seconds.
+target=2, yes=2, no=92, maybe=4002
+Starting value iteration (max, with Gauss-Seidel)...
+Iteration 111: 5.00 sec so far
+Iteration 227: 10.01 sec so far
+Iteration 342: 15.04 sec so far
+Iteration 458: 20.04 sec so far
+Iteration 574: 25.08 sec so far
+Iteration 690: 30.09 sec so far
+Iteration 806: 35.10 sec so far
+Iteration 922: 40.10 sec so far
+Iteration 1038: 45.14 sec so far
+Iteration 1154: 50.16 sec so far
+Iteration 1270: 55.17 sec so far
+Iteration 1386: 60.19 sec so far
+Iteration 1503: 65.22 sec so far
+Iteration 1619: 70.26 sec so far
+Iteration 1735: 75.26 sec so far
+Iteration 1852: 80.30 sec so far
+Iteration 1969: 85.34 sec so far
+Iteration 2084: 90.36 sec so far
+Value iteration (max, with Gauss-Seidel) took 2103 iterations, 65885370690 MV-multiplications and 91.19 seconds.
+Probabilistic reachability took 91.591 seconds.
+
+Value in the initial state: 0.9691352079672801
+
+Time for model checking: 91.594 seconds.
+
+Result: 0.9691352079672801 (value in the initial state)
+

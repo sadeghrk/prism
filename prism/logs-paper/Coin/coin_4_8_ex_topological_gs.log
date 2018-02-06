@@ -1,0 +1,64 @@
+PRISM
+=====
+
+Version: 4.4.beta
+Date: Tue Jan 23 17:04:13 IRST 2018
+Hostname: astek.hpc.vru.ac.ir
+Memory limits: cudd=1g, java(heap)=65.1g
+Command line: prism ../examples/consensus/coin4.nm ../examples/consensus/coin.pctl -prop 4 -const K=8 -ex -gs -javamaxmem 75000m -topological -maxiters 2500000
+
+Parsing model file "../examples/consensus/coin4.nm"...
+
+Parsing properties file "../examples/consensus/coin.pctl"...
+
+8 properties:
+(1) P>=1 [ F "finished" ]
+(2) Pmin=? [ F "finished"&"all_coins_equal_0" ]
+(3) Pmin=? [ F "finished"&"all_coins_equal_1" ]
+(4) Pmax=? [ F "finished"&!"agree" ]
+(5) Pmin=? [ F<=k "finished" ]
+(6) Pmax=? [ F<=k "finished" ]
+(7) R{"steps"}min=? [ F "finished" ]
+(8) R{"steps"}max=? [ F "finished" ]
+
+Type:        MDP
+Modules:     process1 process2 process3 process4 
+Variables:   counter pc1 coin1 pc2 coin2 pc3 coin3 pc4 coin4 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ F "finished"&!"agree" ]
+Model constants: K=8
+
+Building model...
+Model constants: K=8
+
+Computing reachable states... 84096 states
+Reachable states exploration and model construction done in 0.682 secs.
+Sorting reachable states list...
+
+Time for model construction: 0.941 seconds.
+
+Type:        MDP
+States:      84096 (1 initial)
+Transitions: 282592
+Choices:     226432
+Max/avg:     4/2.69
+
+Starting probabilistic reachability (max)...
+Starting Prob0 (max)...
+Prob0 (max) took 293 iterations and 0.513 seconds.
+Starting Prob1 (max)...
+Prob1 (max) took 9003 iterations and 18.402 seconds.
+target=56, yes=20088, no=910, maybe=63098
+Starting value iteration (max, topological, with Gauss-Seidel)...
+Iteration 85256: Iteration 1699 in SCC 1 of 29, 5.00 sec so far
+Value iteration (max, topological, with Gauss-Seidel, with 29 non-singleton SCCs) took 85406 iterations, 536306474 MV-multiplications and 5.162 seconds.
+Probabilistic reachability took 24.082 seconds.
+
+Value in the initial state: 0.07807983266132068
+
+Time for model checking: 24.095 seconds.
+
+Result: 0.07807983266132068 (value in the initial state)
+

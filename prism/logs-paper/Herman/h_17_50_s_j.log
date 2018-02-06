@@ -1,0 +1,70 @@
+PRISM
+=====
+
+Version: 4.4.beta
+Date: Thu Jan 25 17:16:19 IRST 2018
+Hostname: astek.hpc.vru.ac.ir
+Memory limits: cudd=1g, java(heap)=981.5m
+Command line: prism ../examples/self-stabilisation/herman/herman17.pm ../examples/self-stabilisation/herman/herman.pctl -s -prop 6 -jac -nocompact
+
+Parsing model file "../examples/self-stabilisation/herman/herman17.pm"...
+
+Parsing properties file "../examples/self-stabilisation/herman/herman.pctl"...
+
+6 properties:
+(1) filter(forall, "init"=>P>=1 [ F "stable" ])
+(2) R=? [ F "stable" {"init"}{max} ]
+(3) R=? [ F "stable" {"k_tokens"}{max} ]
+(4) R=? [ F "stable" {"k_tokens"}{min} ]
+(5) P=? [ F<=K "stable" {"init"}{min} ]
+(6) P=? [ F "fin" ]
+
+Type:        DTMC
+Modules:     process1 process2 process3 process4 process5 process6 process7 process8 process9 process10 process11 process12 process13 process14 process15 process16 process17 
+Variables:   x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 
+
+---------------------------------------------------------------------
+
+Model checking: P=? [ F "fin" ]
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 2 iterations in 0.00 seconds (average 0.000000, setup 0.00)
+
+Time for model construction: 0.018 seconds.
+
+Type:        DTMC
+States:      131072 (1 initial)
+Transitions: 129140164
+
+Transition matrix: 1053 nodes (10 terminal), 129140164 minterms, vars: 17r/17c
+
+Prob0: 2 iterations in 0.00 seconds (average 0.000000, setup 0.00)
+
+Prob1: 6 iterations in 0.02 seconds (average 0.002833, setup 0.00)
+
+yes = 19448, no = 34, maybe = 111590
+
+Computing remaining probabilities...
+Engine: Sparse
+
+Building sparse matrix... [n=131072, nnz=114007646] [1.3 GB]
+Creating vector for diagonals... [1024.0 KB]
+Creating vector for RHS... [1024.0 KB]
+Allocating iteration vectors... [2 x 1024.0 KB]
+TOTAL: [1.3 GB]
+
+Starting iterations...
+Iteration 27: max relative diff=0.002630, 5.11 sec so far
+Iteration 54: max relative diff=0.000029, 10.19 sec so far
+
+Jacobi: 74 iterations in 21.40 seconds (average 0.188716, setup 7.44)
+
+Value in the initial state: 0.8892175058051611
+
+Time for model checking: 21.707 seconds.
+
+Result: 0.8892175058051611 (value in the initial state)
+
