@@ -5,9 +5,9 @@ README
 This is an extension of PRISM, developed for the paper
 "Prioritizing Methods to Accelerate Probabilistic Model Checking of Discrete Time Markov Models"
 
-------------
+-------------
 INSTALLATION
-------------
+-------------
 
 Installation is as for normal versions of PRISM. In short:
 
