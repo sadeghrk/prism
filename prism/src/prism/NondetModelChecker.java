@@ -2036,6 +2036,17 @@ public class NondetModelChecker extends NonProbModelChecker
 							probsDV = PrismSparse.NondetUntilTopologicalGS(tr, tra, model.getSynchs(), odd, allDDRowVars, allDDColVars, allDDNondetVars, yes, maybe, min, strat);
 							probs = new StateValuesDV(probsDV, model);
 						}else
+						if(prism.getMDPSolnMethod() == prism.MDP_BACKWARDVALITER)
+						{
+							probsDV = PrismSparse.NondetUntilTopologicalBackwardGS(tr, tra, model.getSynchs(), odd, allDDRowVars, allDDColVars, allDDNondetVars, yes, maybe, min, strat);
+							probs = new StateValuesDV(probsDV, model);
+						}else
+						if(prism.getMDPSolnMethod() == prism.MDP_BUCKETVALITER)
+						{
+							probsDV = PrismSparse.NondetUntilTopologicalBucketGS(tr, tra, model.getSynchs(), odd, allDDRowVars, allDDColVars, allDDNondetVars, yes, maybe, min, strat);
+							probs = new StateValuesDV(probsDV, model);
+						}else
+
 						if(prism.getMDPSolnMethod() == prism.MDP_MODPOLITER)
 						{
 							probsDV = PrismSparse.NondetUntilTopologicalMPI(tr, tra, model.getSynchs(), odd, allDDRowVars, allDDColVars, allDDNondetVars, yes, maybe, min, strat);
@@ -2059,6 +2070,13 @@ public class NondetModelChecker extends NonProbModelChecker
 							probsDV = PrismSparse.NondetUntilExplicitTopologicalMPI(tr, tra, model.getSynchs(), odd, allDDRowVars, allDDColVars, allDDNondetVars, yes, maybe, min, strat);
 							probs = new StateValuesDV(probsDV, model);
 						}
+						else
+						if(prism.getMDPSolnMethod() == prism.MDP_BACKWARDVALITER)
+						{	
+							probsDV = PrismSparse.NondetUntilExplicitTopologicalMPI(tr, tra, model.getSynchs(), odd, allDDRowVars, allDDColVars, allDDNondetVars, yes, maybe, min, strat);
+							probs = new StateValuesDV(probsDV, model);
+						}
+
 						else
 						{
 							probsDV = PrismSparse.NondetUntilTopological(tr, tra, model.getSynchs(), odd, allDDRowVars, allDDColVars, allDDNondetVars, yes, maybe, min, strat);
@@ -2120,6 +2138,24 @@ public class NondetModelChecker extends NonProbModelChecker
 							else
 							if(prism.getMDPSolnMethod() == prism.MDP_IMPROVEDMODPOLITER2) {
 							probsDV = PrismSparse.NondetUntilImprovedModPI2(tr, tra, model.getSynchs(), odd, allDDRowVars, allDDColVars, allDDNondetVars, yes, maybe, min, strat);}
+							else
+							if(prism.getMDPSolnMethod() == prism.MDP_BUCKETVALITER) {
+							probsDV = PrismSparse.NondetUntilBucketValIter(tr, tra, model.getSynchs(), odd, allDDRowVars, allDDColVars, allDDNondetVars, yes, maybe, min, strat);}
+							else
+							if(prism.getMDPSolnMethod() == prism.MDP_PRIORITYQUEUEVALITER) {
+							probsDV = PrismSparse.NondetUntilPriorityQueueValIter(tr, tra, model.getSynchs(), odd, allDDRowVars, allDDColVars, allDDNondetVars, yes, maybe, min, strat);}
+							else
+							if(prism.getMDPSolnMethod() == prism.MDP_BACKWARDVALITER) {
+							probsDV = PrismSparse.NondetUntilBackwardValIter(tr, tra, model.getSynchs(), odd, allDDRowVars, allDDColVars, allDDNondetVars, yes, maybe, min, strat);}
+							else
+							if(prism.getMDPSolnMethod() == prism.MDP_BUCKETVALITER2) {
+							probsDV = PrismSparse.NondetUntilBucketValIter2(tr, tra, model.getSynchs(), odd, allDDRowVars, allDDColVars, allDDNondetVars, yes, maybe, min, strat);}
+							else
+							if(prism.getMDPSolnMethod() == prism.MDP_PRIORITYQUEUEVALITER2) {
+							probsDV = PrismSparse.NondetUntilPriorityQueueValIter2(tr, tra, model.getSynchs(), odd, allDDRowVars, allDDColVars, allDDNondetVars, yes, maybe, min, strat);}
+							else
+							if(prism.getMDPSolnMethod() == prism.MDP_BACKWARDVALITER2) {
+							probsDV = PrismSparse.NondetUntilBackwardValIter2(tr, tra, model.getSynchs(), odd, allDDRowVars, allDDColVars, allDDNondetVars, yes, maybe, min, strat);}
 
 							else
 

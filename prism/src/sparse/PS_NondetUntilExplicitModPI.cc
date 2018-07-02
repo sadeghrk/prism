@@ -235,7 +235,7 @@ jlong _strat				// strategy storage
 	int *adv_starts; 
 	int *choice_starts;
 	int dtmc_max_trans = 1000;
-	int tmp;
+	int tmp, m;
 	if(use_counts)
 	{
 		row_starts = new int[n+1];
@@ -275,22 +275,26 @@ jlong _strat				// strategy storage
 	int *dns_starts = new int[n + 1];
 	int *dns_cols = new int[dtmc_max_trans];
 	double *dns_nnz = new double[dtmc_max_trans];
+	int* state_ind = new int[n];
+	int ind = 0;
 
 	// get setup time
 	stop = util_cpu_time();
 	time_for_setup = (double)(stop - start2)/1000;
 	start2 = stop;
 	start3 = stop;
+	for(i = 0; i < n; i++)
+		if(row_starts[i] < row_starts[i+1])
+			state_ind[ind++] = i;
 
 	while(!terminate)
 	{	 
 		done = false; 
 		localitr = left = 0;
-		for(i = 0; i < n; i++)
+		for(m = 0; m < ind; m++)
 		{
-			dns_starts[i] = left;
-			if(row_starts[i] >= row_starts[i+1])
-				continue;
+			i = state_ind[m];
+			dns_starts[m] = left;
 			l2 = choice_starts[adv_starts[i]];
 			h2 = choice_starts[1+adv_starts[i]];
 			for(k = l2; k < h2; k++)
@@ -299,20 +303,19 @@ jlong _strat				// strategy storage
 				dns_nnz[left++] = non_zeros[k];		
 			}			
 		}
-		dns_starts[n] = left;
+		dns_starts[ind] = left;
 		while(!done && localitr < 100)
 		{
 			iters++;
 			localitr++;
 			sup_norm = 0;
-			for(i = 0; i < n; i++){	
+			for(m = 0; m < ind; m++){	
 				d1 = 0;
 				self = 1;
-				if(row_starts[i] >= row_starts[i+1])
-					continue;
+				i = state_ind[m];
 
-				l2 = dns_starts[i];
-				h2 = dns_starts[i+1];
+				l2 = dns_starts[m];
+				h2 = dns_starts[m+1];
 				for(k = l2; k < h2; k++)
 					if(dns_cols[k] != i)
 						d1 += dns_nnz[k] * soln[dns_cols[k]];
@@ -321,12 +324,13 @@ jlong _strat				// strategy storage
 				if(self > 0)d1 /= self;else d1 = soln[i];
 				x = (d1 - soln[i]);	
 				soln[i] = d1;
-				if (term_crit == TERM_CRIT_RELATIVE && x > 0) {
+				if (term_crit == TERM_CRIT_RELATIVE && soln[i] > 0) {
 					x /= soln[i];
 				}
 				if (x > sup_norm) 
 					sup_norm = x;
 			}
+
 			if (sup_norm < term_crit_param && localitr > 10) {
 				done = true;
 			}
@@ -445,7 +449,6 @@ jlong _strat				// strategy storage
 		release_string_array_from_java(env, action_names_jstrings, action_names, num_actions);
 	}
 
-	printf("\n\nNumber of scallar multiplications: %dM \n", (int) (total_mults / 1000000));
 	return ptr_to_jlong(soln);
 }
 

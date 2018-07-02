@@ -26,7 +26,7 @@
 
 // includes
 #include "PrismSparse.h"
-#include <math.h>
+#include <cmath>
 #include <util.h>
 #include <cudd.h>
 #include <dd.h>
@@ -36,13 +36,18 @@
 #include "PrismSparseGlob.h"
 #include "jnipointer.h"
 #include "prism.h"
+#include "Measures.h"
+#include "ExportIterations.h"
+#include <memory>
 #include <new>
-
+#include <queue>
+using namespace std;
+#define alpha .95
 //------------------------------------------------------------------------------
 
 // solve the linear equation system Ax=b with Gauss-Seidel/SOR
 
-JNIEXPORT jlong __jlongpointer JNICALL Java_sparse_PrismSparse_PS_1IMPROVEDSORTR
+JNIEXPORT jlong __jlongpointer JNICALL Java_sparse_PrismSparse_PS_1BACKWARDSOR
 (
 JNIEnv *env,
 jclass cls,
@@ -67,7 +72,6 @@ jboolean forwards	// forwards or backwards?
 	DdNode *a = jlong_to_DdNode(_a);		// matrix A
 	DdNode *b = jlong_to_DdNode(_b);		// vector b
 	DdNode *init = jlong_to_DdNode(_init);		// init soln
-
 	// mtbdds
 	DdNode *reach = NULL, *diags = NULL, *id = NULL;
 	// model stats
@@ -85,12 +89,11 @@ jboolean forwards	// forwards or backwards?
 	long start1, start2, start3, stop;
 	double time_taken, time_for_setup, time_for_iters;
 	// misc
-	int i, j, fb, l, h, iters;
-	double d, x, sup_norm, kb, kbt, total_mults;
+	int i, j, fb, l, h, iters, top, m1, m2, l1, h1;
+	double d, x, sup_norm, kb, kbt, total_mults, self;
 	bool done;
 	int num_of_trans;	
 	double* in_probs;		
-	double d1, d2;		
 
 	// exception handling around whole function
 	try {
@@ -118,7 +121,7 @@ jboolean forwards	// forwards or backwards?
 	a = DD_ITE(ddman, id, DD_Constant(ddman, 0), a);
 	
 	// build sparse matrix
-	PS_PrintToMainLog(env, "\nBuilding sparse matrix...");
+	PS_PrintToMainLog(env, "\nBuilding sparse matrix... ");
 	// if requested, try and build a "compact" version
 	compact_a = true;
 	cmsrsm = NULL;
@@ -172,7 +175,7 @@ jboolean forwards	// forwards or backwards?
 		for (i = 0; i < diags_dist->num_dist; i++) diags_dist->dist[i] = 1.0 / diags_dist->dist[i];
 	}
 	
-	num_of_trans = diags_dist->num_dist;		//	4-8-2017 	
+	num_of_trans = diags_dist->num_dist;		
 
 	// build b vector (if present)
 	if (b != NULL) {
@@ -213,7 +216,7 @@ jboolean forwards	// forwards or backwards?
 	done = false;
 	PS_PrintToMainLog(env, "\nStarting iterations...\n");
 		
-	int* high_trans;					
+	int* dns_start;					
 	double *non_zeros;
 	unsigned char *row_counts;
 	int *row_starts;
@@ -237,172 +240,117 @@ jboolean forwards	// forwards or backwards?
 		dist_shift = cmsrsm->dist_shift;
 		dist_mask = cmsrsm->dist_mask;
 	}
-	
-	double *high_soln, threshold;
 
-	int maybe_count = 0, _a, left, right, small, tot_mults, good_mults;			
-	int s_q = 0, a, b;		
-	unsigned int int_temp;						
-	double _b, dbl_temp, high_trns, A, B;					
+	bool *selected = new bool[n];
+
+	int *pre_start = new int[n];
+	int *pre_end = new int[n];
+	int *pre_freq = new int[n];
+
+ 	int *pre_state = new int[nnz + 500];
+	int *state_order = new int[n];
+
+	for(i = 0; i < n; i++)
+	{
+		pre_freq[i] = 0;
+		selected[i] = false;
+	}
+
+	for(i = 0; i < n; i++)
+		for(j = row_starts[i]; j < row_starts[i+1]; j++)
+			if(fabs(non_zeros[j]) >= alpha / (row_starts[i+1] - row_starts[i]) || j == row_starts[i])
+				pre_freq[cols[j]]++;
+
+	pre_start[0] = 0;
+	pre_end[0] = pre_freq[0];
+	for(i = 1; i < n; i++)
+	{	
+		pre_start[i] = pre_end[i-1];
+		pre_end[i] = pre_end[i-1] + pre_freq[i];
+	}	
+
+	int top = 0, _a, small, good_states, tot_mults, good_mults, m;
 	double effic1, effic2, change_sum;
-	num_of_trans = row_starts[n];
- 	high_trans = new int[n+1];				
-	high_soln = new double[n+1];
-	in_probs = new double[n+1];
- 	int *dns_start = new int[n+1];					
-
-	for(i = 0; i < n; i++)
-	{
-		in_probs[i] = 0;
-		maybe_count += row_starts[i + 1] - row_starts[i];
-	}
-
-	for(i = 0; i < num_of_trans; i++)
-	{
-		_a = cols[i];
-		_b = non_zeros[i];
-		in_probs[_a] += fabs(_b);
-	}
-	x = 0;
-	for(i = 0; i < n; i++)
-		if(row_starts[i+1] > row_starts[i])
-			x += in_probs[i];
-	_b = x / maybe_count;
 	bool flag = true;
 
-	a = 0;
-	for(i = 0; i < n; i++)						
-	{
-		l = row_starts[i];
-		h = row_starts[i + 1];
-		if(h <= l)
-			continue;
+	unsigned int int_temp;						
 
-		threshold = 1.0;
-		if(in_probs[i] > 4)
-			threshold /= 4;
-		else if(in_probs[i] < .25)
-			threshold *= 4;
-		else
-			threshold /= in_probs[i];
-		
-		x = threshold / (h - l);
-
-		for(j = l; j < h; j++)
-		{
-			A += fabs(non_zeros[j]);
-			if(fabs(non_zeros[j]) >= x)
-				a++;
- 		}
-	}
-
-	double *dns_nnz = new double[a + 1];
-	int *dns_cols = new int[a + 1];
-
-	small = s_q = high_trns = A = B = 0;
-	a = b = tot_mults = good_mults = 0;
-	for(i = 0; i < n; i++)						
-	{
-		dns_start[i] = s_q;
-		high_soln[i] = 0;
-		l = row_starts[i];
-		h = row_starts[i + 1];
-		if(h <= l)
-			continue;
-		a += h - l;
-		left = l;
-
-		threshold = 1.0;
-			if(in_probs[i] > 4)
-				threshold /= 4;
-			else if(in_probs[i] < .25)
-				threshold *= 4;
-			else
-				threshold /= in_probs[i];
-		
-		x = threshold / (h - l);
-
-		for(j = l; j < h; j++)
-		{
-			A += fabs(non_zeros[j]);
-			if(fabs(non_zeros[j]) < x)
-			{
-				dbl_temp = non_zeros[j];
-				non_zeros[j] = non_zeros[left];
-				non_zeros[left] = dbl_temp;
-				int_temp = cols[j];
-				cols[j] = cols[left];
-				cols[left++] = int_temp;
-				small++;
-			}
-			else
-			{
-				good_mults++;
-				B += fabs(non_zeros[j]);
-				dns_cols[s_q] = cols[j];	
-				dns_nnz[s_q++] = non_zeros[j];
-				high_trns += fabs(non_zeros[j]);
-			}
-		}
-		high_trans[i] = left;
-		tot_mults = a;		
-	}
+	flag = true;
 	total_mults = 0;
-	dns_start[n] = s_q;
-	while (!done && iters < max_iters) 
+	for(i = 0; i < n; i++)
+		pre_freq[i] = pre_start[i];
+
+	for(i = 0; i < n; i++){
+		for(j = row_starts[i]; j < row_starts[i+1]; j++)
+			if(fabs(non_zeros[j]) >= alpha / (row_starts[i+1] - row_starts[i]) || j == row_starts[i])
+				pre_state[pre_freq[cols[j]]++] = i;
+	}
+
+	for(i = 0; i < n; i++)
+		if(soln[i] >= 1)
+			for(m = pre_start[i]; m < pre_end[i]; m++)
+			{
+				j = pre_state[m];
+				if(!selected[j])
+				{
+					state_order[top++] = j;
+					selected[j] = true;
+				}
+			}
+	l = 0;
+
+	for(int k = 0; k < n; k++)
 	{
-		iters++;
+		if(soln[k] < 1 && selected[k] == false)
+		{
+			selected[k] = true;
+			state_order[top++] = k;
+		}
+		while(l < top)
+		{
+			i = state_order[l];
+			for(m = pre_start[i]; m < pre_end[i]; m++)
+			{
+				j = pre_state[m];
+				if(!selected[j])
+				{
+					state_order[top++] = j;
+					selected[j] = true;
+				}
+			}
+			l++;	
+		}
+	}
+
+	while(!done)
+	{
+		iters++;		
 		sup_norm = 0.0;
 		change_sum = 0;
 		// store local copies of stuff
 		// matrix multiply
 		l = nnz; h = 0;
-		for (fb = 0; fb < n; fb++) {
+		for (fb = 0; fb < top; fb++) 
+		{
 			
 			// loop actually over i
 			// (can do forwards or backwards sor/gs)
-			i = (forwards) ? fb : n-1-fb;
+			i = state_order[fb];
 			d = (b == NULL) ? 0.0 : ((!compact_b) ? b_vec[i] : b_dist->dist[b_dist->ptrs[i]]);
-			if (!use_counts) { l = row_starts[i]; h = row_starts[i+1];}
-			else if (forwards) { l = h; h += row_counts[i]; }
-			else { h = l; l -= row_counts[i]; }
+
+			l = row_starts[i]; 
+			h = row_starts[i+1];
+			
 			// "row major" version
 	
 			if (!compact_a) {
-				if(false){
+
+				//if(flag){
 				for (j = l; j < h; j++) 
 					d -= non_zeros[j] * soln[cols[j]];
-				}
-				else
-				{
-					if(l >= h)
-						continue;	
-					
-					if(flag)
-					{
-						d1 = d2 = 0;
-						for(j = l; j < high_trans[i]; j++)
-							d1 -= non_zeros[j] * soln[cols[j]];
-						for(j = high_trans[i]; j < h; j++)
-							d2 -= non_zeros[j] * soln[cols[j]];
-						high_soln[i] = d1;
-					}
-					else
-					{
-						d2 = 0;
-						d1 = high_soln[i];						
-						for(j = dns_start[i]; j < dns_start[i+1]; j++)				
-							d2 -= dns_nnz[j] * soln[dns_cols[j]];				
-					}
-					if(d <= 0)
-					d = d1 + d2;
-				}
+				//}
 			// "compact msr" version
-			} else {
-				for (j = l; j < h; j++) {
-					d -= dist[(int)(cols[j] & dist_mask)] * soln[(int)(cols[j] >> dist_shift)];
-				}
-			}	
+			} 
 			// divide by diagonal (multiply by inverted diagonal)
 			if (!compact_d) d *= diags_vec[i]; else d *= diags_dist->dist[diags_dist->ptrs[i]];
 			// over-relaxation
@@ -413,39 +361,18 @@ jboolean forwards	// forwards or backwards?
 			// compute norm for convergence
 			// (note we must do this inside the loop because we only store one vector for sor/gauss-seidel)
 			x = fabs(d - soln[i]);
-			if (term_crit == TERM_CRIT_RELATIVE) {
+			if (term_crit == TERM_CRIT_RELATIVE && d > 0) {
 				x /= d;
 			}
 			change_sum += x;
 			if (x > sup_norm) sup_norm = x;
 			// set vector element
 			soln[i] = d;
-		}
-		
-		if(flag)
-		{	
-			effic1 = change_sum / tot_mults;
-			flag = false;
-			if (sup_norm < term_crit_param) 
-				done = true;	
-			total_mults += tot_mults;
-		}
-		else
-		{
-			effic2 = change_sum / good_mults;
-			if(effic2 / effic1 < .25)
-				flag = true;
-			total_mults += good_mults;
-		}
-		
-		// print occasional status update
-		if ((util_cpu_time() - start3) > UPDATE_DELAY) {
-			PS_PrintToMainLog(env, "Iteration %d: max %sdiff=%f", iters, (term_crit == TERM_CRIT_RELATIVE)?"relative ":"", sup_norm);
-			PS_PrintToMainLog(env, ", %.2f sec so far\n", ((double)(util_cpu_time() - start2)/1000));
-			start3 = util_cpu_time();
-		}
+		}		
+		if (sup_norm < term_crit_param) 
+			done = true;				
 	}
-	
+
 	// stop clocks
 	stop = util_cpu_time();
 	time_for_iters = (double)(stop - start2)/1000;
@@ -474,7 +401,7 @@ jboolean forwards	// forwards or backwards?
 	if (diags_dist) delete diags_dist;
 	if (b_vec) delete[] b_vec;
 	if (b_dist) delete b_dist;
-	
+
 	printf("\n\nNumber of scallar multiplications: %dM \n", (int) (total_mults / 1000000));
 	return ptr_to_jlong(soln);
 }

@@ -299,6 +299,8 @@ jlong _strat				// strategy storage
 	bool done = false, first, terminate;
 	double diff, sup_norm, x;
 	int *state_order = new int[n];
+	int *state_order2 = new int[n];
+
 	bool *state_selected = new bool[n];
 
 	int *pre_start = new int[n];
@@ -436,6 +438,7 @@ jlong _strat				// strategy storage
 				i = scc_state[m];
 				for(j = row_starts[i]; j < row_starts[i+1]; j++)
 					for(k = choice_starts[j]; k < choice_starts[j+1]; k++)
+					if(non_zeros[k] > .05)
 					{
 						pre_freq[cols[k]]++;
 						M3++;
@@ -464,6 +467,7 @@ jlong _strat				// strategy storage
 				i = scc_state[m];
 				for(j = row_starts[i]; j < row_starts[i+1]; j++)
 					for(k = choice_starts[j]; k < choice_starts[j+1]; k++)
+					if(non_zeros[k] > .05)
 					{
 						dest = cols[k];
 						if(scc_3[dest] == ind)
@@ -506,44 +510,37 @@ jlong _strat				// strategy storage
 						state_selected[pre_state[j]] = true;
 					}
 			}	
-		}
-	
+		}	
 		done = false;
+		int tt = iters;
+		m = low;
+		//k = scc_3[scc_state[m]];
+		//for(i = 0; i < n; i++)
+		//	if(scc_3[i] == k)
+		//		state_order[m++] = i;
+		//printf("\n\n\t\t\t >>> %d %d \n\n", hi, m);		
+
 		while (!done && iters < max_iters) {
 			iters++;
 		// do matrix multiplication and min/max
 			h1 = h2 = localitr = 0;
 			terminate = false;
-		
-			M0 = M1 = M2 = 0;
-			for(m = low; m < hi; m++)
-			{
-				i = state_order[m];
-				if(row_starts[i] >= row_starts[i+1])
-					continue;
 
-				useful_states[M0] = i;
-				uf_choice_strt[M0] = M1;
-				for(j = 0; j < choice_starts[1 + adv_starts[i]] - choice_starts[adv_starts[i]]; j++)
-				{
-					M2 = choice_starts[adv_starts[i]];
-					uf_cols[M1 + j] = cols[M2 + j];			
-					uf_nnz[M1 + j] = non_zeros[M2 + j];
-				}
-				M0++;
-				M1 += j;
-				uf_choice_strt[M0] = M1;
-			}
-			
+			M0 = M1 = M2 = 0;
+					
 			localitr = 0;
-			while(!terminate && localitr < 100 && hi - low > 1)
+			while(!terminate && localitr < 20 && hi - low > 1)
 			{
 				localitr++;
 				sup_norm = 0;
 		
+//				for(m = hi - 1; m >= low; m--)
+//				{
+//					i = state_order2[m];
 				for(m = low; m < hi; m++)
 				{
-					i = state_order[m];
+					i = scc_state[m];
+
 					if(row_starts[i] >= row_starts[i+1])
 						continue;
 					
@@ -570,7 +567,7 @@ jlong _strat				// strategy storage
 			diff = 0;	
 			for (m = low; m < hi; m++)
 			 {
-				i =  state_order[m];
+				i = state_order[m];
 				d1 = 0.0; // initial value doesn't matter
 				first = true; // (because we also remember 'first')
 				l1 = row_starts[i]; 
@@ -604,10 +601,11 @@ jlong _strat				// strategy storage
 
 				soln[i] = (h1 > l1) ? d1 : yes_vec[i];
 			}
+		
 			// check convergence
-			if (diff < term_crit_param*.8)
-				done = true;			
-		}
+			if (diff < term_crit_param*.98)
+				done = true;		
+		}printf("\nAn SCC solved after %d iterations.\n", iters - tt);
 	}
 
 	done = true;	

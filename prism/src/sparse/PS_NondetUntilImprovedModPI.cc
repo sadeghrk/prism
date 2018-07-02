@@ -278,7 +278,7 @@ jlong _strat				// strategy storage
 
 	adv_starts[n] = row_starts[n];
 	numTransitions = choice_starts[row_starts[n]];
-	int gsn;						
+	int gsn, ind, m;
 	terminate = false;
 
 	int *dns_starts = new int[n + 1];
@@ -297,6 +297,14 @@ jlong _strat				// strategy storage
 	start3 = stop;
 	double epsi;
 	total_mults = 0;
+	int* state_ind = new int[n];
+	ind = 0;
+	int* state_ind2 = new int[n];
+	int ind2 = 0;
+
+	for(i = 0; i < n; i++)
+		if(row_starts[i] < row_starts[i+1])
+			state_ind[ind++] = i;
 	while(!terminate)
 	{	 
 		done = false; 
@@ -304,32 +312,46 @@ jlong _strat				// strategy storage
 		for(i = 0; i < n; i++)
 			in_probs[i] = 0;
 
-		for(i = 0; i < n; i++)
+		for(m = 0; m < ind; m++)
 		{
-			dns_starts[i] = left;
+			i = state_ind[m];
 			if(row_starts[i] >= row_starts[i+1])
 				continue;
 
 			l2 = choice_starts[adv_starts[i]];
 			h2 = choice_starts[1+adv_starts[i]];
 			for(k = l2; k < h2; k++)
-			{
 				in_probs[cols[k]] += non_zeros[k];
+		}
+		ind2 = 0;
+		for(m = 0; m < ind; m++)
+		{
+			i = state_ind[m];
+			if(row_starts[i] >= row_starts[i+1] || in_probs[i] <= 0)
+				continue;
+			dns_starts[ind2] = left;
+			state_ind2[ind2++] = i;
+			l2 = choice_starts[adv_starts[i]];
+			h2 = choice_starts[1+adv_starts[i]];
+			for(k = l2; k < h2; k++)
+			{
 				dns_cols[left] = cols[k];
 				dns_nnz[left++] = non_zeros[k];
 			}			
 		}
+		
+
 		one_iter_mults = left;
-		dns_starts[n] = left;
+		dns_starts[ind2] = left;
 		left = 0;
 		good_inp_sum = inp_sum = 0;
 		gsn = 0;
-		for(i = 0; i < n; i++)
+		for(m = 0; m < ind2; m++)
 		{
-			inp_dns_starts[i] = left;
+			i = state_ind2[m];
+			inp_dns_starts[m] = left;
 			if(row_starts[i] >= row_starts[i+1])
 				continue;
-			
 
 			inp_sum += in_probs[i];
 			if(in_probs[i] > .5)
@@ -347,23 +369,24 @@ jlong _strat				// strategy storage
 		}
 		good_mults = left;
 		
-		inp_dns_starts[n] = left;
+		inp_dns_starts[ind2] = left;
 		while(!done)
 		{
 			iters++;
 			localitr++;
 			sup_norm = 0;
-			if(localitr % 3 == 1)
+			if(localitr % 2 == 1)
 			{
 				total_mults += one_iter_mults;
-				for(i = 0; i < n; i++)
+				for(m = 0; m < ind2; m++)
 				{	
+					i = state_ind2[m];
 					d1 = 0;
 					self = 1;
-					if(row_starts[i] >= row_starts[i+1])
+					if(row_starts[i] >= row_starts[i+1] || in_probs[i] <= 0)
 						continue;
-					l2 = dns_starts[i];
-					h2 = dns_starts[i+1];
+					l2 = dns_starts[m];
+					h2 = dns_starts[m+1];
 	
 					for(k = l2; k < h2; k++)
 							if(dns_cols[k] != i)
@@ -383,14 +406,15 @@ jlong _strat				// strategy storage
 			else
 			{
 				total_mults += good_mults;
-				for(i = 0; i < n; i++)
-				{	
+				for(m = 0; m < ind2; m++)
+				{
+					i = state_ind2[m];
 					d1 = 0;
 					self = 1;
 					if(row_starts[i] >= row_starts[i+1]){
 						continue;}
-					l2 = inp_dns_starts[i];
-					h2 = inp_dns_starts[i+1];
+					l2 = inp_dns_starts[m];
+					h2 = inp_dns_starts[m + 1];
 					if(h2 <= l2)
 						continue;
 	
@@ -412,9 +436,9 @@ jlong _strat				// strategy storage
 						sup_norm = x;
 				}
 			}
-			if ((sup_norm < term_crit_param || localitr >= 200) && localitr % 3 == 1 && localitr > 20) 
+			if ((sup_norm < term_crit_param || localitr >= 100) && localitr % 2 == 1 && localitr > 10)
 				done = true;			
-		}	
+		}
  		iters++;
 		sup_norm = 0.0;
 		// do matrix multiplication and min/max
@@ -527,7 +551,6 @@ jlong _strat				// strategy storage
 	if (action_names != NULL) {
 		release_string_array_from_java(env, action_names_jstrings, action_names, num_actions);
 	}	
-	printf("\n\nNumber of scallar multiplications: %dM \n", (int) (total_mults / 1000000));
 	return ptr_to_jlong(soln);
 }
 

@@ -43,13 +43,14 @@
 #include <memory>
 #include <stdio.h>
 #include <vector>
-#include "tarjan2.h"
+#include "tarjan6.h"
+#include <queue>
 using namespace std;
 #define MAXN  9000400
-#define flag true
+
 //------------------------------------------------------------------------------
 
-JNIEXPORT jlong __jlongpointer JNICALL Java_sparse_PrismSparse_PS_1NondetUntilExplicitTopologicalMPI
+JNIEXPORT jlong __jlongpointer JNICALL Java_sparse_PrismSparse_PS_1NondetUntilTopologicalBucketGS
 (
 JNIEnv *env,
 jclass cls,
@@ -83,19 +84,29 @@ jlong _strat				// strategy storage
 	double *non_zeros;
 	unsigned char *row_counts;
 	int *adv_starts;
-	int *choice_starts;
-	int *scc_state;
-	int *scc_start;
+	int *nonzerq;
+	int *choice_starts, *mid_starts;
+	int *scc_state;		
+	int *scc_start; 	
 	int *scc_end;
-	int *scc_freq;
+	int *scc_freq;		
 	int iters;
+	int total_size;		
 
 	bool* scc_solved;
+	bool* states_sel;	
 	double *yes_vec , *soln;
 	unsigned int *cols;
-	int number_of_sccs;
-	int* useful_states;
+	int* adv_chs_strt;			
+	int* adv_chs_end;			
+	int number_of_states, number_of_sccs;
+	int* freq, *rev_start, *rev_end, *revs, *state_queue, *state_sel;
+	int* useful_states;		
+	int* mapping;			
 	unsigned char *choice_counts;
+	double total_mults;
+	double total_updates;
+	int one_iter_mults;
 
 	// mtbdds
 	DdNode *a = NULL, *tmp = NULL;
@@ -121,13 +132,9 @@ jlong _strat				// strategy storage
 	int num_actions;
 	// misc
 
-	int i, j, k, l1, h1, l2, h2;
+	int i, j, k, l1, h1, l2, h2, local_itr;
 	double d1, d2, kb, kbt;
 	bool done, first;
-	double total_mults;
-	double total_updates;
-	
-
 	// measure for convergence termination check
 	MeasureSupNorm measure(term_crit == TERM_CRIT_RELATIVE);
 
@@ -228,6 +235,7 @@ jlong _strat				// strategy storage
 	// initial solution is yes
 	for (i = 0; i < n; i++) {
 		soln[i] = yes_vec[i];
+//		if (soln[i]) printf("yes[%d] := %f;\n", i+1, yes[i]);
 	}
 
 	std::unique_ptr<ExportIterations> iterationExport;
@@ -284,65 +292,42 @@ jlong _strat				// strategy storage
 		row_starts = (int *)ndsm->row_counts;
 		choice_starts = (int *)ndsm->choice_counts;
 	}
-	int temp_iters = 0;
 	total_mults = 0;
-	total_updates = 0;
-	
-	int low, hi, M0, M1, M2, M3;
-	int j, m, l1, h1, l2, h2, k, tmp, destscc, ind, dest, left, adv_temp, localitr;
-	double d2, d1;
-	bool min = false;
-	bool done = false, first, terminate;
-	double diff, sup_norm, x;
-	int *state_order = new int[n];
-	bool *state_selected = new bool[n];
 
-	int *pre_start = new int[n];
-	int *pre_end = new int[n];
-	int *pre_freq = new int[n];
-
- 	int *pre_state = new int[choice_starts[row_starts[n]-1]+500];
-	double* nnz = new double[choice_starts[row_starts[n]-1]];
-	int* useful_states = new int[n];
-	int* uf_choice_strt = new int[n];
-	int* mapping = new int[n];
-	int* uf_cols = new int[choice_starts[row_starts[n] - 1] + 5];
-	double* uf_nnz = new double[choice_starts[row_starts[n] - 1] + 5];
-
-
-	ticks_2 = current_scc_2 = 0;
-	top_2 = -1;
+	ticks_6 = current_scc_6 = 0;
+	top_6 = -1;
 	for(i = 0; i < n; i++)
 	{
-		d_2[i] = -1;
-		scc_2[i] = -2;
-		stacked_2[i] = false;
+		d_6[i] = -1;
+		scc_6[i] = -2;
+		stacked_6[i] = false;
 		for(j = row_starts[i]; j < row_starts[i + 1]; j++)
 			for(k = choice_starts[j]; k < choice_starts[j + 1]; k++)	
-				g_2[i].push_back(cols[k]);			
+				g_6[i].push_back(cols[k]);			
 	}
 	for(i = 0; i < n; i++)
-		if(scc_2[i] == -2)
-			tarjan_2(i);
-	number_of_sccs = current_scc_2;
+		if(scc_6[i] == -2)
+			tarjan_6(i);
+
+	number_of_sccs = current_scc_6;
 	scc_freq = new int[number_of_sccs + 1];
 	scc_start = new int[number_of_sccs + 1];
 	scc_end = new int[number_of_sccs + 1];
 	scc_state = new int[n];
 	scc_solved = new bool[number_of_sccs + 1];
-	adv_starts = new int[n+1];	
-
+	
 	for(i = 0; i < number_of_sccs + 1; i++)
 	{	
 		scc_solved[i] = false;
 		scc_freq[i] = 0;
 	}
+
 	
 	for(i = 0; i < n; i++)
-			scc_freq[scc_2[i]]++;
+			scc_freq[scc_6[i]]++;
 	
 	scc_start[0] = 0;
-	printf(" %d ", number_of_sccs);
+
 	for(i = 1; i <= number_of_sccs; i++)
 	{
 		scc_start[i] = scc_start[i - 1] + scc_freq[i - 1];
@@ -355,224 +340,57 @@ jlong _strat				// strategy storage
 
 	for(i = 0; i < n; i++)
 		scc_state[i] = 0;	
-
+	bool *in_bucket0 = new bool[n];
+	bool *in_bucket1 = new bool[n];
+	bool *in_bucket2 = new bool[n];
+	bool *in_bucket3 = new bool[n];
+	bool *in_bucket4 = new bool[n];
+	bool *in_bucket5 = new bool[n];
+	bool *in_bucket6 = new bool[n];
 	for(i = 0; i < n; i++)
 	{
-		k = scc_2[i];
+		in_bucket0[i] = false;
+		in_bucket1[i] = false;
+		in_bucket2[i] = false;
+		in_bucket3[i] = false;
+		in_bucket4[i] = false;
+		in_bucket5[i] = false;
+		in_bucket6[i] = false;
+		k = scc_6[i];
 		if(k == -1) continue;
 		j = scc_freq[k]++;
 		scc_state[j] = i;
 	}
 
+	int low, hi, maybe_states, temp_iters;
+	int j, m, l1, h1, l2, h2, k, tmp, destscc, ind, dest, left, m1, m2;
+	double d2, d1, x, self;
+	bool min = false;
+	bool done = false, first;
+	double diff;
+	int *state_order = new int[n];
+	bool *state_selected = new bool[n];
 
-	for(i = 0; i <= n; i++)	
-		adv_starts[i] = row_starts[i];
+	int *pre_start = new int[n];
+	int *pre_end = new int[n];
+	int *pre_freq = new int[n];
+
+ 	int *pre_state = new int[choice_starts[row_starts[n]-1]+500];
+	queue <double> bucket[7];
 	for(ind = 0; ind < number_of_sccs; ind++)
 	{
 		low = scc_start[ind];
 		hi = scc_start[ind + 1]; 
+		maybe_states = 0;
+		one_iter_mults = 0;
 		if(hi - low == 1)
 		{
 			i = scc_state[low];
 			if(row_starts[i+1] - row_starts[i] <= 0)
 				continue;
-
-			done = false;
-			temp_iters = iters;
-			while(!done)
-			{		
-				iters++;
+			while(true)
+			{
 				diff = 0;
-				d1 = 0.0; // initial value doesn't matter
-				first = true; // (because we also remember 'first')
-				l1 = row_starts[i]; 
-				h1 = row_starts[i+1]; 
-				for (j = l1; j < h1; j++) {
-					d2 = 0;
-					l2 = choice_starts[j]; 
-					h2 = choice_starts[j+1]; 
-					
-					for (k = l2; k < h2; k++) 
-						d2 += non_zeros[k] * soln[cols[k]];
-					
-					if (first || (min&&(d2<d1)) || (!min&&(d2>d1))) {
-						d1 = d2;
-						adv_temp = j;
-						// if adversary generation is enabled, remember optimal choice			
-					}
-					first = false;
-				}	
-				// set vector element
-				// (if no choices, use value of yes)
-				if(term_crit == TERM_CRIT_RELATIVE)
-				{
-					if(d1 > 0 && (d1 - soln[i])/d1 > diff)
-						diff = (d1 - soln[i])/d1;
-				}
-				else
-					if(d1 > 0 && (d1 - soln[i]) > diff)
-						diff = d1 - soln[i];
-				soln[i] = (h1 > l1) ? d1 : yes_vec[i];
-				if (diff < term_crit_param)
-					done = true;			
-			}
-			total_updates += iters - temp_iters;
-			total_mults += (iters - temp_iters) * (choice_starts[row_starts[i + 1]] - choice_starts[row_starts[i]]);
-			continue;
-		}
-		else
-		{
-			for(m = low; m < hi; m++)
-			{
-				i = scc_state[m];
-				state_selected[i] = false;
-				pre_freq[i] = 0;
-			}
-
-			M3 = 0;				// Number of mults for one iteration of any SCC.
-			for(m = low; m < hi; m++)
-			{
-				i = scc_state[m];
-				for(j = row_starts[i]; j < row_starts[i+1]; j++)
-					for(k = choice_starts[j]; k < choice_starts[j+1]; k++)if(non_zeros[k] > .05)
-					{
-						pre_freq[cols[k]]++;
-						M3++;
-					}
-			}
-
-			pre_start[scc_state[low]] = 0;
-			pre_end[scc_state[low]] = pre_freq[scc_state[low]];
-			for(m = low + 1; m < hi; m++)
-			{
-				i = scc_state[m];
-				j = scc_state[m-1];
-				pre_start[i] = pre_end[j];
-				pre_end[i] = pre_end[j] + pre_freq[i];
-			}		
-
-			for(m = low; m < hi; m++)
-			{
-				i = scc_state[m];
-				pre_freq[i] = pre_start[i];
-			}		
-
-
-			for(m = low; m < hi; m++)
-			{
-				i = scc_state[m];
-				for(j = row_starts[i]; j < row_starts[i+1]; j++)
-					for(k = choice_starts[j]; k < choice_starts[j+1]; k++)if(non_zeros[k] > .05)
-					{
-						dest = cols[k];
-						if(scc_2[dest] == ind)
-							pre_state[pre_freq[dest]++] = i;
-					}
-			}
-
-			left = low;
-			for(m = low; m < hi; m++)
-			{
-				i = scc_state[m];
-				if(row_starts[i+1] <= row_starts[i])
-				{
-					state_order[left++] = i;
-					state_selected[i] = true;
-				}
-
-				for(j = row_starts[i]; j < row_starts[i+1]; j++)
-					for(k = choice_starts[j]; k < choice_starts[j+1]; k++)
-					{
-						dest = cols[k];
-						if(scc_2[dest] != ind && state_selected[i] == false)
-						{
-							state_order[left++] = i;
-							state_selected[i] = true;
-						}
-					}
-			}
-
-			m = low;
-			while(left < hi)
-			{
-				i = state_order[m++];
-				if(row_starts[i+1] <= row_starts[i] && yes_vec[i] <= 0)
-					continue;
-				for(j = pre_start[i]; j < pre_end[i]; j++)
-					if(state_selected[pre_state[j]] == false)
-					{
-						state_order[left++] = pre_state[j];
-						state_selected[pre_state[j]] = true;
-					}
-			}	
-		}
-		done = false;
-		int tt = iters;
-		while (!done && iters < max_iters) {
-			iters++;
-		// do matrix multiplication and min/max
-			h1 = h2 = localitr = 0;
-			terminate = false;
-				
-			M0 = M1 = M2 = 0;
-//			for(m = hi; m >= low; m--)
-//			{
-//				i = state_order2[m];
-			for(m = low; m < hi; m++)
-			{	
-				i = scc_state[m];
-				if(row_starts[i] >= row_starts[i+1])
-					continue;
-
-				useful_states[M0] = i;
-				uf_choice_strt[M0] = M1;
-				for(j = 0; j < choice_starts[1 + adv_starts[i]] - choice_starts[adv_starts[i]]; j++)
-				{
-					M2 = choice_starts[adv_starts[i]];
-					uf_cols[M1 + j] = cols[M2 + j];			
-					uf_nnz[M1 + j] = non_zeros[M2 + j];
-				}
-				M0++;
-				M1 += j;
-				uf_choice_strt[M0] = M1;
-			}
-			localitr = 0;
-			while(!terminate && localitr < 20 && hi - low > 1)
-			{
-				localitr++;
-				sup_norm = 0;
-		
-				for(m = 0; m < M0; m++){	
-					i = useful_states[m];				
-					d1 = d2 = 0;
-					l2 = uf_choice_strt[m];
-					h2 = uf_choice_strt[m + 1];
-					for(k = l2; k < h2; k++){
-						d1 += uf_nnz[k] * soln[uf_cols[k]];
-						}
-						
-					x = (d1 - soln[i]);
-					soln[i] = d1;
-					if (term_crit == TERM_CRIT_RELATIVE && x > 0) {
-						x /= soln[i];
-					}
-					if (x > sup_norm) 
-						sup_norm = x;
-				}
-				if (sup_norm < term_crit_param) 
-					terminate = true;					
-			}
-			
-			total_updates += localitr * M0 + (hi - low);
-			total_mults += localitr * M1 + M3;
-		
-
-			iters += localitr;
-			diff = 0;
-	
-			for (m = low; m < hi; m++)
-			 {
-				i = state_order[m];
 				d1 = 0.0; // initial value doesn't matter
 				first = true; // (because we also remember 'first')
 				l1 = row_starts[i]; 
@@ -587,12 +405,10 @@ jlong _strat				// strategy storage
 					}
 					if (first || (min&&(d2<d1)) || (!min&&(d2>d1))) {
 						d1 = d2;
-						adv_temp = j;
 						// if adversary generation is enabled, remember optimal choice			
 					}
 					first = false;
-				}	
-				adv_starts[i] = adv_temp;
+				}
 				// set vector element
 				// (if no choices, use value of yes)
 				if(term_crit == TERM_CRIT_RELATIVE)
@@ -601,15 +417,307 @@ jlong _strat				// strategy storage
 						diff = (d1 - soln[i])/d1;
 				}
 				else
-					if(d1 > 0 && (d1 - soln[i]) > diff)
+					if(d1 - soln[i] > diff)
 						diff = d1 - soln[i];
-
-				soln[i] = (h1 > l1) ? d1 : yes_vec[i];
+				soln[i] = d1;
+				if(diff < term_crit_param)
+					break;
 			}
-			// check convergence
-			if (diff < term_crit_param*.8)
-				done = true;			
-		}printf("\nAn SCC solved after %d iterations.\n", iters - tt);
+			continue;
+		}
+		else
+		{
+			for(m = low; m < hi; m++)
+			{
+				i = scc_state[m];
+				state_selected[i] = false;
+				pre_freq[i] = 0;
+			}
+
+			for(m = low; m < hi; m++)
+			{
+				i = scc_state[m];
+				for(j = row_starts[i]; j < row_starts[i+1]; j++)
+					for(k = choice_starts[j]; k < choice_starts[j+1]; k++)
+					{
+						pre_freq[cols[k]]++;
+						one_iter_mults++;
+					}
+			}
+			pre_start[scc_state[low]] = 0;
+			pre_end[scc_state[low]] = pre_freq[scc_state[low]];
+			for(m = low + 1; m < hi; m++)
+			{
+				i = scc_state[m];
+				j = scc_state[m-1];
+				pre_start[i] = pre_end[j];
+				pre_end[i] = pre_end[j] + pre_freq[i];
+			}		
+			for(m = low; m < hi; m++)
+			{
+				i = scc_state[m];
+				pre_freq[i] = pre_start[i];
+			}		
+
+
+			for(m = low; m < hi; m++)
+			{
+				i = scc_state[m];
+				for(j = row_starts[i]; j < row_starts[i+1]; j++)
+					for(k = choice_starts[j]; k < choice_starts[j+1]; k++)
+					{
+						dest = cols[k];
+						if(scc_6[dest] == ind)
+							pre_state[pre_freq[dest]++] = i;
+					}
+			}
+
+			left = low;
+			for(m = low; m < hi; m++)
+			{
+				i = scc_state[m];
+				if(row_starts[i+1] <= row_starts[i])
+				{
+					state_order[left++] = i;
+					state_selected[i] = true;
+				}
+				else
+					maybe_states++;
+
+				for(j = row_starts[i]; j < row_starts[i+1]; j++)
+					for(k = choice_starts[j]; k < choice_starts[j+1]; k++)
+					{
+						dest = cols[k];
+						if(scc_6[dest] != ind && state_selected[i] == false)
+						{
+							state_order[left++] = i;
+							state_selected[i] = true;
+						}
+					}
+			}
+
+ 			m = low;
+			while(left < hi)
+			{
+				i = state_order[m++];
+				if(row_starts[i+1] <= row_starts[i] && yes_vec[i] <= 0)
+					continue;
+				for(j = pre_start[i]; j < pre_end[i]; j++)
+					if(state_selected[pre_state[j]] == false)
+					{
+						state_order[left++] = pre_state[j];
+						state_selected[pre_state[j]] = true;
+					}
+			}
+			
+		}
+		
+		temp_iters = iters;
+		done = false;
+//		while (!done && iters < max_iters) 
+//		{
+		iters++;
+		diff = 0;
+		h1 = h2 = 0;
+		for(i = 0; i < 7; i++)
+			bucket[i].empty();
+		int top = 0;
+		for (m = low; m < hi; m++) {
+			i =  scc_state[m];
+			d1 = 0.0; // initial value doesn't matter
+			first = true; // (because we also remember 'first')
+			l1 = row_starts[i]; 
+			h1 = row_starts[i+1]; 
+			for (j = l1; j < h1; j++) {
+				d2 = 0;
+				l2 = choice_starts[j]; 
+				h2 = choice_starts[j+1]; 
+				
+				for (k = l2; k < h2; k++) {
+					d2 += non_zeros[k] * soln[cols[k]];
+				}
+				if (first || (min&&(d2<d1)) || (!min&&(d2>d1))) {
+					d1 = d2;
+					// if adversary generation is enabled, remember optimal choice			
+				}
+				first = false;
+			}
+			// set vector element
+			// (if no choices, use value of yes)
+			if(term_crit == TERM_CRIT_RELATIVE)
+			{
+				if(d1 > 0 && (d1 - soln[i])/d1 > diff)
+					diff = (d1 - soln[i])/d1;
+			}
+			else
+				if(d1 > 0 && (d1 - soln[i]) > diff)
+					diff = d1 - soln[i];
+			if(diff > .1)
+			{
+				bucket[0].push(i);
+				in_bucket0[i] = true;
+				top = 0;
+			}
+			else if(diff > 1e-2)
+			{
+				bucket[1].push(i);
+				in_bucket1[i] = true;
+				if(top > 1) top = 1;
+			}
+			else if(diff > 1e-3)
+			{
+				bucket[2].push(i);
+				in_bucket2[i] = true;
+				if(top > 2) top = 2;
+			}
+			else if(diff > 1e-4)
+			{
+				bucket[3].push(i);
+				in_bucket3[i] = true;
+				if(top > 3) top = 3;
+			}
+			else if(diff > 1e-5)
+			{
+				bucket[4].push(i);
+				in_bucket4[i] = true;
+				if(top > 4) top = 4;
+			}
+			else if(diff > 1e-6)
+			{
+				bucket[5].push(i);
+				in_bucket5[i] = true;
+				if(top > 5) top = 5;
+			}
+			else
+			{
+				bucket[6].push(i);
+				in_bucket6[i] = true;
+				if(top > 6) top = 6;
+			}
+			soln[i] = (h1 > l1) ? d1 : yes_vec[i];
+		}
+
+		local_itr = 0;
+
+		while(true)
+		{
+			if(bucket[top].size() == 0)
+			{	top++;
+				if(top == 6)
+					break;
+			}
+			else
+			{
+				m1 = bucket[top].front();
+				bucket[top].pop();
+				switch(top)
+				{
+					case 0:
+						in_bucket0[m1] = false;
+						break;
+					case 1:
+						in_bucket1[m1] = false;
+						break;
+					case 2:
+						in_bucket2[m1] = false;
+						break;
+					case 3:
+						in_bucket3[m1] = false;
+						break;
+					case 4:
+						in_bucket4[m1] = false;
+						break;
+					case 5:
+						in_bucket5[m1] = false;
+						break;
+
+				}
+
+				for(m2 = pre_start[m1]; m2 < pre_end[m1]; m2++)
+				{
+					i = pre_state[m2];
+					d1 = (min?1.1:0.0); // initial value doesn't matter		
+					l1 = row_starts[i]; 
+					h1 = row_starts[i+1]; 
+					if(l1 >= h1)	
+						continue;
+							
+					for (j = l1; j < h1; j++) 
+					{
+						self = 1;
+						d2 = 0;
+						l2 = choice_starts[j]; h2 = choice_starts[j+1]; 
+						
+						//for (k = l2; k < h2; k++) {
+						//	d2 += non_zeros[k] * soln[cols[k]];
+						//}
+						for(k = l2; k < h2; k++)
+							if(cols[k] != i)
+								d2 += non_zeros[k] * soln[cols[k]];
+							else
+								self -= non_zeros[k];
+						if(self > 0)d2 /= self;else d2 = soln[i];
+						if ((min&&(d2<d1)) || (!min&&(d2>d1))) 
+							d1 = d2;		
+					}
+					// set vector element
+					// (if no choices, use value of yes)
+					x = (h1 > l1) ? fabs(d1 - soln[i]) : 0;
+					soln[i] = (h1 > l1) ? d1 : yes_vec[i];
+					if (term_crit == TERM_CRIT_RELATIVE) {
+						x /= soln[i];
+					}
+					if(x > .1 && in_bucket0[i] == false)
+					{
+						top = 0;
+						bucket[0].push(i);
+						in_bucket0[i] = true;
+					}
+					else if(x > 1e-2 && in_bucket1[i] == false)
+					{
+						if(top > 1)top = 1;
+						bucket[1].push(i);
+						in_bucket1[i] = true;
+					}
+					else if(x > 1e-3 && in_bucket2[i] == false)
+					{
+						if(top > 2)top = 2;
+						bucket[2].push(i);
+						in_bucket2[i] = true;
+					}
+					else if(x > 1e-4 && in_bucket3[i] == false)
+					{
+						if(top > 3)top = 3;
+						bucket[3].push(i);
+						in_bucket3[i] = true;
+					}
+					else if(x > 1e-5 && in_bucket4[i] == false)
+					{
+						if(top > 4)top = 4;
+						bucket[4].push(i);
+						in_bucket4[i] = true;
+					}
+					else if(x > 1e-6 && in_bucket5[i] == false)
+					{
+						if(top > 5)top = 5;
+						bucket[5].push(i);
+						in_bucket5[i] = true;
+					}
+					else if(in_bucket6[i] == false)
+					{
+						bucket[6].push(i);
+						in_bucket6[i] = true;
+					}
+
+				}				
+			}
+		}
+		// check convergence
+		if (diff < term_crit_param) {
+			done = true;
+		}	
+		total_updates += double(iters - temp_iters) * maybe_states;
+		total_mults += double(iters - temp_iters) * one_iter_mults;		
 	}
 
 	done = true;	
@@ -694,8 +802,8 @@ jlong _strat				// strategy storage
 		release_string_array_from_java(env, action_names_jstrings, action_names, num_actions);
 	}
 
-	printf("\n\nNumber of scallar multiplications: %dM \n", (int) (total_mults / 1000000));
-	
 	return ptr_to_jlong(soln);
 }
+
 //------------------------------------------------------------------------------
+

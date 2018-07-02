@@ -119,7 +119,12 @@ public class Prism extends PrismComponent implements PrismSettingsListener
 	public static final int PSOR = 10;
 	public static final int BPSOR = 11;
 	public static final int IMPGAUSSSEIDEL = 12;
-	public static final int IMPGAUSSSEIDEL2= 13;
+	public static final int IMPGAUSSSEIDEL2 = 13;
+	public static final int BUCKETGAUSSSEIDEL = 14;
+	public static final int BACKWARDGAUSSSEIDEL = 15;
+	public static final int PRIORITYQUEUAUSSSEIDEL = 16;
+
+
 
 	// methods for solving MDPs
 	public static final int MDP_VALITER = 1;
@@ -130,7 +135,13 @@ public class Prism extends PrismComponent implements PrismSettingsListener
 	public static final int MDP_LP = 6;
 	public static final int MDP_IMPROVEDMODPOLITER = 7;
 	public static final int MDP_IMPROVEDMODPOLITER2 = 8;
-
+	public static final int MDP_BUCKETVALITER = 9;
+	public static final int MDP_PRIORITYQUEUEVALITER = 10;
+	public static final int MDP_BACKWARDVALITER = 11;
+	public static final int MDP_BUCKETVALITER2 = 12;
+	public static final int MDP_PRIORITYQUEUEVALITER2 = 13;
+	public static final int MDP_BACKWARDVALITER2 = 14;
+	
 
 	// methods for solving multi-objective queries on MDPs
 	public static final int MDP_MULTI_VALITER = 1;

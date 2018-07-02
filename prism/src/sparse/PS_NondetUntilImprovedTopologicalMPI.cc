@@ -44,6 +44,7 @@
 #include <stdio.h>
 #include <vector>
 #include "tarjan4.h"
+//#define flag true
 using namespace std;
 //------------------------------------------------------------------------------
 
@@ -296,6 +297,12 @@ jlong _strat				// strategy storage
 	int *pre_freq = new int[n];
 	int * queue = new int[n];
 	double *in_probs = new double[n];
+	int mx_itr;
+	#ifdef flag
+	mx_itr = 100;
+	#else
+	mx_itr = 20;
+	#endif
 
  	int *pre_state = new int[choice_starts[row_starts[n]-1]+500];
 	double* nnz = new double[choice_starts[row_starts[n]-1]];
@@ -505,17 +512,18 @@ jlong _strat				// strategy storage
 		done = false;
 		while (!done && iters < max_iters) {
 			iters++;
+			//printf("\n  >>>> %d ", util_cpu_time());
 		// do matrix multiplication and min/max
 			h1 = h2 = localitr = 0;
 			terminate = false;
 			for(m = low; m < hi; m++)
 			{
-				i = state_order[m];
+				i = scc_state[m];
 				in_probs[i] = 0;
 			}		
 			for(m = low; m < hi; m++)
 			{
-				i = state_order[m];
+				i = scc_state[m];
 				for(j = choice_starts[adv_starts[i]]; j < choice_starts[adv_starts[i] + 1]; j++)
 					in_probs[cols[j]] += non_zeros[j];
 			}
@@ -524,7 +532,7 @@ jlong _strat				// strategy storage
 			M0 = M1 = M2 = 0;
 			for(m = low; m < hi; m++)
 			{
-				i = state_order[m];
+				i = scc_state[m];
 				if(in_probs[i] <= 0)
 					queue[M0++] = i;		
 			}
@@ -538,12 +546,14 @@ jlong _strat				// strategy storage
 						queue[M0++] = cols[j];
 				}
 			}
-			//if(hi - low > 10)printf("\nHi - low = %d, M0 = %d ", hi - low, M0);
+			K3 = M0 - 1;
 			M0 = M1 = M2 = 0;
+#ifdef flag
 
 			for(m = low; m < hi; m++)
 			{
 				i = state_order[m];
+
 				if(row_starts[i] >= row_starts[i+1])
 					continue;
 
@@ -559,11 +569,15 @@ jlong _strat				// strategy storage
 				M1 += j;
 				uf_choice_strt[M0] = M1;
 			}
-
+#endif
 			K0 = K1 = K2 = 0;	
 			for(m = low; m < hi; m++)
 				{
+#ifdef flag
 				i = state_order[m];
+#else
+				i = scc_state[m];
+#endif
 				if(row_starts[i] >= row_starts[i+1] || in_probs[i] <= 0)
 					continue;
 
@@ -579,12 +593,14 @@ jlong _strat				// strategy storage
 				K1 += j;
 				uf_choice_strt2[K0] = K1;
 			}
+			//printf("\n  >>>> %d ", util_cpu_time());
 
 			localitr = 0;
-			while(!terminate && localitr < 100 && hi - low > 1)
+			while(!terminate && localitr < mx_itr && hi - low > 1)
 			{
 				localitr++;
 				sup_norm = 0;
+#ifdef flag
 				if(localitr % 3 == 1)
 				{
 					for(m = 0; m < M0; m++)
@@ -604,10 +620,11 @@ jlong _strat				// strategy storage
 						if (x > sup_norm) 
 							sup_norm = x;
 					}
-					if (sup_norm < term_crit_param && localitr > 20) 
+					if (sup_norm < term_crit_param && localitr > 2) 
 						terminate = true;					
 				}
 				else
+#endif
 				for(m = 0; m < K0; m++)
 				{	
 					i = useful_states2[m];	
@@ -620,7 +637,34 @@ jlong _strat				// strategy storage
 						
 					soln[i] = d1;
 				}
-			}			
+			}//	printf("\n  >>>> %d ", util_cpu_time());
+#ifndef flag
+			while(K3 >= 0)
+			{
+				i = queue[K3--];
+				d1 = 0.0; // initial value doesn't matter
+				first = true; // (because we also remember 'first')
+				l1 = row_starts[i]; 
+				h1 = row_starts[i+1]; 
+				for (j = l1; j < h1; j++) {
+					d2 = 0;
+					l2 = choice_starts[j]; 
+					h2 = choice_starts[j+1]; 
+					
+					for (k = l2; k < h2; k++) {
+						d2 += non_zeros[k] * soln[cols[k]];
+					}
+					if (first || (min&&(d2<d1)) || (!min&&(d2>d1))) {
+						d1 = d2;
+						adv_temp = j;
+						// if adversary generation is enabled, remember optimal choice			
+					}
+					first = false;
+				}	
+			
+				soln[i] = (h1 > l1) ? d1 : yes_vec[i];
+			}
+#endif
 			total_mults += .3334 * localitr * M1 + .6666 * K1 + M3;
 			iters += localitr;
 			diff = 0;
@@ -661,6 +705,7 @@ jlong _strat				// strategy storage
 
 				soln[i] = (h1 > l1) ? d1 : yes_vec[i];
 			}
+//printf("\n  >>>> %d \n\n", util_cpu_time());
 			// check convergence
 			if (diff < term_crit_param*.8)
 				done = true;			

@@ -1,4 +1,3 @@
-
 //==============================================================================
 //	
 //	Copyright (c) 2002-
@@ -39,10 +38,16 @@
 #include "PrismSparseGlob.h"
 #include "jnipointer.h"
 #include <new>
-
+#include <queue>
+using namespace std;
 //------------------------------------------------------------------------------
+struct stpq
+{
+	int state;
+	double priority;
+};
 
-JNIEXPORT jlong __jlongpointer JNICALL Java_sparse_PrismSparse_PS_1NondetUntilModPI
+JNIEXPORT jlong __jlongpointer JNICALL Java_sparse_PrismSparse_PS_1NondetUntilBucketValIter
 (
 JNIEnv *env,
 jclass cls,
@@ -61,10 +66,10 @@ jlong __jlongpointer m,		// 'maybe' states
 jboolean min,				// min or max probabilities (true = min, false = max)
 jlong _strat				// strategy storage
 )
-{	
+{
 	// cast function parameters
 	DdNode *trans = jlong_to_DdNode(t);				// trans matrix
-	DdNode *trans_actions = jlong_to_DdNode(ta);	// trans action labels t
+	DdNode *trans_actions = jlong_to_DdNode(ta);	// trans action labels
 	ODDNode *odd = jlong_to_ODDNode(od); 			// reachable states
 	DdNode **rvars = jlong_to_DdNode_array(rv); 	// row vars
 	DdNode **cvars = jlong_to_DdNode_array(cv); 	// col vars
@@ -72,20 +77,6 @@ jlong _strat				// strategy storage
 	DdNode *yes = jlong_to_DdNode(y);				// 'yes' states
 	DdNode *maybe = jlong_to_DdNode(m); 			// 'maybe' states
 	int *strat = (int *)jlong_to_ptr(_strat);		// strategy storage
-	
-
-	char *choiceTrans;			
-
-	int numDistrs;
-	int numTransitions;
-	int maxNumDistrs;
-
-	int *queue;					
-	bool *choiceCheck;
-	char *stateActs;
-	double total_mults;
-	double total_updates;
-	int one_iter_mults;
 
 	// mtbdds
 	DdNode *a = NULL, *tmp = NULL;
@@ -98,24 +89,22 @@ jlong _strat				// strategy storage
 	double *yes_vec = NULL, *soln = NULL, /**soln2 = NULL,*/ *tmpsoln = NULL;
 	// timing stuff
 	long start1, start2, start3, stop;
-	double time_taken, time_for_setup, time_for_iters , delta; 		
+	double time_taken, time_for_setup, time_for_iters, self;
 	// adversary stuff
 	int export_adv_enabled = export_adv;
 	bool adv_loop = false;
 	FILE *fp_adv = NULL;
 	int adv_j;
-	bool terminate;
+	bool adv_new;
 	int *adv = NULL;
-	int adv_temp;
 	// action info
 	jstring *action_names_jstrings;
 	const char** action_names = NULL;
 	int num_actions;
 	// misc
-	int i, j, k, l, l1, h1, l2, h2, iters , kk , ksel , localitr;
+	int i, j, k, l1, h1, l2, h2, iters, m1, m2;
 	double d1, d2, x, sup_norm, kb, kbt;
 	bool done, first;
-	double self; 
 	// exception handling around whole function
 	try {
 	
@@ -143,7 +132,7 @@ jlong _strat				// strategy storage
 	n = odd->eoff + odd->toff;
 	
 	// build sparse matrix
-	PS_PrintToMainLog(env, "\nBuilding sparse matrix (FOR POLICY ITERASION)... ");
+	PS_PrintToMainLog(env, "\nBuilding sparse matrix(FOR GS)... ");
 	ndsm = build_nd_sparse_matrix(ddman, a, rvars, cvars, num_rvars, ndvars, num_ndvars, odd);
 	// get number of transitions/choices
 	nnz = ndsm->nnz;
@@ -185,7 +174,7 @@ jlong _strat				// strategy storage
 	// create solution/iteration vectors
 	PS_PrintToMainLog(env, "Allocating iteration vectors... ");
 	soln = new double[n];
-	tmpsoln = new double[n];		//Canceled for Gauss-Seidel.
+//	soln2 = new double[n];		Canceled for Gauss-Seidel.
 	kb = n*8.0/1024.0;
 	kbt += 2*kb;
 	PS_PrintMemoryToMainLog(env, "[2 x ", kb, "]\n");
@@ -213,9 +202,15 @@ jlong _strat				// strategy storage
 	
 	// initial solution is yes 
 	for (i = 0; i < n; i++) {
-		soln[i] = tmpsoln[i] = yes_vec[i];
+		soln[i] = yes_vec[i];
 		//if (soln[i]) printf("yes[%d] := %f;\n", i+1, yes[i]);
 	}
+	
+	// get setup time
+	stop = util_cpu_time();
+	time_for_setup = (double)(stop - start2)/1000;
+	start2 = stop;
+	start3 = stop;
 	
 	// start iterations
 	iters = 0;
@@ -232,33 +227,29 @@ jlong _strat				// strategy storage
 			export_adv_enabled = EXPORT_ADV_NONE;
 		}
 	}
-
-	// store local copies of stuff
+	
 	// store local copies of stuff
 	double *non_zeros = ndsm->non_zeros;
 	unsigned char *row_counts = ndsm->row_counts;
-	bool use_counts = ndsm->use_counts;
 	unsigned char *choice_counts = ndsm->choice_counts;
+	bool use_counts = ndsm->use_counts;
 	unsigned int *cols = ndsm->cols;
+	int* row_starts;
+	int* choice_starts;
 
-		
-	int *row_starts; 
-	int *adv_starts; 
-	int *choice_starts;
 	if(use_counts)
 	{
-		row_starts = new int[n+1];
-		choice_starts;
+		row_starts = new int[n+1]; 
+		//choice_starts;
 		row_starts[0] = 0;
 		for(i = 1; i <= n; i++)
 			row_starts[i] = row_starts[i - 1] + row_counts[i-1]; 
 
 		choice_starts = new int[row_starts[n]+1]; 
 		choice_starts[0] = 0;
-
 		for(i = 1; i <= row_starts[n]; i++)
 			choice_starts[i] = choice_starts[i - 1] + choice_counts[i-1]; 
-
+		
 	}
 	else
 	{
@@ -266,127 +257,283 @@ jlong _strat				// strategy storage
 		choice_starts = (int *)ndsm->choice_counts;
 	}
 
-	int maybe_states = 0;
-	one_iter_mults = 0;
-	numTransitions = choice_starts[row_starts[n]];
-	adv_starts = new int[n+1]; 		
-	for(i = 0; i < n; i++)	
-	{
-		adv_starts[i] = row_starts[i];
-		if(row_starts[i + 1] > row_starts[i])
-			maybe_states++;
-		else
-			continue;
-		one_iter_mults += choice_starts[adv_starts[i] + 1] - choice_starts[adv_starts[i]];
-	}
-	adv_starts[n] = row_starts[n];
-	int sup_index;						
-	terminate = false;
-	int* state_ind = new int[n];
-	int ind = 0, m;
-	for(i = 0; i < n; i++)
-		if(row_starts[i] < row_starts[i+1])
-			state_ind[ind++] = i;
+	bool *in_bucket0 = new bool[n];
+	bool *in_bucket1 = new bool[n];
+	bool *in_bucket2 = new bool[n];
+	bool *in_bucket3 = new bool[n];
+	bool *in_bucket4 = new bool[n];
+	bool *in_bucket5 = new bool[n];
+	bool *in_bucket6 = new bool[n];
 
-	// get setup time
-	stop = util_cpu_time();
-	time_for_setup = (double)(stop - start2)/1000;
-	start2 = stop;
-	start3 = stop;
-	double epsi;
-	total_mults = 0;
-	while(!terminate)
-	{	 
-		done = false;
-		localitr = 0;
-		while(!done && localitr < 20)
-		{
-			iters++;
-			localitr++;
-			sup_norm = 0;
-			for(m = 0; m < ind; m++){
-				i = state_ind[m];	
-				d1 = 0;
-				self = 1;
-				if(row_starts[i] >= row_starts[i+1]){
-					continue;}
-				l2 = choice_starts[adv_starts[i]];
-				h2 = choice_starts[1+adv_starts[i]];
-				for(k = l2; k < h2; k++)
-					if(cols[k] != i)
-						d1 += non_zeros[k] * soln[cols[k]];
-					else
-						self -= non_zeros[k];
-				if(self > 0)d1 /= self;else d1 = soln[i];
-				x = (d1 - soln[i]);
-			
-				soln[i] = d1;
-				if (term_crit == TERM_CRIT_RELATIVE && x > 0) {
-					x /= soln[i];
-				}
-				if (x > sup_norm) 
-					sup_norm = x;
-			}
-			if (sup_norm < term_crit_param && localitr > 10) {
-				done = true;
-			}
-			total_mults += one_iter_mults;
-		}	
-		
-		one_iter_mults = 0;
- 		iters++;
+	int *pre_start = new int[n];
+	int *pre_end = new int[n];
+	int *pre_freq = new int[n];
+ 	int *pre_state = new int[choice_starts[row_starts[n]-1]+500];
+
+	for(i = 0; i < n; i++)
+		pre_freq[i] = 0;
+
+	for(i = 0; i < n; i++)
+		for(j = row_starts[i]; j < row_starts[i+1]; j++)
+			for(k = choice_starts[j]; k < choice_starts[j+1]; k++)
+				pre_freq[cols[k]]++;
+
+	pre_start[0] = 0;
+	pre_end[0] = pre_freq[0];
+	for(i = 1; i < n; i++)
+	{
+		pre_start[i] = pre_end[i-1];
+		pre_end[i] = pre_end[i-1] + pre_freq[i];
+	}		
+
+
+	for(i = 0; i < n; i++)
+	{
+		in_bucket0[i] = false;
+		in_bucket1[i] = false;
+		in_bucket2[i] = false;
+		in_bucket3[i] = false;
+		in_bucket4[i] = false;
+		in_bucket5[i] = false;
+		in_bucket6[i] = false;
+
+		pre_freq[i] = pre_start[i];
+	}
+
+	for(i = 0; i < n; i++)
+		for(j = row_starts[i]; j < row_starts[i+1]; j++)
+			for(k = choice_starts[j]; k < choice_starts[j+1]; k++)
+				pre_state[pre_freq[cols[k]]++] = i;
+
+	//queue <double> bucket[7];
+	int** bucket = new int*[7];
+	int ind[8];
+	for(i = 0; i < 7; i++)
+	{
+		bucket[i] = new int[n];
+		ind[i] = 0;
+	}
+	//while (!done && iters < max_iters) 
+	{		
+		iters++;
 		sup_norm = 0.0;
 		// do matrix multiplication and min/max
 		h1 = h2 = 0;
-		if(iters >  max_iters)
-			printf("\nOut of Max iter. Can not converge to the solution after this number of iterations. ");
-		else
-		for(m = 0; m < ind; m++) 
-		{
-			i = state_ind[m];
-			d1 = 0.0; // initial value doesn't matter
+		for (i = 0; i < n; i++) {
+			d1 = (min?1.1:0.0); // initial value doesn't matter		
 			first = true; // (because we also remember 'first')
-			kk = -1;
-			l1 = row_starts[i]; h1 = row_starts[i+1]; 
-		
-			if(l1 >= h1) continue;									
-			for (j = l1; j < h1; j++)
+			adv_new = false;
+			l1 = row_starts[i]; 
+			h1 = row_starts[i+1]; 
+			if(l1 >= h1)	
+				continue;
+					
+			for (j = l1; j < h1; j++) 
 			{
-				kk++;
+				self = 1;
 				d2 = 0;
-				l2 = choice_starts[j]; h2 = choice_starts[j+1]; 
-				
-				for (k = l2; k < h2; k++) {
-					d2 += non_zeros[k] * soln[cols[k]];
-				}
-				if (first || (min&&(d2<d1)) || (!min&&(d2-d1> 0-1e-16))) {
+				if (!use_counts) { l2 = choice_starts[j]; h2 = choice_starts[j+1]; }
+				else { l2 = h2; h2 += choice_counts[j]; }
+				//for (k = l2; k < h2; k++) {
+				//	d2 += non_zeros[k] * soln[cols[k]];
+				//}
+				for(k = l2; k < h2; k++)
+					if(cols[k] != i)
+						d2 += non_zeros[k] * soln[cols[k]];
+					else
+						self -= non_zeros[k];
+				if(self > 0)d2 /= self;else d2 = soln[i];
+				if (first || (min&&(d2<d1)) || (!min&&(d2>d1))) {
 					d1 = d2;
-					ksel = kk;
-					adv_temp = j;
-					first = false;				
+					
 				}
+				first = false;
 			}
-			
-			x = fabs(d1 - soln[i]);
-			soln[i] = d1;
+			// set vector element
+			// (if no choices, use value of yes)
+			x = (h1 > l1) ? fabs(d1 - soln[i]) : 0;
+			soln[i] = (h1 > l1) ? d1 : yes_vec[i];
 			if (term_crit == TERM_CRIT_RELATIVE) {
 				x /= soln[i];
 			}
-			if (x > sup_norm) sup_norm = x;	
-			adv_starts[i] = adv_temp;	
-			one_iter_mults += choice_starts[adv_starts[i] + 1] - choice_starts[adv_starts[i]];
+			if(x > .1)
+			{
+				bucket[0][ind[0]++] = i;
+				in_bucket0[i] = true;
+			}
+			else if(x > 1e-2)
+			{
+				bucket[1][ind[1]++] = i;
+				in_bucket1[i] = true;
+			}
+			else if(x > 1e-3)
+			{
+				bucket[2][ind[2]++] = i;
+				in_bucket2[i] = true;
+			}
+			else if(x > 1e-4)
+			{
+				bucket[3][ind[3]++] = i;
+				in_bucket3[i] = true;
+			}
+			else if(x > 1e-5)
+			{
+				bucket[4][ind[4]++] = i;
+				in_bucket4[i] = true;
+			}
+			else if(x > 1e-6)
+			{
+				bucket[5][ind[5]++] = i;
+				in_bucket5[i] = true;
+			}
+			else
+			{
+				bucket[6][ind[6]++] = i;
+				in_bucket6[i] = true;
+			}
+			if (x > sup_norm) sup_norm = x;
 		}
-		total_mults += numTransitions;
+		
+		int top = 0;
+		while(iters++ < 1e+9)
+		{			
+			if(ind[top] == 0)
+			{	top++;
+				if(top == 6)
+					break;
+			}
+			else
+			{
+				if(ind[top] > 0)
+					m1 = bucket[top][--ind[top]];
+				else
+					continue;
+				//printf(" %d %d ", iters, m1);
+				//scanf("%d", &m2);
+				//bucket[top].pop();
+				switch(top)
+				{
+					case 0:
+						in_bucket0[m1] = false;
+						break;
+					case 1:
+						in_bucket1[m1] = false;
+						break;
+					case 2:
+						in_bucket2[m1] = false;
+						break;
+					case 3:
+						in_bucket3[m1] = false;
+						break;
+					case 4:
+						in_bucket4[m1] = false;
+						break;
+					case 5:
+						in_bucket5[m1] = false;
+						break;
 
-		if (sup_norm < term_crit_param) 
-			done=terminate = true;
-		// print occasional status update
-		if ((util_cpu_time() - start3) > UPDATE_DELAY) {
-			PS_PrintToMainLog(env, "Iteration %d: max %sdiff=%f", iters, (term_crit == TERM_CRIT_RELATIVE)?"relative ":"", sup_norm);
-			PS_PrintToMainLog(env, ", %.2f sec so far\n", ((double)(util_cpu_time() - start2)/1000));
-			start3 = util_cpu_time();
+				}
+
+				for(m2= pre_start[m1]; m2 < pre_end[m1]; m2++)
+				{
+					i = pre_state[m2];
+					d1 = (min?1.1:0.0); // initial value doesn't matter		
+					l1 = row_starts[i]; 
+					h1 = row_starts[i+1]; 
+					if(l1 >= h1)	
+						continue;
+							
+					for (j = l1; j < h1; j++) 
+					{
+						self = 1;
+						d2 = 0;
+						l2 = choice_starts[j]; h2 = choice_starts[j+1]; 
+						
+						//for (k = l2; k < h2; k++) {
+						//	d2 += non_zeros[k] * soln[cols[k]];
+						//}
+						for(k = l2; k < h2; k++)
+							if(cols[k] != i)
+								d2 += non_zeros[k] * soln[cols[k]];
+							else
+								self -= non_zeros[k];
+						if(self > 0)d2 /= self;else d2 = soln[i];
+						if ((min&&(d2<d1)) || (!min&&(d2>d1))) 
+							d1 = d2;							
+					}
+					// set vector element
+					// (if no choices, use value of yes)
+					x = (h1 > l1) ? fabs(d1 - soln[i]) : 0;
+					soln[i] = (h1 > l1) ? d1 : yes_vec[i];
+					if (term_crit == TERM_CRIT_RELATIVE) {
+						x /= soln[i];
+					}
+					if(x > .1 && in_bucket0[i] == false)
+					{
+						top = 0;
+						bucket[0][ind[0]++] = i;
+						in_bucket0[i] = true;
+					}
+					else if(x > 1e-2 && in_bucket1[i] == false)
+					{
+						if(top > 1)top = 1;
+						bucket[1][ind[1]++] = i;
+						in_bucket1[i] = true;
+					}
+					else if(x > 1e-3 && in_bucket2[i] == false)
+					{
+						if(top > 2)top = 2;
+						bucket[2][ind[2]++] = i;
+						in_bucket2[i] = true;
+					}
+					else if(x > 1e-4 && in_bucket3[i] == false)
+					{
+						if(top > 3)top = 3;
+						bucket[3][ind[3]++] = i;
+						in_bucket3[i] = true;
+					}
+					else if(x > 1e-5 && in_bucket4[i] == false)
+					{
+						if(top > 4)top = 4;
+						bucket[4][ind[4]++] = i;
+						in_bucket4[i] = true;
+					}
+					else if(x > 1e-6 && in_bucket5[i] == false)
+					{
+						if(top > 5)top = 5;
+						bucket[5][ind[5]++] = i;
+						in_bucket5[i] = true;
+					}
+					else if(in_bucket6[i] == false)
+					{
+						bucket[6][ind[6]++] = i;
+						in_bucket6[i] = true;
+					}
+
+				}				
+			}
+			if ((util_cpu_time() - start3) > 500000) {
+				PS_PrintToMainLog(env, "Iterative method did not converge within after 500 seconds.");
+				break;
+			}
 		}
+
+
+		//for(i = 0; i < 7; i++)
+		//	printf("\n%d  %d   %d ", iters, i, bucket[i].size());
+		if ((util_cpu_time() - start3) <= 500000)
+		done = true;
+
+		
+		// print occasional status update
+		
+		
+		// prepare for next iteration
+		tmpsoln = soln;
+		//soln = soln2;
+		//soln2 = tmpsoln;
 	}
+	
 	// Traverse matrix to extract adversary
 	if (export_adv_enabled != EXPORT_ADV_NONE) {
 		h1 = h2 = 0;
@@ -437,6 +584,7 @@ jlong _strat				// strategy storage
 			if (adv[i] > 0) strat[i] = ndsm->actions[adv[i]] - 1;
 		}
 	}
+	
 	// catch exceptions: register error, free memory
 	} catch (std::bad_alloc e) {
 		PS_SetErrorMessage("Out of memory");
@@ -448,6 +596,7 @@ jlong _strat				// strategy storage
 	if (a) Cudd_RecursiveDeref(ddman, a);
 	if (ndsm) delete ndsm;
 	if (yes_vec) delete[] yes_vec;
+//	if (soln2) delete[] soln2;
 	if (strat == NULL && adv) delete[] adv;
 	if (action_names != NULL) {
 		release_string_array_from_java(env, action_names_jstrings, action_names, num_actions);

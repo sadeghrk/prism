@@ -295,6 +295,30 @@ public class PrismSparse
 		return new DoubleVector(ptr, (int)(odd.getEOff() + odd.getTOff()));
 	}
 
+	// pctl until (nondeterministic/mdp - Topological Backward gs)
+	private static native long PS_NondetUntilTopologicalBackwardGS(long trans, long trans_actions, List<String> synchs, long odd, long rv, int nrv, long cv, int ncv, long ndv, int nndv, long yes, long maybe, boolean minmax, long strat);
+	public static DoubleVector NondetUntilTopologicalBackwardGS(JDDNode trans, JDDNode transActions, List<String> synchs, ODDNode odd, JDDVars rows, JDDVars cols, JDDVars nondet, JDDNode yes, JDDNode maybe, boolean minmax, IntegerVector strat) throws PrismException
+	{
+		checkNumStates(odd);
+
+		long ptr = PS_NondetUntilTopologicalBackwardGS(trans.ptr(), (transActions == null) ? 0 : transActions.ptr(), synchs, odd.ptr(), rows.array(), rows.n(), cols.array(), cols.n(), nondet.array(), nondet.n(), yes.ptr(), maybe.ptr(), minmax, (strat == null) ? 0 : strat.getPtr());
+		if (ptr == 0) throw new PrismException(getErrorMessage());
+		return new DoubleVector(ptr, (int)(odd.getEOff() + odd.getTOff()));
+	}
+
+
+	// pctl until (nondeterministic/mdp - Topological Backward gs)
+	private static native long PS_NondetUntilTopologicalBucketGS(long trans, long trans_actions, List<String> synchs, long odd, long rv, int nrv, long cv, int ncv, long ndv, int nndv, long yes, long maybe, boolean minmax, long strat);
+	public static DoubleVector NondetUntilTopologicalBucketGS(JDDNode trans, JDDNode transActions, List<String> synchs, ODDNode odd, JDDVars rows, JDDVars cols, JDDVars nondet, JDDNode yes, JDDNode maybe, boolean minmax, IntegerVector strat) throws PrismException
+	{
+		checkNumStates(odd);
+
+		long ptr = PS_NondetUntilTopologicalBucketGS(trans.ptr(), (transActions == null) ? 0 : transActions.ptr(), synchs, odd.ptr(), rows.array(), rows.n(), cols.array(), cols.n(), nondet.array(), nondet.n(), yes.ptr(), maybe.ptr(), minmax, (strat == null) ? 0 : strat.getPtr());
+		if (ptr == 0) throw new PrismException(getErrorMessage());
+		return new DoubleVector(ptr, (int)(odd.getEOff() + odd.getTOff()));
+	}
+
+
 	// pctl until (nondeterministic/mdp - Topological MPI)
 	private static native long PS_NondetUntilTopologicalMPI(long trans, long trans_actions, List<String> synchs, long odd, long rv, int nrv, long cv, int ncv, long ndv, int nndv, long yes, long maybe, boolean minmax, long strat);
 	public static DoubleVector NondetUntilTopologicalMPI(JDDNode trans, JDDNode transActions, List<String> synchs, ODDNode odd, JDDVars rows, JDDVars cols, JDDVars nondet, JDDNode yes, JDDNode maybe, boolean minmax, IntegerVector strat) throws PrismException
@@ -324,7 +348,62 @@ public class PrismSparse
 		return new DoubleVector(ptr, (int)(odd.getEOff() + odd.getTOff()));
 	}	
 
+	// pctl until (Gauss-Seidel)
+	private static native long PS_NondetUntilBucketValIter(long trans, long trans_actions, List<String> synchs, long odd, long rv, int nrv, long cv, int ncv, long ndv, int nndv, long yes, long maybe, boolean minmax, long strat);
+	public static DoubleVector NondetUntilBucketValIter(JDDNode trans, JDDNode transActions, List<String> synchs, ODDNode odd, JDDVars rows, JDDVars cols, JDDVars nondet, JDDNode yes, JDDNode maybe, boolean minmax, IntegerVector strat) throws PrismException
+	{	
+		long ptr = PS_NondetUntilBucketValIter(trans.ptr(), (transActions == null) ? 0 : transActions.ptr(), synchs, odd.ptr(), rows.array(), rows.n(), cols.array(), cols.n(), nondet.array(), nondet.n(), yes.ptr(), maybe.ptr(), minmax, (strat == null) ? 0 : strat.getPtr());
+		if (ptr == 0) throw new PrismException(getErrorMessage());
+		return new DoubleVector(ptr, (int)(odd.getEOff() + odd.getTOff()));
+	}	
 
+	// pctl until (PriorityQueue-Value Iteration)
+	private static native long PS_NondetUntilPriorityQueueValIter(long trans, long trans_actions, List<String> synchs, long odd, long rv, int nrv, long cv, int ncv, long ndv, int nndv, long yes, long maybe, boolean minmax, long strat);
+	public static DoubleVector NondetUntilPriorityQueueValIter(JDDNode trans, JDDNode transActions, List<String> synchs, ODDNode odd, JDDVars rows, JDDVars cols, JDDVars nondet, JDDNode yes, JDDNode maybe, boolean minmax, IntegerVector strat) throws PrismException
+	{	
+		long ptr = PS_NondetUntilPriorityQueueValIter(trans.ptr(), (transActions == null) ? 0 : transActions.ptr(), synchs, odd.ptr(), rows.array(), rows.n(), cols.array(), cols.n(), nondet.array(), nondet.n(), yes.ptr(), maybe.ptr(), minmax, (strat == null) ? 0 : strat.getPtr());
+		if (ptr == 0) throw new PrismException(getErrorMessage());
+		return new DoubleVector(ptr, (int)(odd.getEOff() + odd.getTOff()));
+	}	
+
+
+	// pctl until (Gauss-Seidel)
+	private static native long PS_NondetUntilBackwardValIter(long trans, long trans_actions, List<String> synchs, long odd, long rv, int nrv, long cv, int ncv, long ndv, int nndv, long yes, long maybe, boolean minmax, long strat);
+	public static DoubleVector NondetUntilBackwardValIter(JDDNode trans, JDDNode transActions, List<String> synchs, ODDNode odd, JDDVars rows, JDDVars cols, JDDVars nondet, JDDNode yes, JDDNode maybe, boolean minmax, IntegerVector strat) throws PrismException
+	{	
+		long ptr = PS_NondetUntilBackwardValIter(trans.ptr(), (transActions == null) ? 0 : transActions.ptr(), synchs, odd.ptr(), rows.array(), rows.n(), cols.array(), cols.n(), nondet.array(), nondet.n(), yes.ptr(), maybe.ptr(), minmax, (strat == null) ? 0 : strat.getPtr());
+		if (ptr == 0) throw new PrismException(getErrorMessage());
+		return new DoubleVector(ptr, (int)(odd.getEOff() + odd.getTOff()));
+	}	
+
+
+	// pctl until (Gauss-Seidel)
+	private static native long PS_NondetUntilBucketValIter2(long trans, long trans_actions, List<String> synchs, long odd, long rv, int nrv, long cv, int ncv, long ndv, int nndv, long yes, long maybe, boolean minmax, long strat);
+	public static DoubleVector NondetUntilBucketValIter2(JDDNode trans, JDDNode transActions, List<String> synchs, ODDNode odd, JDDVars rows, JDDVars cols, JDDVars nondet, JDDNode yes, JDDNode maybe, boolean minmax, IntegerVector strat) throws PrismException
+	{	
+		long ptr = PS_NondetUntilBucketValIter2(trans.ptr(), (transActions == null) ? 0 : transActions.ptr(), synchs, odd.ptr(), rows.array(), rows.n(), cols.array(), cols.n(), nondet.array(), nondet.n(), yes.ptr(), maybe.ptr(), minmax, (strat == null) ? 0 : strat.getPtr());
+		if (ptr == 0) throw new PrismException(getErrorMessage());
+		return new DoubleVector(ptr, (int)(odd.getEOff() + odd.getTOff()));
+	}	
+
+	// pctl until (PriorityQueue-Value Iteration)
+	private static native long PS_NondetUntilPriorityQueueValIter2(long trans, long trans_actions, List<String> synchs, long odd, long rv, int nrv, long cv, int ncv, long ndv, int nndv, long yes, long maybe, boolean minmax, long strat);
+	public static DoubleVector NondetUntilPriorityQueueValIter2(JDDNode trans, JDDNode transActions, List<String> synchs, ODDNode odd, JDDVars rows, JDDVars cols, JDDVars nondet, JDDNode yes, JDDNode maybe, boolean minmax, IntegerVector strat) throws PrismException
+	{	
+		long ptr = PS_NondetUntilPriorityQueueValIter2(trans.ptr(), (transActions == null) ? 0 : transActions.ptr(), synchs, odd.ptr(), rows.array(), rows.n(), cols.array(), cols.n(), nondet.array(), nondet.n(), yes.ptr(), maybe.ptr(), minmax, (strat == null) ? 0 : strat.getPtr());
+		if (ptr == 0) throw new PrismException(getErrorMessage());
+		return new DoubleVector(ptr, (int)(odd.getEOff() + odd.getTOff()));
+	}	
+
+
+	// pctl until (Gauss-Seidel)
+	private static native long PS_NondetUntilBackwardValIter2(long trans, long trans_actions, List<String> synchs, long odd, long rv, int nrv, long cv, int ncv, long ndv, int nndv, long yes, long maybe, boolean minmax, long strat);
+	public static DoubleVector NondetUntilBackwardValIter2(JDDNode trans, JDDNode transActions, List<String> synchs, ODDNode odd, JDDVars rows, JDDVars cols, JDDVars nondet, JDDNode yes, JDDNode maybe, boolean minmax, IntegerVector strat) throws PrismException
+	{	
+		long ptr = PS_NondetUntilBackwardValIter2(trans.ptr(), (transActions == null) ? 0 : transActions.ptr(), synchs, odd.ptr(), rows.array(), rows.n(), cols.array(), cols.n(), nondet.array(), nondet.n(), yes.ptr(), maybe.ptr(), minmax, (strat == null) ? 0 : strat.getPtr());
+		if (ptr == 0) throw new PrismException(getErrorMessage());
+		return new DoubleVector(ptr, (int)(odd.getEOff() + odd.getTOff()));
+	}	
 
 
 	// pctl until (Modified-Policy-Iteration)
@@ -776,6 +855,7 @@ private static native long PS_NondetUntilImprovedModPI2(long trans, long trans_a
 		if (ptr == 0) throw new PrismException(getErrorMessage());
 		return new DoubleVector(ptr, (int)(odd.getEOff() + odd.getTOff()));
 	}
+
 	// improved sor method
 	private static native long PS_IMPROVEDSORTR(long odd, long rv, int nrv, long cv, int ncv, long a, long b, long init, boolean transpose, boolean row_sums, double omega, boolean forwards);
 	public static DoubleVector IMPROVEDSORTR(ODDNode odd, JDDVars rows, JDDVars cols, JDDNode a, JDDNode b, JDDNode init, boolean transpose, boolean row_sums, double omega, boolean forwards) throws PrismException
@@ -787,6 +867,37 @@ private static native long PS_NondetUntilImprovedModPI2(long trans, long trans_a
 		return new DoubleVector(ptr, (int)(odd.getEOff() + odd.getTOff()));
 	}
 
+	// bucket sor method
+	private static native long PS_BUCKETSOR(long odd, long rv, int nrv, long cv, int ncv, long a, long b, long init, boolean transpose, boolean row_sums, double omega, boolean forwards);
+	public static DoubleVector BUCKETSOR(ODDNode odd, JDDVars rows, JDDVars cols, JDDNode a, JDDNode b, JDDNode init, boolean transpose, boolean row_sums, double omega, boolean forwards) throws PrismException
+	{
+		checkNumStates(odd);
+
+		long ptr = PS_BUCKETSOR(odd.ptr(), rows.array(), rows.n(), cols.array(), cols.n(), a.ptr(), b.ptr(), init.ptr(), transpose, row_sums, omega, forwards);
+		if (ptr == 0) throw new PrismException(getErrorMessage());
+		return new DoubleVector(ptr, (int)(odd.getEOff() + odd.getTOff()));
+	}
+
+	// priority queue sor method
+	private static native long PS_PRIORITYQUEUESOR(long odd, long rv, int nrv, long cv, int ncv, long a, long b, long init, boolean transpose, boolean row_sums, double omega, boolean forwards);
+	public static DoubleVector PRIORITYQUEUESOR(ODDNode odd, JDDVars rows, JDDVars cols, JDDNode a, JDDNode b, JDDNode init, boolean transpose, boolean row_sums, double omega, boolean forwards) throws PrismException
+	{
+		checkNumStates(odd);
+
+		long ptr = PS_PRIORITYQUEUESOR(odd.ptr(), rows.array(), rows.n(), cols.array(), cols.n(), a.ptr(), b.ptr(), init.ptr(), transpose, row_sums, omega, forwards);
+		if (ptr == 0) throw new PrismException(getErrorMessage());
+		return new DoubleVector(ptr, (int)(odd.getEOff() + odd.getTOff()));
+	}
+	// bucket sor method
+	private static native long PS_BACKWARDSOR(long odd, long rv, int nrv, long cv, int ncv, long a, long b, long init, boolean transpose, boolean row_sums, double omega, boolean forwards);
+	public static DoubleVector BACKWARDSOR(ODDNode odd, JDDVars rows, JDDVars cols, JDDNode a, JDDNode b, JDDNode init, boolean transpose, boolean row_sums, double omega, boolean forwards) throws PrismException
+	{
+		checkNumStates(odd);
+
+		long ptr = PS_BACKWARDSOR(odd.ptr(), rows.array(), rows.n(), cols.array(), cols.n(), a.ptr(), b.ptr(), init.ptr(), transpose, row_sums, omega, forwards);
+		if (ptr == 0) throw new PrismException(getErrorMessage());
+		return new DoubleVector(ptr, (int)(odd.getEOff() + odd.getTOff()));
+	}
 
 	// sor method, interval variant
 	private static native long PS_SORInterval(long odd, long rv, int nrv, long cv, int ncv, long a, long b, long lower, long upper, boolean transpose, boolean row_sums, double omega, boolean forwards, int flags);

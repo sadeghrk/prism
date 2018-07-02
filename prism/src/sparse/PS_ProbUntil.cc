@@ -110,9 +110,16 @@ jlong __jlongpointer m	// 'maybe' states
 			soln = jlong_to_double(Java_sparse_PrismSparse_PS_1IMPROVEDSOR(env, cls, ptr_to_jlong(odd), ptr_to_jlong(rvars), num_rvars, ptr_to_jlong(cvars), num_cvars, ptr_to_jlong(a), ptr_to_jlong(b), ptr_to_jlong(b), false, false, 1.0, true)); break;
 		case 13: 
 			soln = jlong_to_double(Java_sparse_PrismSparse_PS_1IMPROVEDSORTR(env, cls, ptr_to_jlong(odd), ptr_to_jlong(rvars), num_rvars, ptr_to_jlong(cvars), num_cvars, ptr_to_jlong(a), ptr_to_jlong(b), ptr_to_jlong(b), false, false, 1.0, true)); break;
+		case 14:
+			soln = jlong_to_double(Java_sparse_PrismSparse_PS_1BUCKETSOR(env, cls, ptr_to_jlong(odd), ptr_to_jlong(rvars), num_rvars, ptr_to_jlong(cvars), num_cvars, ptr_to_jlong(a), ptr_to_jlong(b), ptr_to_jlong(b), false, false, 1.0, true)); break;
+		case 15:
+			soln = jlong_to_double(Java_sparse_PrismSparse_PS_1BACKWARDSOR(env, cls, ptr_to_jlong(odd), ptr_to_jlong(rvars), num_rvars, ptr_to_jlong(cvars), num_cvars, ptr_to_jlong(a), ptr_to_jlong(b), ptr_to_jlong(b), false, false, 1.0, true)); break;
+		case 16:
+			soln = jlong_to_double(Java_sparse_PrismSparse_PS_1PRIORITYQUEUESOR(env, cls, ptr_to_jlong(odd), ptr_to_jlong(rvars), num_rvars, ptr_to_jlong(cvars), num_cvars, ptr_to_jlong(a), ptr_to_jlong(b), ptr_to_jlong(b), false, false, 1.0, true)); break;
 
 		default:
-			PS_SetErrorMessage("Pseudo Gauss-Seidel/SOR methods are currently not supported by the sparse engine"); return 0;
+			PS_SetErrorMessage("Pseudo Gauss-Seidel/SOR methods are currently not supported by the sparse engine");
+			return 0;
 	}
 	
 	// catch exceptions: register error, free memory

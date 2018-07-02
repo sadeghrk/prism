@@ -241,7 +241,7 @@ public class PrismSettings implements Observer
 			{ CHOICE_TYPE,		PRISM_TRANSIENT_METHOD,					"Transient probability computation method",	"3.3",		"Uniformisation",															"Uniformisation,Fast adaptive uniformisation",																
 																			"Which method to use for computing transient probabilities in CTMCs." },
 			// NUMERICAL SOLUTION OPTIONS:
-			{ CHOICE_TYPE,		PRISM_LIN_EQ_METHOD,					"Linear equations method",				"2.1",			"Jacobi",																	"Power,Jacobi,Gauss-Seidel,Backwards Gauss-Seidel,Pseudo-Gauss-Seidel,Backwards Pseudo-Gauss-Seidel,JOR,SOR,Backwards SOR,Pseudo-SOR,Backwards Pseudo-SOR,Improved Gauss-Seidel,Improved Gauss-Seidel2",
+			{ CHOICE_TYPE,		PRISM_LIN_EQ_METHOD,					"Linear equations method",				"2.1",			"Jacobi",																	"Power,Jacobi,Gauss-Seidel,Backwards Gauss-Seidel,Pseudo-Gauss-Seidel,Backwards Pseudo-Gauss-Seidel,JOR,SOR,Backwards SOR,Pseudo-SOR,Backwards Pseudo-SOR,Improved Gauss-Seidel,Improved Gauss-Seidel2,Bucket Gauss-Seidel,Backward Gauss-Seidel,Priority Queue Gauss-Seidel",
 																			"Which iterative method to use when solving linear equation systems." },
 			{ DOUBLE_TYPE,		PRISM_LIN_EQ_METHOD_PARAM,				"Over-relaxation parameter",			"2.1",			new Double(0.9),															"",																							
 																			"Over-relaxation parameter for iterative numerical methods such as JOR/SOR." },
@@ -253,7 +253,7 @@ public class PrismSettings implements Observer
 																				"Use interval iteration (from above and below) in iterative numerical methods."},
 			{ STRING_TYPE,		PRISM_INTERVAL_ITER_OPTIONS,				"Interval iteration options",				"4.3.1",		"",																		"",
 																	"Interval iteration options, a comma-separated list of the following:\n" + OptionsIntervalIteration.getOptionsDescription() },
-			{ CHOICE_TYPE,		PRISM_MDP_SOLN_METHOD,					"MDP solution method",				"4.0",			"Value iteration",																"Value iteration,Gauss-Seidel,Policy iteration,Modified policy iteration,Explicit Modified policy iteration,Linear programming,Improved Modified policy iteration,Improved Modified policy iteration2",
+			{ CHOICE_TYPE,		PRISM_MDP_SOLN_METHOD,					"MDP solution method",				"4.0",			"Value iteration",																"Value iteration,Gauss-Seidel,Policy iteration,Modified policy iteration,Explicit Modified policy iteration,Linear programming,Improved Modified policy iteration,Improved Modified policy iteration2,Bucket value iteration,Priority Queue value iteration,Backward value iteration,Bucket value iteration2,Priority Queue value iteration2,Backward value iteration2",
 																			"Which method to use when solving Markov decision processes." },
 			{ CHOICE_TYPE,		PRISM_MDP_MULTI_SOLN_METHOD,			"MDP multi-objective solution method",				"4.0.3",			"Value iteration",											"Value iteration,Gauss-Seidel,Linear programming",
 																			"Which method to use when solving multi-objective queries on Markov decision processes." },
@@ -984,6 +984,12 @@ public class PrismSettings implements Observer
 			set(PRISM_LIN_EQ_METHOD, "Improved Gauss-Seidel");
 		} else if (sw.equals("improvedgs2")) {
 			set(PRISM_LIN_EQ_METHOD, "Improved Gauss-Seidel2");
+		} else if (sw.equals("bucketgs")) {
+			set(PRISM_LIN_EQ_METHOD, "Bucket Gauss-Seidel");
+		} else if (sw.equals("backwardgs")) {
+			set(PRISM_LIN_EQ_METHOD, "Backward Gauss-Seidel");
+		} else if (sw.equals("pqgs")) {
+			set(PRISM_LIN_EQ_METHOD, "Priority Queue Gauss-Seidel");
 		} else if (sw.equals("sor")) {
 			set(PRISM_LIN_EQ_METHOD, "SOR");
 		} else if (sw.equals("bsor")) {
@@ -1005,6 +1011,19 @@ public class PrismSettings implements Observer
 			set(PRISM_MDP_SOLN_METHOD, "Improved Modified policy iteration");
 		} else if (sw.equals("improvedmodpoliter2")) {
 			set(PRISM_MDP_SOLN_METHOD, "Improved Modified policy iteration2");
+		} else if (sw.equals("backwardvaliter")) {
+			set(PRISM_MDP_SOLN_METHOD, "Backward value iteration");
+		} else if (sw.equals("pqvaliter")) {
+			set(PRISM_MDP_SOLN_METHOD, "Priority Queue value iteration");
+		} else if (sw.equals("bucketvaliter")) {
+			set(PRISM_MDP_SOLN_METHOD, "Bucket value iteration");
+		} else if (sw.equals("backwardvaliter2")) {
+			set(PRISM_MDP_SOLN_METHOD, "Backward value iteration2");
+		} else if (sw.equals("pqvaliter2")) {
+			set(PRISM_MDP_SOLN_METHOD, "Priority Queue value iteration2");
+		} else if (sw.equals("bucketvaliter2")) {
+			set(PRISM_MDP_SOLN_METHOD, "Bucket value iteration2");
+
 		} else if (sw.equals("linprog") || sw.equals("lp")) {
 			set(PRISM_MDP_SOLN_METHOD, "Linear programming");
 			set(PRISM_MDP_MULTI_SOLN_METHOD, "Linear programming");
