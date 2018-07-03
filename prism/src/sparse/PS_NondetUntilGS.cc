@@ -234,6 +234,8 @@ jlong _strat				// strategy storage
 	int *row_starts; 
 	int *adv_starts; 
 	int *choice_starts;
+	int* state_ind = new int[n];
+	int nd = 0, p;
 	if(use_counts)
 	{
 		row_starts = new int[n+1];
@@ -247,20 +249,19 @@ jlong _strat				// strategy storage
 
 		for(i = 1; i <= row_starts[n]; i++)
 			choice_starts[i] = choice_starts[i - 1] + choice_counts[i-1]; 
-
+		for(i = 0; i < n; i++)
+			if(row_counts[i] > 0)
+				state_ind[nd++] = i;
 	}
 	else
 	{
 		row_starts = (int *)ndsm->row_counts;
 		choice_starts = (int *)ndsm->choice_counts;
+		for(i = 0; i < n; i++)
+			if(row_starts[i+1] - row_starts[i] > 0)
+				state_ind[nd++] = i;
 	}
 
-
-	int* state_ind = new int[n];
-	int nd = 0, p;
-	for(i = 0; i < n; i++)
-		if(row_counts[i] > 0)
-			state_ind[nd++] = i;
 
 	while (!done && iters < max_iters) {
 		

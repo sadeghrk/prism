@@ -44,7 +44,7 @@
 #include <stdio.h>
 #include <vector>
 #include "tarjan4.h"
-//#define flag true
+//#define flag true			// For Zeroconf Examples, do not use flag.
 using namespace std;
 //------------------------------------------------------------------------------
 
@@ -502,6 +502,7 @@ jlong _strat				// strategy storage
 				if(row_starts[i+1] <= row_starts[i] && yes_vec[i] <= 0)
 					continue;
 				for(j = pre_start[i]; j < pre_end[i]; j++)
+					if(state_selected[pre_state[j]] == false)
 					if(state_selected[pre_state[j]] == false)
 					{
 						state_order[left++] = pre_state[j];

@@ -299,13 +299,13 @@ jlong _strat				// strategy storage
 	{	 
 		done = false;
 		localitr = 0;
-		while(!done && localitr < 20)
+		while(!done && localitr < 100)
 		{
 			iters++;
 			localitr++;
 			sup_norm = 0;
-			for(m = 0; m < ind; m++){
-				i = state_ind[m];	
+			for(i = 0; i < n; i++)
+			{	
 				d1 = 0;
 				self = 1;
 				if(row_starts[i] >= row_starts[i+1]){
@@ -341,9 +341,8 @@ jlong _strat				// strategy storage
 		if(iters >  max_iters)
 			printf("\nOut of Max iter. Can not converge to the solution after this number of iterations. ");
 		else
-		for(m = 0; m < ind; m++) 
+		for(i = 0; i < n; i++) 
 		{
-			i = state_ind[m];
 			d1 = 0.0; // initial value doesn't matter
 			first = true; // (because we also remember 'first')
 			kk = -1;
