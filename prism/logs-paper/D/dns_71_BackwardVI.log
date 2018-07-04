@@ -1,0 +1,105 @@
+PRISM
+=====
+
+Version: 4.4.dev
+Date: Sun Jun 17 19:00:48 IRDT 2018
+Hostname: sadegh-H81M-S2PH
+Memory limits: cudd=1g, java(heap)=2.1g
+Command line: prism dns71.nm dns.pctl -s -backwardvaliter -maxiters 90050 -epsilon 1e-6 -javamaxmem 2400m
+
+Parsing model file "dns71.nm"...
+
+Parsing properties file "dns.pctl"...
+
+1 property:
+(1) Pmax=? [ "pp" U "qq" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 
+Variables:   s1 s2 s3 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "pp" U "qq" ]
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 3 iterations in 0.01 seconds (average 0.001667, setup 0.00)
+
+Time for model construction: 14.341 seconds.
+
+Type:        MDP
+States:      9600 (1 initial)
+Transitions: 163804640
+Choices:     28800
+
+Transition matrix: 13539008 nodes (267916 terminal), 163804640 minterms, vars: 15r/15c/3nd
+
+Prob0A: 2 iterations in 0.01 seconds (average 0.003500, setup 0.00)
+
+Prob1E: 4 iterations in 0.01 seconds (average 0.002250, setup 0.00)
+
+yes = 10, no = 45, maybe = 9545
+
+Computing remaining probabilities...
+Engine: Sparse
+
+Building sparse matrix(FOR GS)... [n=9600, nc=28635, nnz=162857814, k=3] [1.8 GB]
+Creating vector for yes...[75.0 KB]
+Allocating iteration vectors... [2 x 75.0 KB]
+TOTAL: [1.8 GB]
+
+Starting iterations...
+Iteration 12: max relative diff=0.084356, 5.17 sec so far
+Iteration 31: max relative diff=0.026237, 10.32 sec so far
+Iteration 50: max relative diff=0.013678, 15.47 sec so far
+Iteration 69: max relative diff=0.008409, 20.62 sec so far
+Iteration 88: max relative diff=0.005619, 25.78 sec so far
+Iteration 107: max relative diff=0.003944, 30.93 sec so far
+Iteration 126: max relative diff=0.002861, 36.08 sec so far
+Iteration 145: max relative diff=0.002123, 41.23 sec so far
+Iteration 164: max relative diff=0.001602, 46.39 sec so far
+Iteration 183: max relative diff=0.001223, 51.54 sec so far
+Iteration 202: max relative diff=0.000943, 56.69 sec so far
+Iteration 221: max relative diff=0.000732, 61.84 sec so far
+Iteration 240: max relative diff=0.000571, 67.00 sec so far
+Iteration 259: max relative diff=0.000448, 72.15 sec so far
+Iteration 278: max relative diff=0.000352, 77.29 sec so far
+Iteration 297: max relative diff=0.000277, 82.44 sec so far
+Iteration 316: max relative diff=0.000219, 87.60 sec so far
+Iteration 335: max relative diff=0.000173, 92.75 sec so far
+Iteration 354: max relative diff=0.000137, 97.90 sec so far
+Iteration 373: max relative diff=0.000109, 103.05 sec so far
+Iteration 392: max relative diff=0.000086, 108.21 sec so far
+Iteration 411: max relative diff=0.000068, 113.36 sec so far
+Iteration 430: max relative diff=0.000054, 118.50 sec so far
+Iteration 449: max relative diff=0.000043, 123.66 sec so far
+Iteration 468: max relative diff=0.000034, 128.82 sec so far
+Iteration 487: max relative diff=0.000027, 133.97 sec so far
+Iteration 506: max relative diff=0.000022, 139.12 sec so far
+Iteration 525: max relative diff=0.000017, 144.28 sec so far
+Iteration 544: max relative diff=0.000014, 149.43 sec so far
+Iteration 563: max relative diff=0.000011, 154.59 sec so far
+Iteration 582: max relative diff=0.000009, 159.74 sec so far
+Iteration 601: max relative diff=0.000007, 164.89 sec so far
+Iteration 620: max relative diff=0.000005, 170.04 sec so far
+Iteration 639: max relative diff=0.000004, 175.19 sec so far
+Iteration 658: max relative diff=0.000003, 180.34 sec so far
+Iteration 677: max relative diff=0.000003, 185.50 sec so far
+Iteration 696: max relative diff=0.000002, 190.65 sec so far
+Iteration 715: max relative diff=0.000002, 195.80 sec so far
+Iteration 734: max relative diff=0.000001, 200.96 sec so far
+Iteration 753: max relative diff=0.000001, 206.11 sec so far
+
+Iterative method: 762 iterations in 208.55 seconds (average 0.273689, setup 16.15)
+
+Value in the initial state: 0.29759506275206
+
+Time for model checking: 225.463 seconds.
+
+Result: 0.29759506275206 (value in the initial state)
+
+Warning: CUDD reports 14446690 non-zero references.
+

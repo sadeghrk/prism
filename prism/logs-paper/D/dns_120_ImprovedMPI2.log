@@ -1,0 +1,78 @@
+PRISM
+=====
+
+Version: 4.4.dev
+Date: Sun May 20 23:16:38 IRDT 2018
+Hostname: sadegh-H81M-S2PH
+Memory limits: cudd=1g, java(heap)=2.1g
+Command line: prism dns120.nm dns.pctl -s -improvedmodpoliter2 -maxiters 90050 -epsilon 1e-8 -javamaxmem 2400m
+
+Parsing model file "dns120.nm"...
+
+Parsing properties file "dns.pctl"...
+
+1 property:
+(1) Pmax=? [ "pp" U "qq" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 
+Variables:   s1 s2 s3 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "pp" U "qq" ]
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 3 iterations in 0.01 seconds (average 0.002000, setup 0.00)
+
+Time for model construction: 15.213 seconds.
+
+Type:        MDP
+States:      10000 (1 initial)
+Transitions: 121658134
+Choices:     30000
+
+Transition matrix: 16895975 nodes (253653 terminal), 121658134 minterms, vars: 15r/15c/3nd
+
+Prob0A: 3 iterations in 0.00 seconds (average 0.000667, setup 0.00)
+
+Prob1E: 9 iterations in 0.00 seconds (average 0.000444, setup 0.00)
+
+yes = 10, no = 15, maybe = 9975
+
+Computing remaining probabilities...
+Engine: Sparse
+
+Building sparse matrix (FOR POLICY ITERASION)... [n=10000, nc=29925, nnz=121352044, k=3] [1.4 GB]
+Creating vector for yes...[78.1 KB]
+Allocating iteration vectors... [2 x 78.1 KB]
+TOTAL: [1.4 GB]
+
+Starting iterations...
+Iteration 303: max relative diff=0.005334, 6.42 sec so far
+Iteration 606: max relative diff=0.001041, 13.23 sec so far
+Iteration 808: max relative diff=0.000391, 19.10 sec so far
+Iteration 1010: max relative diff=0.000181, 24.23 sec so far
+Iteration 1313: max relative diff=0.000064, 30.92 sec so far
+Iteration 1616: max relative diff=0.000013, 37.55 sec so far
+Iteration 1919: max relative diff=0.000004, 44.22 sec so far
+Iteration 2222: max relative diff=0.000001, 50.89 sec so far
+Iteration 2525: max relative diff=0.000000, 57.62 sec so far
+Iteration 2828: max relative diff=0.000000, 64.31 sec so far
+Iteration 3131: max relative diff=0.000000, 71.28 sec so far
+Iteration 3434: max relative diff=0.000000, 78.35 sec so far
+
+Iterative method: 3535 iterations in 80.65 seconds (average 0.022814, setup 10.68)
+
+
+Number of scallar multiplications: 80046M 
+
+Value in the initial state: 0.5487289541709777
+
+Time for model checking: 93.234 seconds.
+
+Result: 0.5487289541709777 (value in the initial state)
+

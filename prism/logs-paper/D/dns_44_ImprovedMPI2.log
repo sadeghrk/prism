@@ -1,0 +1,73 @@
+PRISM
+=====
+
+Version: 4.4.dev
+Date: Sun May 20 14:26:53 IRDT 2018
+Hostname: sadegh-H81M-S2PH
+Memory limits: cudd=1g, java(heap)=2.1g
+Command line: prism dns44.nm dns.pctl -s -improvedmodpoliter2 -maxiters 90050 -epsilon 1e-8 -javamaxmem 2400m
+
+Parsing model file "dns44.nm"...
+
+Parsing properties file "dns.pctl"...
+
+1 property:
+(1) Pmax=? [ "pp" U "qq" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 
+Variables:   s1 s2 s3 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "pp" U "qq" ]
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 2 iterations in 0.00 seconds (average 0.001000, setup 0.00)
+
+Time for model construction: 13.105 seconds.
+
+Type:        MDP
+States:      9600 (1 initial)
+Transitions: 260279538
+Choices:     38400
+
+Transition matrix: 16689425 nodes (312477 terminal), 260279538 minterms, vars: 15r/15c/4nd
+
+Prob0A: 2 iterations in 0.00 seconds (average 0.002000, setup 0.00)
+
+Prob1E: 4 iterations in 0.00 seconds (average 0.000500, setup 0.00)
+
+yes = 10, no = 78, maybe = 9512
+
+Computing remaining probabilities...
+Engine: Sparse
+
+Building sparse matrix (FOR POLICY ITERASION)... [n=9600, nc=38048, nnz=257911810, k=4] [2.9 GB]
+Creating vector for yes...[75.0 KB]
+Allocating iteration vectors... [2 x 75.0 KB]
+TOTAL: [2.9 GB]
+
+Starting iterations...
+Iteration 202: max relative diff=0.016832, 6.08 sec so far
+Iteration 404: max relative diff=0.001401, 12.15 sec so far
+Iteration 606: max relative diff=0.000128, 18.23 sec so far
+Iteration 808: max relative diff=0.000015, 24.37 sec so far
+Iteration 1010: max relative diff=0.000001, 30.62 sec so far
+Iteration 1212: max relative diff=0.000000, 37.44 sec so far
+Iteration 1411: max relative diff=0.000000, 44.19 sec so far
+
+Iterative method: 1411 iterations in 44.19 seconds (average 0.031315, setup 17.12)
+
+
+Number of scallar multiplications: 45359M 
+
+Value in the initial state: 0.19092687340270462
+
+Time for model checking: 63.098 seconds.
+
+Result: 0.19092687340270462 (value in the initial state)
+

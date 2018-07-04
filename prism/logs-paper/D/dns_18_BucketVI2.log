@@ -1,0 +1,63 @@
+PRISM
+=====
+
+Version: 4.4.dev
+Date: Sat Jun 16 18:45:13 IRDT 2018
+Hostname: sadegh-H81M-S2PH
+Memory limits: cudd=1g, java(heap)=2.1g
+Command line: prism dns18.nm dns.pctl -s -bucketvaliter2 -maxiters 90050 -javamaxmem 2400m
+
+Parsing model file "dns18.nm"...
+
+Parsing properties file "dns.pctl"...
+
+1 property:
+(1) Pmax=? [ "pp" U "qq" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 
+Variables:   s1 s2 s3 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "pp" U "qq" ]
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 2 iterations in 0.00 seconds (average 0.000000, setup 0.00)
+
+Time for model construction: 12.193 seconds.
+
+Type:        MDP
+States:      6000 (1 initial)
+Transitions: 210497305
+Choices:     36000
+
+Transition matrix: 10632765 nodes (677797 terminal), 210497305 minterms, vars: 14r/14c/6nd
+
+Prob0A: 2 iterations in 0.00 seconds (average 0.002000, setup 0.00)
+
+Prob1E: 4 iterations in 0.00 seconds (average 0.000250, setup 0.00)
+
+yes = 10, no = 105, maybe = 5885
+
+Computing remaining probabilities...
+Engine: Sparse
+
+Building sparse matrix(FOR GS)... [n=6000, nc=35310, nnz=206466325, k=6] [2.3 GB]
+Creating vector for yes...[46.9 KB]
+Allocating iteration vectors... [2 x 46.9 KB]
+TOTAL: [2.3 GB]
+
+Starting iterations...
+
+Iterative method: 432534 iterations in 290.44 seconds (average 0.000671, setup 20.46)
+
+Value in the initial state: 0.2802039588188567
+
+Time for model checking: 313.872 seconds.
+
+Result: 0.2802039588188567 (value in the initial state)
+

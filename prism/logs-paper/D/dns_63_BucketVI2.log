@@ -1,0 +1,60 @@
+PRISM
+=====
+
+Version: 4.4.dev
+Date: Sun Jun 17 16:57:39 IRDT 2018
+Hostname: sadegh-H81M-S2PH
+Memory limits: cudd=1g, java(heap)=2.1g
+Command line: prism dns63.nm dns.pctl -s -bucketvaliter2 -maxiters 90050 -javamaxmem 2400m
+
+Parsing model file "dns63.nm"...
+
+Parsing properties file "dns.pctl"...
+
+1 property:
+(1) Pmax=? [ "pp" U "qq" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 
+Variables:   s1 s2 s3 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "pp" U "qq" ]
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 2 iterations in 0.00 seconds (average 0.001000, setup 0.00)
+
+Time for model construction: 19.363 seconds.
+
+Type:        MDP
+States:      6800 (1 initial)
+Transitions: 170394718
+Choices:     40800
+
+Transition matrix: 15726203 nodes (723484 terminal), 170394718 minterms, vars: 15r/15c/6nd
+
+Prob0A: 2 iterations in 0.00 seconds (average 0.002000, setup 0.00)
+
+Prob1E: 4 iterations in 0.00 seconds (average 0.000750, setup 0.00)
+
+yes = 10, no = 15, maybe = 6775
+
+Computing remaining probabilities...
+Engine: Sparse
+
+Building sparse matrix(FOR GS)... [n=6800, nc=40650, nnz=169769934, k=6] [1.9 GB]
+Creating vector for yes...[53.1 KB]
+Allocating iteration vectors... [2 x 53.1 KB]
+TOTAL: [1.9 GB]
+
+Starting iterations...
+Iterative method did not converge within after 1000 seconds.
+Iterative method: 1960910 iterations in 1000.00 seconds (average 0.000510, setup 18.34)
+
+Error: Iterative method did not converge within 1960910 iterations.
+Consider using a different numerical method or increasing the maximum number of iterations.
+

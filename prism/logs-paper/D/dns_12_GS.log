@@ -1,0 +1,73 @@
+PRISM
+=====
+
+Version: 4.4.dev
+Date: Sat Jun 16 17:03:53 IRDT 2018
+Hostname: sadegh-H81M-S2PH
+Memory limits: cudd=1g, java(heap)=2.1g
+Command line: prism dns12.nm dns.pctl -s -gs -maxiters 90050 -epsilon 1e-6 -javamaxmem 2400m
+
+Parsing model file "dns12.nm"...
+
+Parsing properties file "dns.pctl"...
+
+1 property:
+(1) Pmax=? [ "pp" U "qq" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 
+Variables:   s1 s2 s3 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "pp" U "qq" ]
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 2 iterations in 0.00 seconds (average 0.000500, setup 0.00)
+
+Time for model construction: 4.742 seconds.
+
+Type:        MDP
+States:      6000 (1 initial)
+Transitions: 104074536
+Choices:     18000
+
+Transition matrix: 4157006 nodes (199960 terminal), 104074536 minterms, vars: 14r/14c/3nd
+
+Prob0A: 2 iterations in 0.01 seconds (average 0.002500, setup 0.00)
+
+Prob1E: 4 iterations in 0.00 seconds (average 0.000250, setup 0.00)
+
+yes = 10, no = 78, maybe = 5912
+
+Computing remaining probabilities...
+Engine: Sparse
+
+Building sparse matrix(FOR GS)... [n=6000, nc=17736, nnz=102553332, k=3] [1.1 GB]
+Creating vector for yes...[46.9 KB]
+Allocating iteration vectors... [2 x 46.9 KB]
+TOTAL: [1.1 GB]
+
+Starting iterations...
+Iteration 29: max relative diff=0.021457, 5.05 sec so far
+Iteration 58: max relative diff=0.005783, 10.12 sec so far
+Iteration 88: max relative diff=0.001947, 15.24 sec so far
+Iteration 118: max relative diff=0.000709, 20.36 sec so far
+Iteration 148: max relative diff=0.000265, 25.49 sec so far
+Iteration 178: max relative diff=0.000100, 30.61 sec so far
+Iteration 208: max relative diff=0.000038, 35.73 sec so far
+Iteration 238: max relative diff=0.000014, 40.85 sec so far
+Iteration 268: max relative diff=0.000005, 45.98 sec so far
+Iteration 298: max relative diff=0.000002, 51.11 sec so far
+
+Iterative method: 321 iterations in 55.04 seconds (average 0.171455, setup 10.18)
+
+Value in the initial state: 0.16153241236757965
+
+Time for model checking: 65.761 seconds.
+
+Result: 0.16153241236757965 (value in the initial state)
+

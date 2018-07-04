@@ -1,0 +1,71 @@
+PRISM
+=====
+
+Version: 4.4.dev
+Date: Mon Jun 18 12:53:46 IRDT 2018
+Hostname: sadegh-H81M-S2PH
+Memory limits: cudd=1g, java(heap)=2.1g
+Command line: prism dns137.nm dns.pctl -s -backwardvaliter -maxiters 90050 -epsilon 1e-6 -javamaxmem 2400m
+
+Parsing model file "dns137.nm"...
+
+Parsing properties file "dns.pctl"...
+
+1 property:
+(1) Pmax=? [ "pp" U "qq" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 
+Variables:   s1 s2 s3 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "pp" U "qq" ]
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 3 iterations in 0.01 seconds (average 0.003333, setup 0.00)
+
+Time for model construction: 12.492 seconds.
+
+Type:        MDP
+States:      8000 (1 initial)
+Transitions: 60070727
+Choices:     24000
+
+Transition matrix: 12594242 nodes (423034 terminal), 60070727 minterms, vars: 15r/15c/3nd
+
+Prob0A: 2 iterations in 0.03 seconds (average 0.012500, setup 0.00)
+
+Prob1E: 4 iterations in 0.02 seconds (average 0.005500, setup 0.00)
+
+yes = 10, no = 120, maybe = 7870
+
+Computing remaining probabilities...
+Engine: Sparse
+
+Building sparse matrix(FOR GS)... [n=8000, nc=23610, nnz=59115285, k=3] [676.6 MB]
+Creating vector for yes...[62.5 KB]
+Allocating iteration vectors... [2 x 62.5 KB]
+TOTAL: [676.8 MB]
+
+Starting iterations...
+Iteration 46: max relative diff=0.008829, 5.04 sec so far
+Iteration 97: max relative diff=0.001319, 10.09 sec so far
+Iteration 148: max relative diff=0.000244, 15.13 sec so far
+Iteration 199: max relative diff=0.000047, 20.18 sec so far
+Iteration 250: max relative diff=0.000009, 25.23 sec so far
+Iteration 301: max relative diff=0.000002, 30.27 sec so far
+
+Iterative method: 319 iterations in 32.05 seconds (average 0.100476, setup 9.36)
+
+Value in the initial state: 0.14486779260704938
+
+Time for model checking: 41.675 seconds.
+
+Result: 0.14486779260704938 (value in the initial state)
+
+Warning: CUDD reports 13690617 non-zero references.
+

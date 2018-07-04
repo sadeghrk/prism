@@ -1,0 +1,67 @@
+PRISM
+=====
+
+Version: 4.4.dev
+Date: Mon May 21 01:07:22 IRDT 2018
+Hostname: sadegh-H81M-S2PH
+Memory limits: cudd=1g, java(heap)=2.1g
+Command line: prism dns149.nm dns.pctl -s -modpoliter -maxiters 90050 -epsilon 1e-8 -javamaxmem 2400m
+
+Parsing model file "dns149.nm"...
+
+Parsing properties file "dns.pctl"...
+
+1 property:
+(1) Pmax=? [ "pp" U "qq" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 
+Variables:   s1 s2 s3 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "pp" U "qq" ]
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 3 iterations in 0.01 seconds (average 0.004333, setup 0.00)
+
+Time for model construction: 13.319 seconds.
+
+Type:        MDP
+States:      6800 (1 initial)
+Transitions: 49906191
+Choices:     34000
+
+Transition matrix: 15801116 nodes (839523 terminal), 49906191 minterms, vars: 15r/15c/5nd
+
+Prob0A: 3 iterations in 0.00 seconds (average 0.001333, setup 0.00)
+
+Prob1E: 4 iterations in 0.00 seconds (average 0.000500, setup 0.00)
+
+yes = 10, no = 28, maybe = 6762
+
+Computing remaining probabilities...
+Engine: Sparse
+
+Building sparse matrix (FOR POLICY ITERASION)... [n=6800, nc=33810, nnz=49614013, k=5] [567.9 MB]
+Creating vector for yes...[53.1 KB]
+Allocating iteration vectors... [2 x 53.1 KB]
+TOTAL: [568.1 MB]
+
+Starting iterations...
+Iteration 505: max relative diff=0.001647, 5.65 sec so far
+Iteration 1010: max relative diff=0.000025, 11.27 sec so far
+Iteration 1515: max relative diff=0.000001, 16.87 sec so far
+Iteration 2020: max relative diff=0.000000, 22.50 sec so far
+
+Iterative method: 2248 iterations in 25.08 seconds (average 0.011157, setup 6.36)
+
+Value in the initial state: 0.6718813482721319
+
+Time for model checking: 31.629 seconds.
+
+Result: 0.6718813482721319 (value in the initial state)
+

@@ -1,0 +1,44 @@
+PRISM
+=====
+
+Version: 4.4.dev
+Date: Tue Jun 19 17:49:45 IRDT 2018
+Hostname: sadegh-H81M-S2PH
+Memory limits: cudd=1g, java(heap)=2.1g
+Command line: prism dns186.nm dns.pctl -s -bucketvaliter2 -maxiters 90050 -javamaxmem 2400m
+
+Parsing model file "dns186.nm"...
+
+Parsing properties file "dns.pctl"...
+
+1 property:
+(1) Pmax=? [ "pp" U "qq" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 
+Variables:   s1 s2 s3 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "pp" U "qq" ]
+
+Building model...
+
+CUDD internal error detected, from the following stack trace:
+  jdd.JDD.ptrToNode(JDD.java:1718)
+  jdd.JDD.Apply(JDD.java:546)
+  prism.Modules2MTBDD.translateSynchronising(Modules2MTBDD.java:1239)
+  prism.Modules2MTBDD.translateSystemFullParallel(Modules2MTBDD.java:976)
+  prism.Modules2MTBDD.translateSystemDefnRec(Modules2MTBDD.java:872)
+  prism.Modules2MTBDD.translateSystemDefn(Modules2MTBDD.java:702)
+  prism.Modules2MTBDD.translateModules(Modules2MTBDD.java:666)
+  prism.Modules2MTBDD.translate(Modules2MTBDD.java:204)
+  prism.Prism.doBuildModel(Prism.java:2005)
+  prism.Prism.buildModelIfRequired(Prism.java:1972)
+  prism.Prism.modelCheck(Prism.java:2942)
+  prism.PrismCL.run(PrismCL.java:373)
+  prism.PrismCL.go(PrismCL.java:210)
+  prism.PrismCL.main(PrismCL.java:2523)
+
+Error: Out of memory (or other internal error) in the CUDD library.
+Tip: Try using the -cuddmaxmem switch to increase the memory available to CUDD.

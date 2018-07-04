@@ -1,0 +1,104 @@
+PRISM
+=====
+
+Version: 4.4.dev
+Date: Sat Jun 16 18:19:49 IRDT 2018
+Hostname: sadegh-H81M-S2PH
+Memory limits: cudd=1g, java(heap)=2.1g
+Command line: prism dns17.nm dns.pctl -s -gs -maxiters 90050 -epsilon 1e-6 -javamaxmem 2400m
+
+Parsing model file "dns17.nm"...
+
+Parsing properties file "dns.pctl"...
+
+1 property:
+(1) Pmax=? [ "pp" U "qq" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 
+Variables:   s1 s2 s3 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "pp" U "qq" ]
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 2 iterations in 0.00 seconds (average 0.000000, setup 0.00)
+
+Time for model construction: 7.354 seconds.
+
+Type:        MDP
+States:      4800 (1 initial)
+Transitions: 133462529
+Choices:     28800
+
+Transition matrix: 6953775 nodes (676434 terminal), 133462529 minterms, vars: 14r/14c/6nd
+
+Prob0A: 2 iterations in 0.00 seconds (average 0.001000, setup 0.00)
+
+Prob1E: 4 iterations in 0.00 seconds (average 0.000250, setup 0.00)
+
+yes = 10, no = 10, maybe = 4780
+
+Computing remaining probabilities...
+Engine: Sparse
+
+Building sparse matrix(FOR GS)... [n=4800, nc=28680, nnz=132903158, k=6] [1.5 GB]
+Creating vector for yes...[37.5 KB]
+Allocating iteration vectors... [2 x 37.5 KB]
+TOTAL: [1.5 GB]
+
+Starting iterations...
+Iteration 23: max relative diff=0.033963, 5.07 sec so far
+Iteration 46: max relative diff=0.012028, 10.14 sec so far
+Iteration 69: max relative diff=0.005877, 15.21 sec so far
+Iteration 92: max relative diff=0.003344, 20.28 sec so far
+Iteration 115: max relative diff=0.002092, 25.35 sec so far
+Iteration 138: max relative diff=0.001396, 30.42 sec so far
+Iteration 161: max relative diff=0.000983, 35.49 sec so far
+Iteration 184: max relative diff=0.000720, 40.56 sec so far
+Iteration 207: max relative diff=0.000542, 45.63 sec so far
+Iteration 230: max relative diff=0.000418, 50.70 sec so far
+Iteration 253: max relative diff=0.000327, 55.78 sec so far
+Iteration 276: max relative diff=0.000260, 60.85 sec so far
+Iteration 299: max relative diff=0.000208, 65.92 sec so far
+Iteration 322: max relative diff=0.000168, 71.00 sec so far
+Iteration 345: max relative diff=0.000136, 76.08 sec so far
+Iteration 368: max relative diff=0.000111, 81.16 sec so far
+Iteration 391: max relative diff=0.000091, 86.24 sec so far
+Iteration 414: max relative diff=0.000075, 91.31 sec so far
+Iteration 437: max relative diff=0.000061, 96.39 sec so far
+Iteration 460: max relative diff=0.000051, 101.47 sec so far
+Iteration 483: max relative diff=0.000042, 106.54 sec so far
+Iteration 506: max relative diff=0.000035, 111.61 sec so far
+Iteration 529: max relative diff=0.000029, 116.68 sec so far
+Iteration 552: max relative diff=0.000024, 121.75 sec so far
+Iteration 575: max relative diff=0.000020, 126.82 sec so far
+Iteration 598: max relative diff=0.000016, 131.89 sec so far
+Iteration 621: max relative diff=0.000014, 136.97 sec so far
+Iteration 644: max relative diff=0.000011, 142.04 sec so far
+Iteration 667: max relative diff=0.000009, 147.11 sec so far
+Iteration 690: max relative diff=0.000008, 152.17 sec so far
+Iteration 713: max relative diff=0.000006, 157.24 sec so far
+Iteration 736: max relative diff=0.000005, 162.34 sec so far
+Iteration 759: max relative diff=0.000004, 167.41 sec so far
+Iteration 782: max relative diff=0.000004, 172.48 sec so far
+Iteration 805: max relative diff=0.000003, 177.55 sec so far
+Iteration 828: max relative diff=0.000003, 182.65 sec so far
+Iteration 851: max relative diff=0.000002, 187.72 sec so far
+Iteration 874: max relative diff=0.000002, 192.79 sec so far
+Iteration 897: max relative diff=0.000001, 197.89 sec so far
+Iteration 920: max relative diff=0.000001, 202.96 sec so far
+Iteration 943: max relative diff=0.000001, 208.03 sec so far
+
+Iterative method: 947 iterations in 208.91 seconds (average 0.220605, setup 10.32)
+
+Value in the initial state: 0.693285266153814
+
+Time for model checking: 219.865 seconds.
+
+Result: 0.693285266153814 (value in the initial state)
+

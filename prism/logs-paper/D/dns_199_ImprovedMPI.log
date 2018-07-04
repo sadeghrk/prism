@@ -1,0 +1,112 @@
+PRISM
+=====
+
+Version: 4.4.dev
+Date: Mon May 21 04:18:58 IRDT 2018
+Hostname: sadegh-H81M-S2PH
+Memory limits: cudd=1g, java(heap)=2.1g
+Command line: prism dns199.nm dns.pctl -s -improvedmodpoliter -maxiters 90050 -epsilon 1e-8 -javamaxmem 2400m
+
+Parsing model file "dns199.nm"...
+
+Parsing properties file "dns.pctl"...
+
+1 property:
+(1) Pmax=? [ "pp" U "qq" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 
+Variables:   s1 s2 s3 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "pp" U "qq" ]
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 5 iterations in 0.00 seconds (average 0.000400, setup 0.00)
+
+Time for model construction: 5.852 seconds.
+
+Type:        MDP
+States:      12800 (1 initial)
+Transitions: 9619689
+Choices:     38400
+
+Transition matrix: 8941635 nodes (364978 terminal), 9619689 minterms, vars: 15r/15c/3nd
+
+Prob0A: 4 iterations in 0.01 seconds (average 0.001750, setup 0.00)
+
+Prob1E: 45 iterations in 0.02 seconds (average 0.000489, setup 0.00)
+
+yes = 10, no = 21, maybe = 12769
+
+Computing remaining probabilities...
+Engine: Sparse
+
+Building sparse matrix (FOR POLICY ITERASION)... [n=12800, nc=38307, nnz=9596832, k=3] [110.0 MB]
+Creating vector for yes...[100.0 KB]
+Allocating iteration vectors... [2 x 100.0 KB]
+TOTAL: [110.3 MB]
+
+Starting iterations...
+Iteration 1938: max relative diff=0.006880, 5.29 sec so far
+Iteration 3876: max relative diff=0.001969, 10.46 sec so far
+Iteration 5610: max relative diff=0.001047, 15.49 sec so far
+Iteration 6834: max relative diff=0.000734, 20.51 sec so far
+Iteration 8568: max relative diff=0.000479, 25.75 sec so far
+Iteration 10302: max relative diff=0.000357, 30.92 sec so far
+Iteration 12036: max relative diff=0.000287, 35.99 sec so far
+Iteration 13872: max relative diff=0.000230, 41.09 sec so far
+Iteration 15708: max relative diff=0.000185, 46.19 sec so far
+Iteration 17544: max relative diff=0.000149, 51.46 sec so far
+Iteration 19278: max relative diff=0.000122, 56.50 sec so far
+Iteration 21012: max relative diff=0.000100, 61.81 sec so far
+Iteration 22542: max relative diff=0.000084, 67.10 sec so far
+Iteration 24378: max relative diff=0.000069, 72.24 sec so far
+Iteration 26316: max relative diff=0.000056, 77.32 sec so far
+Iteration 28254: max relative diff=0.000048, 82.47 sec so far
+Iteration 30090: max relative diff=0.000041, 87.74 sec so far
+Iteration 31722: max relative diff=0.000037, 93.03 sec so far
+Iteration 33558: max relative diff=0.000033, 98.13 sec so far
+Iteration 35496: max relative diff=0.000030, 103.41 sec so far
+Iteration 37026: max relative diff=0.000028, 108.63 sec so far
+Iteration 38760: max relative diff=0.000026, 113.82 sec so far
+Iteration 40698: max relative diff=0.000024, 118.99 sec so far
+Iteration 42636: max relative diff=0.000022, 124.02 sec so far
+Iteration 44574: max relative diff=0.000020, 129.14 sec so far
+Iteration 46512: max relative diff=0.000019, 134.38 sec so far
+Iteration 48348: max relative diff=0.000018, 139.40 sec so far
+Iteration 50286: max relative diff=0.000017, 144.49 sec so far
+Iteration 52122: max relative diff=0.000016, 149.50 sec so far
+Iteration 54060: max relative diff=0.000016, 154.71 sec so far
+Iteration 55998: max relative diff=0.000015, 159.86 sec so far
+Iteration 57936: max relative diff=0.000015, 164.99 sec so far
+Iteration 59874: max relative diff=0.000014, 170.10 sec so far
+Iteration 61812: max relative diff=0.000014, 175.19 sec so far
+Iteration 63648: max relative diff=0.000013, 180.27 sec so far
+Iteration 65178: max relative diff=0.000013, 185.43 sec so far
+Iteration 66912: max relative diff=0.000012, 190.47 sec so far
+Iteration 68850: max relative diff=0.000012, 195.52 sec so far
+Iteration 70890: max relative diff=0.000011, 200.72 sec so far
+Iteration 72828: max relative diff=0.000011, 205.81 sec so far
+Iteration 74766: max relative diff=0.000011, 210.91 sec so far
+Iteration 76704: max relative diff=0.000010, 216.13 sec so far
+Iteration 78642: max relative diff=0.000010, 221.15 sec so far
+Iteration 80580: max relative diff=0.000010, 226.28 sec so far
+Iteration 82518: max relative diff=0.000009, 231.50 sec so far
+Iteration 84456: max relative diff=0.000009, 236.53 sec so far
+Iteration 86394: max relative diff=0.000009, 241.73 sec so far
+Iteration 88332: max relative diff=0.000008, 246.88 sec so far
+
+Out of Max iter. Can not converge to the solution after this number of iterations. 
+Iterative method: 90066 iterations in 251.37 seconds (average 0.002791, setup 2.12)
+
+Value in the initial state: 0.9662720458711264
+
+Time for model checking: 253.522 seconds.
+
+Result: 0.9662720458711264 (value in the initial state)
+

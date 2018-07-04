@@ -1,0 +1,70 @@
+PRISM
+=====
+
+Version: 4.4.dev
+Date: Mon May 21 02:39:41 IRDT 2018
+Hostname: sadegh-H81M-S2PH
+Memory limits: cudd=1g, java(heap)=2.1g
+Command line: prism dns167.nm dns.pctl -s -modpoliter -maxiters 90050 -epsilon 1e-8 -javamaxmem 2400m
+
+Parsing model file "dns167.nm"...
+
+Parsing properties file "dns.pctl"...
+
+1 property:
+(1) Pmax=? [ "pp" U "qq" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 
+Variables:   s1 s2 s3 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "pp" U "qq" ]
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 3 iterations in 0.01 seconds (average 0.002000, setup 0.00)
+
+Time for model construction: 18.296 seconds.
+
+Type:        MDP
+States:      10000 (1 initial)
+Transitions: 42862648
+Choices:     40000
+
+Transition matrix: 21350783 nodes (574755 terminal), 42862648 minterms, vars: 15r/15c/4nd
+
+Prob0A: 3 iterations in 0.01 seconds (average 0.002333, setup 0.00)
+
+Prob1E: 9 iterations in 0.02 seconds (average 0.001889, setup 0.00)
+
+yes = 10, no = 28, maybe = 9962
+
+Computing remaining probabilities...
+Engine: Sparse
+
+Building sparse matrix (FOR POLICY ITERASION)... [n=10000, nc=39848, nnz=42703468, k=4] [488.9 MB]
+Creating vector for yes...[78.1 KB]
+Allocating iteration vectors... [2 x 78.1 KB]
+TOTAL: [489.1 MB]
+
+Starting iterations...
+Iteration 505: max relative diff=0.002396, 6.19 sec so far
+Iteration 1010: max relative diff=0.000123, 12.32 sec so far
+Iteration 1515: max relative diff=0.000018, 18.43 sec so far
+Iteration 2020: max relative diff=0.000012, 24.56 sec so far
+Iteration 2525: max relative diff=0.000000, 30.69 sec so far
+Iteration 3030: max relative diff=0.000000, 36.83 sec so far
+Iteration 3535: max relative diff=0.000000, 42.97 sec so far
+
+Iterative method: 3705 iterations in 45.05 seconds (average 0.012159, setup 7.07)
+
+Value in the initial state: 0.6833376368286193
+
+Time for model checking: 52.268 seconds.
+
+Result: 0.6833376368286193 (value in the initial state)
+

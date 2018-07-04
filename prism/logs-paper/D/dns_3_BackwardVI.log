@@ -1,0 +1,95 @@
+PRISM
+=====
+
+Version: 4.4.dev
+Date: Sat Jun 16 14:54:59 IRDT 2018
+Hostname: sadegh-H81M-S2PH
+Memory limits: cudd=1g, java(heap)=2.1g
+Command line: prism dns3.nm dns.pctl -s -backwardvaliter -maxiters 90050 -epsilon 1e-6 -javamaxmem 2400m
+
+Parsing model file "dns3.nm"...
+
+Parsing properties file "dns.pctl"...
+
+1 property:
+(1) Pmax=? [ "pp" U "qq" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 
+Variables:   s1 s2 s3 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "pp" U "qq" ]
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 2 iterations in 0.00 seconds (average 0.000500, setup 0.00)
+
+Time for model construction: 9.753 seconds.
+
+Type:        MDP
+States:      8000 (1 initial)
+Transitions: 186608256
+Choices:     24000
+
+Transition matrix: 9327361 nodes (291340 terminal), 186608256 minterms, vars: 15r/15c/3nd
+
+Prob0A: 2 iterations in 0.00 seconds (average 0.002000, setup 0.00)
+
+Prob1E: 4 iterations in 0.00 seconds (average 0.000250, setup 0.00)
+
+yes = 10, no = 66, maybe = 7924
+
+Computing remaining probabilities...
+Engine: Sparse
+
+Building sparse matrix(FOR GS)... [n=8000, nc=23772, nnz=184838296, k=3] [2.1 GB]
+Creating vector for yes...[62.5 KB]
+Allocating iteration vectors... [2 x 62.5 KB]
+TOTAL: [2.1 GB]
+
+Starting iterations...
+Iteration 10: max relative diff=0.102604, 5.15 sec so far
+Iteration 27: max relative diff=0.028598, 10.39 sec so far
+Iteration 44: max relative diff=0.014002, 15.63 sec so far
+Iteration 61: max relative diff=0.008085, 20.87 sec so far
+Iteration 78: max relative diff=0.005061, 26.11 sec so far
+Iteration 95: max relative diff=0.003318, 31.35 sec so far
+Iteration 112: max relative diff=0.002236, 36.59 sec so far
+Iteration 129: max relative diff=0.001536, 41.83 sec so far
+Iteration 146: max relative diff=0.001068, 47.07 sec so far
+Iteration 163: max relative diff=0.000749, 52.31 sec so far
+Iteration 180: max relative diff=0.000529, 57.55 sec so far
+Iteration 197: max relative diff=0.000375, 62.79 sec so far
+Iteration 214: max relative diff=0.000266, 68.03 sec so far
+Iteration 231: max relative diff=0.000190, 73.28 sec so far
+Iteration 247: max relative diff=0.000138, 78.43 sec so far
+Iteration 263: max relative diff=0.000100, 83.50 sec so far
+Iteration 279: max relative diff=0.000073, 88.68 sec so far
+Iteration 295: max relative diff=0.000053, 93.75 sec so far
+Iteration 311: max relative diff=0.000039, 98.87 sec so far
+Iteration 327: max relative diff=0.000028, 103.93 sec so far
+Iteration 343: max relative diff=0.000021, 108.93 sec so far
+Iteration 359: max relative diff=0.000015, 114.17 sec so far
+Iteration 375: max relative diff=0.000011, 119.33 sec so far
+Iteration 391: max relative diff=0.000008, 124.43 sec so far
+Iteration 407: max relative diff=0.000006, 129.58 sec so far
+Iteration 424: max relative diff=0.000004, 134.86 sec so far
+Iteration 441: max relative diff=0.000003, 140.12 sec so far
+Iteration 458: max relative diff=0.000002, 145.36 sec so far
+Iteration 475: max relative diff=0.000002, 150.61 sec so far
+Iteration 492: max relative diff=0.000001, 155.85 sec so far
+
+Iterative method: 497 iterations in 157.40 seconds (average 0.316690, setup 16.61)
+
+Value in the initial state: 0.21374493507442355
+
+Time for model checking: 174.988 seconds.
+
+Result: 0.21374493507442355 (value in the initial state)
+
+Warning: CUDD reports 10630376 non-zero references.
+

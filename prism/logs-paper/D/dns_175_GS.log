@@ -1,0 +1,103 @@
+PRISM
+=====
+
+Version: 4.4.dev
+Date: Tue Jun 19 16:28:33 IRDT 2018
+Hostname: sadegh-H81M-S2PH
+Memory limits: cudd=1g, java(heap)=2.1g
+Command line: prism dns175.nm dns.pctl -s -gs -maxiters 90050 -epsilon 1e-6 -javamaxmem 2400m
+
+Parsing model file "dns175.nm"...
+
+Parsing properties file "dns.pctl"...
+
+1 property:
+(1) Pmax=? [ "pp" U "qq" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 
+Variables:   s1 s2 s3 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "pp" U "qq" ]
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 3 iterations in 0.00 seconds (average 0.001333, setup 0.00)
+
+Time for model construction: 10.955 seconds.
+
+Type:        MDP
+States:      8000 (1 initial)
+Transitions: 20968992
+Choices:     24000
+
+Transition matrix: 11417583 nodes (531126 terminal), 20968992 minterms, vars: 15r/15c/3nd
+
+Prob0A: 3 iterations in 0.00 seconds (average 0.001333, setup 0.00)
+
+Prob1E: 15 iterations in 0.01 seconds (average 0.000933, setup 0.00)
+
+yes = 10, no = 10, maybe = 7980
+
+Computing remaining probabilities...
+Engine: Sparse
+
+Building sparse matrix(FOR GS)... [n=8000, nc=23940, nnz=20915020, k=3] [239.5 MB]
+Creating vector for yes...[62.5 KB]
+Allocating iteration vectors... [2 x 62.5 KB]
+TOTAL: [239.7 MB]
+
+Starting iterations...
+Iteration 141: max relative diff=0.003289, 5.01 sec so far
+Iteration 282: max relative diff=0.001016, 10.02 sec so far
+Iteration 423: max relative diff=0.000513, 15.03 sec so far
+Iteration 564: max relative diff=0.000315, 20.03 sec so far
+Iteration 706: max relative diff=0.000214, 25.06 sec so far
+Iteration 847: max relative diff=0.000156, 30.07 sec so far
+Iteration 988: max relative diff=0.000120, 35.07 sec so far
+Iteration 1129: max relative diff=0.000095, 40.08 sec so far
+Iteration 1270: max relative diff=0.000077, 45.08 sec so far
+Iteration 1411: max relative diff=0.000064, 50.08 sec so far
+Iteration 1553: max relative diff=0.000054, 55.12 sec so far
+Iteration 1694: max relative diff=0.000045, 60.12 sec so far
+Iteration 1835: max relative diff=0.000039, 65.13 sec so far
+Iteration 1976: max relative diff=0.000033, 70.13 sec so far
+Iteration 2118: max relative diff=0.000028, 75.16 sec so far
+Iteration 2259: max relative diff=0.000025, 80.17 sec so far
+Iteration 2400: max relative diff=0.000021, 85.17 sec so far
+Iteration 2542: max relative diff=0.000019, 90.20 sec so far
+Iteration 2684: max relative diff=0.000016, 95.23 sec so far
+Iteration 2825: max relative diff=0.000014, 100.23 sec so far
+Iteration 2967: max relative diff=0.000012, 105.26 sec so far
+Iteration 3109: max relative diff=0.000011, 110.30 sec so far
+Iteration 3251: max relative diff=0.000009, 115.33 sec so far
+Iteration 3393: max relative diff=0.000008, 120.37 sec so far
+Iteration 3535: max relative diff=0.000007, 125.40 sec so far
+Iteration 3677: max relative diff=0.000006, 130.44 sec so far
+Iteration 3819: max relative diff=0.000006, 135.47 sec so far
+Iteration 3961: max relative diff=0.000005, 140.51 sec so far
+Iteration 4103: max relative diff=0.000004, 145.54 sec so far
+Iteration 4244: max relative diff=0.000004, 150.54 sec so far
+Iteration 4385: max relative diff=0.000003, 155.55 sec so far
+Iteration 4526: max relative diff=0.000003, 160.55 sec so far
+Iteration 4667: max relative diff=0.000003, 165.55 sec so far
+Iteration 4809: max relative diff=0.000002, 170.59 sec so far
+Iteration 4950: max relative diff=0.000002, 175.59 sec so far
+Iteration 5091: max relative diff=0.000002, 180.59 sec so far
+Iteration 5232: max relative diff=0.000002, 185.60 sec so far
+Iteration 5374: max relative diff=0.000001, 190.63 sec so far
+Iteration 5516: max relative diff=0.000001, 195.67 sec so far
+Iteration 5657: max relative diff=0.000001, 200.67 sec so far
+
+Iterative method: 5792 iterations in 205.46 seconds (average 0.035473, setup 4.45)
+
+Value in the initial state: 0.8015713249156236
+
+Time for model checking: 210.02 seconds.
+
+Result: 0.8015713249156236 (value in the initial state)
+

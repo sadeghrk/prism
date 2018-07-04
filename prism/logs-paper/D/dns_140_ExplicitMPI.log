@@ -1,0 +1,70 @@
+PRISM
+=====
+
+Version: 4.4.dev
+Date: Mon May 21 00:42:03 IRDT 2018
+Hostname: sadegh-H81M-S2PH
+Memory limits: cudd=1g, java(heap)=2.1g
+Command line: prism dns140.nm dns.pctl -s -explicitmodpoliter -maxiters 90050 -epsilon 1e-8 -javamaxmem 2400m
+
+Parsing model file "dns140.nm"...
+
+Parsing properties file "dns.pctl"...
+
+1 property:
+(1) Pmax=? [ "pp" U "qq" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 
+Variables:   s1 s2 s3 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "pp" U "qq" ]
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 3 iterations in 0.00 seconds (average 0.001000, setup 0.00)
+
+Time for model construction: 7.74 seconds.
+
+Type:        MDP
+States:      7200 (1 initial)
+Transitions: 51622008
+Choices:     21600
+
+Transition matrix: 9705957 nodes (356528 terminal), 51622008 minterms, vars: 15r/15c/3nd
+
+Prob0A: 3 iterations in 0.01 seconds (average 0.004000, setup 0.00)
+
+Prob1E: 9 iterations in 0.00 seconds (average 0.000444, setup 0.00)
+
+yes = 10, no = 15, maybe = 7175
+
+Computing remaining probabilities...
+Engine: Sparse
+
+Building sparse matrix (FOR POLICY ITERASION)... [n=7200, nc=21525, nnz=51438835, k=3] [588.8 MB]
+Creating vector for yes...[56.2 KB]
+Allocating iteration vectors... [2 x 56.2 KB]
+TOTAL: [588.9 MB]
+
+Starting iterations...
+Iteration 404: max relative diff=0.002192, 6.42 sec so far
+Iteration 808: max relative diff=0.000183, 12.77 sec so far
+Iteration 1212: max relative diff=0.000024, 19.10 sec so far
+Iteration 1616: max relative diff=0.000002, 25.43 sec so far
+Iteration 2020: max relative diff=0.000000, 31.75 sec so far
+Iteration 2424: max relative diff=0.000000, 38.07 sec so far
+Iteration 2828: max relative diff=0.000000, 44.40 sec so far
+
+Iterative method: 2840 iterations in 44.64 seconds (average 0.015718, setup 4.15)
+
+Value in the initial state: 0.5587210491311474
+
+Time for model checking: 49.003 seconds.
+
+Result: 0.5587210491311474 (value in the initial state)
+

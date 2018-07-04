@@ -1,0 +1,70 @@
+PRISM
+=====
+
+Version: 4.4.dev
+Date: Sun May 20 14:37:20 IRDT 2018
+Hostname: sadegh-H81M-S2PH
+Memory limits: cudd=1g, java(heap)=2.1g
+Command line: prism dns47.nm dns.pctl -s -modpoliter -maxiters 90050 -epsilon 1e-8 -javamaxmem 2400m
+
+Parsing model file "dns47.nm"...
+
+Parsing properties file "dns.pctl"...
+
+1 property:
+(1) Pmax=? [ "pp" U "qq" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 
+Variables:   s1 s2 s3 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "pp" U "qq" ]
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 2 iterations in 0.00 seconds (average 0.000500, setup 0.00)
+
+Time for model construction: 14.268 seconds.
+
+Type:        MDP
+States:      9600 (1 initial)
+Transitions: 258634988
+Choices:     38400
+
+Transition matrix: 18759738 nodes (400024 terminal), 258634988 minterms, vars: 15r/15c/4nd
+
+Prob0A: 2 iterations in 0.01 seconds (average 0.003000, setup 0.00)
+
+Prob1E: 4 iterations in 0.00 seconds (average 0.000500, setup 0.00)
+
+yes = 10, no = 91, maybe = 9499
+
+Computing remaining probabilities...
+Engine: Sparse
+
+Building sparse matrix (FOR POLICY ITERASION)... [n=9600, nc=37996, nnz=255873535, k=4] [2.9 GB]
+Creating vector for yes...[75.0 KB]
+Allocating iteration vectors... [2 x 75.0 KB]
+TOTAL: [2.9 GB]
+
+Starting iterations...
+Iteration 101: max relative diff=0.139633, 6.75 sec so far
+Iteration 202: max relative diff=0.010385, 13.65 sec so far
+Iteration 303: max relative diff=0.001852, 20.50 sec so far
+Iteration 404: max relative diff=0.000136, 27.36 sec so far
+Iteration 505: max relative diff=0.000012, 34.22 sec so far
+Iteration 606: max relative diff=0.000000, 41.06 sec so far
+Iteration 707: max relative diff=0.000000, 47.89 sec so far
+
+Iterative method: 758 iterations in 51.42 seconds (average 0.067831, setup 18.12)
+
+Value in the initial state: 0.19643716871560354
+
+Time for model checking: 70.311 seconds.
+
+Result: 0.19643716871560354 (value in the initial state)
+

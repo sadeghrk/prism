@@ -1,0 +1,76 @@
+PRISM
+=====
+
+Version: 4.4.dev
+Date: Sun May 20 11:49:28 IRDT 2018
+Hostname: sadegh-H81M-S2PH
+Memory limits: cudd=1g, java(heap)=2.1g
+Command line: prism dns19.nm dns.pctl -s -improvedmodpoliter2 -maxiters 90050 -epsilon 1e-8 -javamaxmem 2400m
+
+Parsing model file "dns19.nm"...
+
+Parsing properties file "dns.pctl"...
+
+1 property:
+(1) Pmax=? [ "pp" U "qq" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 
+Variables:   s1 s2 s3 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "pp" U "qq" ]
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 2 iterations in 0.00 seconds (average 0.000000, setup 0.00)
+
+Time for model construction: 11.499 seconds.
+
+Type:        MDP
+States:      7200 (1 initial)
+Transitions: 300659328
+Choices:     43200
+
+Transition matrix: 14801318 nodes (618516 terminal), 300659328 minterms, vars: 15r/15c/6nd
+
+Prob0A: 2 iterations in 0.00 seconds (average 0.001500, setup 0.00)
+
+Prob1E: 4 iterations in 0.00 seconds (average 0.000250, setup 0.00)
+
+yes = 10, no = 21, maybe = 7169
+
+Computing remaining probabilities...
+Engine: Sparse
+
+Building sparse matrix (FOR POLICY ITERASION)... [n=7200, nc=43014, nnz=299385736, k=6] [3.3 GB]
+Creating vector for yes...[56.2 KB]
+Allocating iteration vectors... [2 x 56.2 KB]
+TOTAL: [3.3 GB]
+
+Starting iterations...
+Iteration 303: max relative diff=0.010605, 5.92 sec so far
+Iteration 606: max relative diff=0.001530, 11.77 sec so far
+Iteration 909: max relative diff=0.000250, 17.65 sec so far
+Iteration 1212: max relative diff=0.000055, 23.52 sec so far
+Iteration 1515: max relative diff=0.000015, 29.38 sec so far
+Iteration 1818: max relative diff=0.000004, 35.26 sec so far
+Iteration 2121: max relative diff=0.000001, 41.75 sec so far
+Iteration 2424: max relative diff=0.000000, 48.32 sec so far
+Iteration 2727: max relative diff=0.000000, 54.81 sec so far
+Iteration 3030: max relative diff=0.000000, 61.49 sec so far
+
+Iterative method: 3068 iterations in 62.60 seconds (average 0.020405, setup 15.15)
+
+
+Number of scallar multiplications: 62142M 
+
+Value in the initial state: 0.5477336037695808
+
+Time for model checking: 79.436 seconds.
+
+Result: 0.5477336037695808 (value in the initial state)
+

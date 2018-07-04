@@ -1,0 +1,73 @@
+PRISM
+=====
+
+Version: 4.4.dev
+Date: Sun May 20 15:46:00 IRDT 2018
+Hostname: sadegh-H81M-S2PH
+Memory limits: cudd=1g, java(heap)=2.1g
+Command line: prism dns58.nm dns.pctl -s -improvedmodpoliter -maxiters 90050 -epsilon 1e-8 -javamaxmem 2400m
+
+Parsing model file "dns58.nm"...
+
+Parsing properties file "dns.pctl"...
+
+1 property:
+(1) Pmax=? [ "pp" U "qq" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 
+Variables:   s1 s2 s3 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "pp" U "qq" ]
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 2 iterations in 0.00 seconds (average 0.000500, setup 0.00)
+
+Time for model construction: 14.882 seconds.
+
+Type:        MDP
+States:      6800 (1 initial)
+Transitions: 195696504
+Choices:     40800
+
+Transition matrix: 15923475 nodes (382545 terminal), 195696504 minterms, vars: 15r/15c/6nd
+
+Prob0A: 2 iterations in 0.00 seconds (average 0.002000, setup 0.00)
+
+Prob1E: 4 iterations in 0.00 seconds (average 0.000500, setup 0.00)
+
+yes = 10, no = 15, maybe = 6775
+
+Computing remaining probabilities...
+Engine: Sparse
+
+Building sparse matrix (FOR POLICY ITERASION)... [n=6800, nc=40650, nnz=195015296, k=6] [2.2 GB]
+Creating vector for yes...[53.1 KB]
+Allocating iteration vectors... [2 x 53.1 KB]
+TOTAL: [2.2 GB]
+
+Starting iterations...
+Iteration 204: max relative diff=0.009481, 6.44 sec so far
+Iteration 408: max relative diff=0.001300, 12.69 sec so far
+Iteration 612: max relative diff=0.000227, 18.91 sec so far
+Iteration 816: max relative diff=0.000051, 25.14 sec so far
+Iteration 1020: max relative diff=0.000011, 31.37 sec so far
+Iteration 1224: max relative diff=0.000002, 37.60 sec so far
+Iteration 1428: max relative diff=0.000001, 43.84 sec so far
+Iteration 1632: max relative diff=0.000000, 50.35 sec so far
+Iteration 1836: max relative diff=0.000000, 56.86 sec so far
+Iteration 2040: max relative diff=0.000000, 63.26 sec so far
+
+Iterative method: 2040 iterations in 63.26 seconds (average 0.031009, setup 13.64)
+
+Value in the initial state: 0.5694179849948473
+
+Time for model checking: 77.663 seconds.
+
+Result: 0.5694179849948473 (value in the initial state)
+

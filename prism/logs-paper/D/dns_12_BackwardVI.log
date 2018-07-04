@@ -1,0 +1,75 @@
+PRISM
+=====
+
+Version: 4.4.dev
+Date: Sat Jun 16 17:08:54 IRDT 2018
+Hostname: sadegh-H81M-S2PH
+Memory limits: cudd=1g, java(heap)=2.1g
+Command line: prism dns12.nm dns.pctl -s -backwardvaliter -maxiters 90050 -epsilon 1e-6 -javamaxmem 2400m
+
+Parsing model file "dns12.nm"...
+
+Parsing properties file "dns.pctl"...
+
+1 property:
+(1) Pmax=? [ "pp" U "qq" ]
+
+Type:        MDP
+Modules:     m1 m2 m3 
+Variables:   s1 s2 s3 
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ "pp" U "qq" ]
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 2 iterations in 0.00 seconds (average 0.000000, setup 0.00)
+
+Time for model construction: 4.814 seconds.
+
+Type:        MDP
+States:      6000 (1 initial)
+Transitions: 104074536
+Choices:     18000
+
+Transition matrix: 4157006 nodes (199960 terminal), 104074536 minterms, vars: 14r/14c/3nd
+
+Prob0A: 2 iterations in 0.00 seconds (average 0.001500, setup 0.00)
+
+Prob1E: 4 iterations in 0.00 seconds (average 0.000250, setup 0.00)
+
+yes = 10, no = 78, maybe = 5912
+
+Computing remaining probabilities...
+Engine: Sparse
+
+Building sparse matrix(FOR GS)... [n=6000, nc=17736, nnz=102553332, k=3] [1.1 GB]
+Creating vector for yes...[46.9 KB]
+Allocating iteration vectors... [2 x 46.9 KB]
+TOTAL: [1.1 GB]
+
+Starting iterations...
+Iteration 21: max relative diff=0.035140, 5.16 sec so far
+Iteration 51: max relative diff=0.007603, 10.29 sec so far
+Iteration 81: max relative diff=0.002457, 15.42 sec so far
+Iteration 111: max relative diff=0.000879, 20.55 sec so far
+Iteration 141: max relative diff=0.000325, 25.68 sec so far
+Iteration 171: max relative diff=0.000122, 30.81 sec so far
+Iteration 201: max relative diff=0.000046, 35.94 sec so far
+Iteration 231: max relative diff=0.000017, 41.07 sec so far
+Iteration 261: max relative diff=0.000006, 46.21 sec so far
+Iteration 291: max relative diff=0.000002, 51.34 sec so far
+
+Iterative method: 319 iterations in 56.12 seconds (average 0.175934, setup 10.13)
+
+Value in the initial state: 0.1615324811577016
+
+Time for model checking: 66.807 seconds.
+
+Result: 0.1615324811577016 (value in the initial state)
+
+Warning: CUDD reports 5197149 non-zero references.
+
